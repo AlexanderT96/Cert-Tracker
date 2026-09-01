@@ -22,7 +22,7 @@
       myPath:clone(state.myPath||{}),filter:state.filter||'my-path',currentSalary:Number(state.currentSalary||0),pace2:Number(state.pace2||0),
       expLog:clone(state.expLog||[]),eventsDismissed:clone(state.eventsDismissed||[]),artifacts:clone(state.artifacts||{}),partners:clone(state.partners||{}),
       certOrder:clone(state.certOrder||{}),phaseOverrides:clone(state.phaseOverrides||{}),activities:clone(state.activities||[]),gates:clone(state.gates||{}),
-      objectiveProgress:clone(state.objectiveProgress||{}),competencyEvidence:clone(state.competencyEvidence||{}),capabilityEvidence:clone(state.capabilityEvidence||{}),plannerSettings:clone(state.plannerSettings||{}),
+      objectiveProgress:clone(state.objectiveProgress||{}),competencyEvidence:clone(state.competencyEvidence||{}),capabilityEvidence:clone(state.capabilityEvidence||{}),customization:clone(state.customization||{}),plannerSettings:clone(state.plannerSettings||{}),
       goalProfile:localStorage.getItem(C.goalKey)||'convergence'
     };
   }
@@ -51,13 +51,20 @@
     }
     return errors;
   }
+  function validateCustomization(value){
+    const errors=[];if(value==null)return errors;if(!isObj(value))return ['customization must be an object.'];
+    for(const field of ['colors','phaseColors','visibility','tabLabels'])if(value[field]!=null&&!isObj(value[field]))errors.push(`customization.${field} must be an object.`);
+    if(value.tabOrder!=null&&(!Array.isArray(value.tabOrder)||value.tabOrder.some(x=>typeof x!=='string')) )errors.push('customization.tabOrder must be an array of strings.');
+    for(const field of ['fontScale','density','radius','cardRadius','controlRadius','contentWidth','panelOpacity','shadowStrength','glowStrength','borderWidth'])if(value[field]!=null&&!Number.isFinite(Number(value[field])))errors.push(`customization.${field} must be numeric.`);
+    return errors;
+  }
 
   function validateBackup(data){
     const errors=[];if(!isObj(data))return {ok:false,errors:['Backup root must be an object.']};
     const version=Number(data.version);if(!Number.isInteger(version)||version<1)errors.push('Missing or invalid backup version.');else if(version>CT.version.backup)errors.push(`Backup version ${version} is newer than this app supports (${CT.version.backup}).`);
     errors.push(...validateCertKeyObject(data.passes,'passes',{dateValues:true}),...validateCertKeyObject(data.exams,'exams',{dateValues:true}),...validateCertKeyObject(data.skipped,'skipped',{dateValues:true}),...validateCertKeyObject(data.myPath,'myPath',{boolValues:true}),...validateCertKeyObject(data.objectiveProgress,'objectiveProgress',{numberRange:[0,100]}));
     for(const field of ['notes','artifacts','partners','certOrder','phaseOverrides','gates','competencyEvidence','plannerSettings'])if(data[field]!=null&&!isObj(data[field]))errors.push(`${field} must be an object.`);
-    errors.push(...validateCapabilityEvidence(data.capabilityEvidence));
+    errors.push(...validateCapabilityEvidence(data.capabilityEvidence),...validateCustomization(data.customization));
     if(isObj(data.phaseOverrides))for(const [id,value] of Object.entries(data.phaseOverrides)){if(!validIds.has(id))errors.push(`phaseOverrides.${id} references an unknown certification.`);const n=Number(value);if(!Number.isInteger(n)||n<1||n>6)errors.push(`phaseOverrides.${id} must be an integer from 1 to 6.`);}
     if(isObj(data.notes))for(const [id,note] of Object.entries(data.notes)){if(!validIds.has(id))errors.push(`notes.${id} references an unknown certification.`);if(!isObj(note))errors.push(`notes.${id} must be an object.`);else{for(const key of ['text','link','imageData'])if(note[key]!=null&&typeof note[key]!=='string')errors.push(`notes.${id}.${key} must be text.`);}}
     errors.push(...validateArrayRecords(data.studyLog,'studyLog',(row,i,out)=>{if(row.date&&!CT.util.validIsoDate(row.date))out.push(`studyLog[${i}].date is invalid.`);const h=Number(row.hours);if(!Number.isFinite(h)||h<0||h>24)out.push(`studyLog[${i}].hours must be 0-24.`);if(row.certId&&!validIds.has(row.certId))out.push(`studyLog[${i}].certId is unknown.`);}),...validateArrayRecords(data.expLog,'expLog'),...validateArrayRecords(data.eventsDismissed,'eventsDismissed',null,{allowPrimitives:true}),...validateArrayRecords(data.activities,'activities'));
@@ -69,7 +76,7 @@
   }
 
   function persistAll(options={}){
-    save.passes();save.exams();save.notes();save.study();save.skipped();save.myPath();save.cpe();save.gates();save.objectives();save.evidence();save.capabilityEvidence();save.planner();
+    save.passes();save.exams();save.notes();save.study();save.skipped();save.myPath();save.cpe();save.gates();save.objectives();save.evidence();save.capabilityEvidence();save.customization?.();save.planner();
     localStorage.setItem(SK.filter,state.filter||'my-path');localStorage.setItem(SK.salary,String(Number(state.currentSalary||0)));localStorage.setItem(SK.pace2,String(Number(state.pace2||0)));localStorage.setItem(SK.explog,JSON.stringify(state.expLog||[]));localStorage.setItem(SK.eventsDis,JSON.stringify(state.eventsDismissed||[]));
     localStorage.setItem('ct2-artifacts',JSON.stringify(state.artifacts||{}));localStorage.setItem('ct2-partners',JSON.stringify(state.partners||{}));localStorage.setItem('ct2-order',JSON.stringify(state.certOrder||{}));localStorage.setItem('ct2-phase-ovr',JSON.stringify(state.phaseOverrides||{}));localStorage.setItem(C.storageSchemaKey,String(CT.version.storage));
     if(options.changedAt!==false)localStorage.setItem(C.lastChangeKey,options.changedAt||new Date().toISOString());
@@ -79,12 +86,12 @@
     state.passes=clone(data.passes||{});state.exams=clone(data.exams||{});state.notes=clone(data.notes||{});state.studyLog=clone(data.studyLog||[]);state.skipped=clone(data.skipped||{});if(data.myPath)state.myPath=clone(data.myPath);
     if(typeof data.filter==='string')state.filter=data.filter;if(data.currentSalary!=null)state.currentSalary=Number(data.currentSalary);if(data.pace2!=null)state.pace2=Number(data.pace2);
     state.expLog=clone(data.expLog||[]);state.eventsDismissed=clone(data.eventsDismissed||[]);state.artifacts=clone(data.artifacts||{});state.partners=clone(data.partners||{});state.certOrder=clone(data.certOrder||{});state.phaseOverrides=clone(data.phaseOverrides||{});state.activities=clone(data.activities||[]);state.gates=clone(data.gates||{});
-    state.objectiveProgress=clone(data.objectiveProgress||{});state.competencyEvidence=clone(data.competencyEvidence||{});state.capabilityEvidence=clone(data.capabilityEvidence||{});state.plannerSettings={...state.plannerSettings,...clone(data.plannerSettings||{})};if(typeof data.goalProfile==='string')localStorage.setItem(C.goalKey,data.goalProfile);
+    state.objectiveProgress=clone(data.objectiveProgress||{});state.competencyEvidence=clone(data.competencyEvidence||{});state.capabilityEvidence=clone(data.capabilityEvidence||{});state.customization=clone(data.customization||{});state.plannerSettings={...state.plannerSettings,...clone(data.plannerSettings||{})};if(typeof data.goalProfile==='string')localStorage.setItem(C.goalKey,data.goalProfile);
   }
 
   function applyBackup(data,options={}){
     const validation=validateBackup(data);if(!validation.ok)throw new Error(validation.errors.join(' '));const rollback=serializableState();
-    try{assignBackup(data);persistAll({changedAt:data.changedAt||data.exportedAt||new Date().toISOString()});if(!options.silent){CT.events.emit('state-restored',{source:options.source||'backup'});if(typeof renderApp==='function')renderApp();}return true;}
+    try{assignBackup(data);persistAll({changedAt:data.changedAt||data.exportedAt||new Date().toISOString()});CT.personalization?.apply?.();if(!options.silent){CT.events.emit('state-restored',{source:options.source||'backup'});if(typeof renderApp==='function')renderApp();}return true;}
     catch(error){try{assignBackup(rollback);persistAll({changedAt:rollback.changedAt||rollback.exportedAt});}catch{}throw error;}
   }
 
