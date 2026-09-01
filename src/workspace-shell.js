@@ -37,11 +37,6 @@
   global.renderApp=renderApp;
   global.switchTab=switchTab;
   CT.workspaceShell=Object.freeze({renderApp,switchTab,availableTabs,decorate,focusHtml});
-
-  // Browser regression pages deliberately keep #app hidden. Do not render the full
-  // 184-cert dashboard there; expose the shell API so tests can validate it cheaply.
-  const isTestHarness=!!document.getElementById('results');
-  if(!isTestHarness){
-    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>renderApp(),0),{once:true});else setTimeout(()=>renderApp(),0);
-  }
+  // bootstrap.js owns initial rendering. Keeping this module passive prevents duplicate
+  // first renders and keeps the browser regression harness lightweight.
 })(window);
