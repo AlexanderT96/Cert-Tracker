@@ -24,7 +24,9 @@ const phraseRules = [
   ['sensitive client-context claim', /\bdefence-adjacent client\b/i],
   ['location-specific salary assumption', /\bNW median\b/i],
   ['first-person employer reference', /\bmy (?:current )?employer\b/i],
-  ['first-person job reference', /\bmy (?:current )?(?:job|role|workplace)\b/i],
+  // Only flag first-person job/role language when it is actually personal context.
+  // Generic quoted guidance such as "I do my job well" is not identifying data.
+  ['first-person current-job reference', /\bmy current (?:job|role|workplace)\b/i],
   ['first-person salary reference', /\bmy (?:current )?salary\b/i]
 ];
 
@@ -32,7 +34,9 @@ const phraseRules = [
 const identifierRules = [
   ['email address', /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i],
   ['UK telephone number', /(?:\+44\s?\(?0?\)?|\b0)\d{2,4}[\s-]?\d{3,4}[\s-]?\d{3,4}\b/],
-  ['UK postcode', /\b(?:GIR 0AA|[A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2})\b/i]
+  // The negative lookbehind prevents six-digit CSS hex colours (e.g. #c084fc)
+  // being misclassified as compact UK postcodes.
+  ['UK postcode', /(?<!#)\b(?:GIR 0AA|[A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2})\b/i]
 ];
 
 const findings = [];
