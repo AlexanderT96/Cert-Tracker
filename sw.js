@@ -1,48 +1,71 @@
 // ───── SERVICE WORKER ─────────────────────────────────────────────────────
-// Uses relative paths so it works on GitHub Pages subdirectory deployment.
-const CACHE = 'cert-tracker-v337';
+// Relative paths keep GitHub Pages subdirectory deployments working.
+const CACHE = 'cert-tracker-assets-v2.1.0';
 const ASSETS = [
-  './',
-  './index.html',
-  './styles.css',
-  './certs.js',
-  './app.js',
-  './manifest.json',
-  './icon.svg',
-  './header-art.jpg',
-  './icon-192.png',
-  './icon-512.png',
+  './', './index.html', './styles.css', './certs.js', './app.js', './stability.js',
+  './manifest.json', './icon.svg', './header-art.jpg', './icon-192.png', './icon-512.png'
 ];
 
-self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));
+self.addEventListener('install', event => {
+  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)));
   self.skipWaiting();
 });
 
-self.addEventListener('activate', e => {
-  e.waitUntil(caches.keys().then(keys =>
-    Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-  ));
-  self.clients.claim();
+self.addEventListener('activate', event => {
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key)));
+    await self.clients.claim();
+  })());
 });
 
-self.addEventListener('fetch', e => {
-  e.respondWith(
-    caches.match(e.request).then(cached => cached || fetch(e.request).catch(() => caches.match('./index.html')))
-  );
+async function networkFirst(request, fallback) {
+  const cache = await caches.open(CACHE);
+  try {
+    const response = await fetch(request);
+    if (response && response.ok) cache.put(request, response.clone());
+    return response;
+  } catch {
+    return (await cache.match(request)) || (fallback ? cache.match(fallback) : Response.error());
+  }
+}
+
+async function cacheFirst(request) {
+  const cache = await caches.open(CACHE);
+  const cached = await cache.match(request);
+  if (cached) return cached;
+  const response = await fetch(request);
+  if (response && response.ok) cache.put(request, response.clone());
+  return response;
+}
+
+self.addEventListener('fetch', event => {
+  const request = event.request;
+  if (request.method !== 'GET') return;
+
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin) return;
+
+  if (request.mode === 'navigate') {
+    event.respondWith(networkFirst(request, './index.html'));
+    return;
+  }
+
+  const destination = request.destination;
+  if (destination === 'script' || destination === 'style') {
+    event.respondWith(networkFirst(request));
+    return;
+  }
+
+  event.respondWith(cacheFirst(request));
 });
 
-self.addEventListener('message', e => {
-  if (e.data && e.data.type === 'NOTIFY') {
-    const { title, body, tag } = e.data;
-    // Use relative path resolved against SW scope so icons work on any deployment path
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'NOTIFY') {
+    const { title, body, tag } = event.data;
     const iconUrl = new URL('./icon.svg', self.registration.scope).href;
-    self.registration.showNotification(title, {
-      body,
-      tag,
-      icon: iconUrl,
-      badge: iconUrl,
-      requireInteraction: false,
-    });
+    event.waitUntil(self.registration.showNotification(title, {
+      body, tag, icon: iconUrl, badge: iconUrl, requireInteraction: false
+    }));
   }
 });
