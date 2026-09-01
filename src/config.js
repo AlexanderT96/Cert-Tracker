@@ -5,13 +5,13 @@
   const CT = global.CertTrackerV3 = global.CertTrackerV3 || {};
 
   CT.version = Object.freeze({
-    app: '4.0.0',
-    data: 60,
-    storage: 5,
-    backup: 4,
+    app: '4.2.0',
+    data: 61,
+    storage: 7,
+    backup: 6,
     sync: 2,
     market: 2,
-    intelligence: 1
+    intelligence: 3
   });
 
   CT.config = Object.freeze({
@@ -28,6 +28,8 @@
     plannerKey: 'ct4-planner-settings',
     objectiveKey: 'ct4-objective-progress',
     evidenceKey: 'ct4-competency-evidence',
+    capabilityEvidenceKey: 'ct4-capability-evidence',
+    personalizationKey: 'ct4-personalization',
     deviceKey: 'ct4-device-id',
     syncRevisionKey: 'ct4-sync-revision',
     syncCommonHashKey: 'ct4-sync-common-hash',
@@ -83,7 +85,7 @@
     isPlainObject(value) { return !!value && typeof value === 'object' && !Array.isArray(value); },
     clamp(value, min, max) { return Math.min(max, Math.max(min, value)); },
     escapeHtml(value) {
-      return String(value ?? '').replace(/[&<>'"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[ch]));
+      return String(value ?? '').replace(/[&<>'"]/g, ch => ({ '&': '&amp;', '>': '&gt;', '<': '&lt;', "'": '&#39;', '"': '&quot;' }[ch]));
     },
     averageHours(cert) {
       return Array.isArray(cert?.hours) && cert.hours.length === 2

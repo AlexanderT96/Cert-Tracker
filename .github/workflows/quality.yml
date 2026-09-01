@@ -11,6 +11,7 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -28,5 +29,19 @@ jobs:
           sleep 2
           chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
           test -n "$chrome"
-          "$chrome" --headless=new --no-sandbox --disable-gpu --disable-dev-shm-usage --virtual-time-budget=45000 --dump-dom http://127.0.0.1:4173/tests.html > /tmp/certtracker-tests.html
+          timeout 75s "$chrome" \
+            --headless=new \
+            --no-sandbox \
+            --disable-gpu \
+            --disable-dev-shm-usage \
+            --disable-background-networking \
+            --disable-component-update \
+            --no-first-run \
+            --virtual-time-budget=25000 \
+            --dump-dom http://127.0.0.1:4173/tests.html > /tmp/certtracker-tests.html || {
+              code=$?
+              echo "Headless browser exited with code $code"
+              grep -E 'summary|PASS|FAIL|SKIP|Fatal browser error|Fatal promise rejection' /tmp/certtracker-tests.html || true
+              exit "$code"
+            }
           grep -Eq 'All [0-9]+ executed checks passed' /tmp/certtracker-tests.html || { grep -E 'summary|PASS|FAIL|SKIP|Fatal browser error|Fatal promise rejection' /tmp/certtracker-tests.html || cat /tmp/certtracker-tests.html; exit 1; }

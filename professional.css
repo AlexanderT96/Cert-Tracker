@@ -1,0 +1,74 @@
+/* Cert Tracker — professional enterprise visual system.
+   Default design is intentionally product/engineering focused rather than personal/themed.
+   User customisation can override every token through src/personalization.js. */
+:root{
+  --bg:#07111f;--surface:#0c1828;--surface-2:#111f32;--surface-3:#17283d;--border:#223750;--border-2:#31506f;
+  --text:#edf5ff;--muted:#9db0c6;--dim:#6f849d;
+  --blue:#4aa8ff;--blue-bg:#0c2a47;--blue-text:#9ed0ff;
+  --green:#38d39f;--green-bg:#0b332b;--green-text:#91efd0;
+  --amber:#f4bc55;--amber-bg:#35270c;--amber-text:#f8dc9a;
+  --red:#f46f7f;--red-bg:#391721;--red-text:#ffb1ba;
+  --purple:#9b8cff;--purple-bg:#211d4b;--purple-text:#c9c1ff;
+  --slate:#9eafc1;--slate-bg:#172334;--slate-text:#d6e1ec;
+  --ph1:#4aa8ff;--ph2:#5cc8ff;--ph3:#38d39f;--ph4:#f4bc55;--ph5:#9b8cff;--ph6:#8fa2b8;
+  --ct-font-scale:1;--ct-density:1;--ct-radius:10px;--ct-card-radius:12px;--ct-control-radius:8px;--ct-content-width:1180px;
+  --ct-panel-opacity:.97;--ct-shadow-strength:.28;--ct-glow-strength:.12;--ct-border-width:1px;--ct-motion:1;
+  --ct-header-height:58px;--ct-card-padding:14px;--ct-row-padding:12px;--ct-gap:12px;
+  --ct-font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+}
+html,body{font-family:var(--ct-font-family);font-size:calc(14px * var(--ct-font-scale));background:var(--bg);}
+body{
+  background-image:
+    radial-gradient(circle at 8% -10%,color-mix(in srgb,var(--blue) calc(var(--ct-glow-strength) * 100%),transparent) 0,transparent 30%),
+    radial-gradient(circle at 92% 0%,color-mix(in srgb,var(--purple) calc(var(--ct-glow-strength) * 70%),transparent) 0,transparent 28%),
+    linear-gradient(180deg,color-mix(in srgb,var(--surface) 22%,var(--bg)),var(--bg) 36%);
+  background-attachment:fixed;
+}
+.header{
+  min-height:var(--ct-header-height);padding:12px 18px;background:color-mix(in srgb,var(--surface) calc(var(--ct-panel-opacity) * 100%),transparent);
+  border-bottom:var(--ct-border-width) solid var(--border);box-shadow:0 8px 30px rgba(0,0,0,calc(var(--ct-shadow-strength) * .45));backdrop-filter:blur(16px);
+}
+.header-title{font-size:16px;font-weight:760;letter-spacing:-.02em}.header-sub{font-size:10px;letter-spacing:.02em}.header-count{font-size:15px}
+.tabs{top:var(--ct-header-height);background:color-mix(in srgb,var(--surface) 96%,transparent);border-bottom:var(--ct-border-width) solid var(--border);padding:0 10px;gap:2px;backdrop-filter:blur(14px)}
+.tab{padding:12px 15px;font-weight:650;letter-spacing:.01em;border-bottom-width:2px}.tab.active{color:var(--text);border-bottom-color:var(--blue);background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--blue) 8%,transparent))}
+.content{max-width:var(--ct-content-width);padding:calc(14px * var(--ct-density));}
+.card,.study-hero,.gate-block,.ct3-card,.cpe-card{border-radius:var(--ct-card-radius);border-width:var(--ct-border-width);box-shadow:0 8px 26px rgba(0,0,0,calc(var(--ct-shadow-strength) * .32));}
+.card{padding:calc(var(--ct-card-padding) * var(--ct-density));margin-bottom:calc(var(--ct-gap) * var(--ct-density));}
+.card-title{font-weight:750;letter-spacing:.09em;color:var(--muted)}
+.tools-bar{border:var(--ct-border-width) solid var(--border);border-radius:var(--ct-control-radius);background:color-mix(in srgb,var(--surface-2) 90%,transparent)}
+.btn-tool,.ct3-btn,input,select,textarea{border-radius:var(--ct-control-radius)!important}
+.cert-row{padding:calc(var(--ct-row-padding) * var(--ct-density)) 14px}.cert-row:hover{background:color-mix(in srgb,var(--surface-2) 82%,var(--blue) 3%)}
+.cert-row.passed{background:linear-gradient(90deg,color-mix(in srgb,var(--green) 7%,transparent),transparent 42%)}
+.cert-row.gateway{background:linear-gradient(90deg,color-mix(in srgb,var(--amber) 7%,transparent),transparent 45%)}
+.badge,.badge-tier,.badge-track,.badge-prio,.status-badge{border-radius:6px!important;box-shadow:none!important}
+.badge-cond{background:color-mix(in srgb,var(--blue) 88%,#fff 12%);color:#07111f}.badge-core{background:var(--amber);color:#15100a}.badge-role{background:var(--green);color:#061b16}
+.badge-roi{background:color-mix(in srgb,var(--blue) 10%,transparent);color:var(--blue-text);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--blue) 38%,transparent)!important}
+.phase-stage-tag{background:color-mix(in srgb,var(--purple) 9%,transparent);color:var(--purple-text);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--purple) 28%,transparent)}
+.progress,.ct-meter,.ct-intel-meter{background:color-mix(in srgb,var(--surface-3) 90%,#000 10%)}
+.progress-bar,.ct-meter>i,.ct-intel-meter>i{box-shadow:0 0 14px color-mix(in srgb,currentColor 30%,transparent)}
+.banner,.notify-banner{border-radius:var(--ct-control-radius)}
+.cert-project{background:linear-gradient(135deg,color-mix(in srgb,var(--blue-bg) 75%,transparent),color-mix(in srgb,var(--surface-2) 92%,transparent));border-left-color:var(--blue)}
+
+/* Professional utility dock replaces the scattered personal-app feel. */
+.ct-command-dock{position:fixed;z-index:9996;left:50%;bottom:16px;transform:translateX(-50%);display:flex;gap:6px;padding:6px;background:color-mix(in srgb,var(--surface) 94%,transparent);border:1px solid var(--border);border-radius:14px;box-shadow:0 16px 44px rgba(0,0,0,.42);backdrop-filter:blur(18px)}
+.ct-command-dock button{position:static!important;inset:auto!important;transform:none!important;border:1px solid transparent!important;background:transparent!important;color:var(--muted)!important;box-shadow:none!important;backdrop-filter:none!important;border-radius:9px!important;padding:9px 11px!important;font:650 11px/1 var(--ct-font-family)!important;white-space:nowrap}
+.ct-command-dock button:hover,.ct-command-dock button:focus-visible{background:var(--surface-2)!important;border-color:var(--border)!important;color:var(--text)!important;outline:none}.ct-command-dock button.connected{color:var(--green-text)!important}
+
+/* Dedicated learning-path workspace. */
+.ct-learning-workspace{display:grid;gap:14px}.ct-learning-hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:12px}.ct-learning-focus{background:linear-gradient(145deg,color-mix(in srgb,var(--surface) 94%,var(--blue) 6%),var(--surface));border:1px solid var(--border);border-radius:var(--ct-card-radius);padding:18px;box-shadow:0 12px 36px rgba(0,0,0,.22)}
+.ct-learning-eyebrow{font-size:10px;font-weight:800;color:var(--blue-text);letter-spacing:.11em;text-transform:uppercase}.ct-learning-focus h2{font-size:20px;line-height:1.2;margin:6px 0 7px}.ct-learning-focus p{color:var(--muted);font-size:12px;line-height:1.55}.ct-learning-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}.ct-learning-chip{display:inline-flex;align-items:center;padding:4px 7px;border:1px solid var(--border);border-radius:7px;background:var(--surface-2);color:var(--muted);font-size:10px;font-weight:650}
+.ct-learning-roadmap{display:grid;gap:10px}.ct-learning-phase{display:grid;grid-template-columns:92px minmax(0,1fr);gap:12px;position:relative}.ct-learning-phase-label{position:sticky;top:calc(var(--ct-header-height) + 54px);align-self:start;border:1px solid var(--border);background:var(--surface);border-radius:10px;padding:10px;text-align:center}.ct-learning-phase-label strong{display:block;font-size:18px}.ct-learning-phase-label span{display:block;color:var(--muted);font-size:9px;margin-top:2px}.ct-learning-phase-body{border:1px solid var(--border);border-radius:var(--ct-card-radius);background:color-mix(in srgb,var(--surface) 95%,transparent);overflow:hidden}.ct-learning-phase-head{display:flex;justify-content:space-between;gap:12px;padding:13px 14px;border-bottom:1px solid var(--border);background:var(--surface-2)}.ct-learning-phase-title{font-weight:750}.ct-learning-phase-sub{font-size:10px;color:var(--muted);margin-top:2px}.ct-learning-columns{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(220px,.8fr);gap:0}.ct-learning-cert-list,.ct-learning-topic-list{padding:10px 12px}.ct-learning-topic-list{border-left:1px solid var(--border);background:color-mix(in srgb,var(--surface-2) 55%,transparent)}.ct-learning-section-label{font-size:9px;font-weight:800;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin:2px 0 8px}.ct-learning-item{display:flex;gap:9px;align-items:flex-start;padding:8px 0;border-top:1px solid color-mix(in srgb,var(--border) 70%,transparent)}.ct-learning-item:first-of-type{border-top:0}.ct-learning-dot{width:9px;height:9px;border-radius:50%;margin-top:4px;background:var(--border-2);flex:none}.ct-learning-dot.done{background:var(--green)}.ct-learning-dot.now{background:var(--blue);box-shadow:0 0 0 4px color-mix(in srgb,var(--blue) 15%,transparent)}.ct-learning-item strong{font-size:11px}.ct-learning-item small{display:block;font-size:9px;color:var(--muted);line-height:1.4;margin-top:2px}.ct-learning-gate{margin:0 0 10px 104px;border:1px dashed var(--border-2);border-radius:10px;padding:9px 12px;background:color-mix(in srgb,var(--surface-2) 80%,transparent);display:flex;justify-content:space-between;gap:10px;align-items:center}.ct-learning-gate strong{font-size:10px}.ct-learning-gate span{font-size:9px;color:var(--muted)}
+
+/* Personalisation studio. */
+.ct-custom-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.ct-custom-group{border:1px solid var(--border);border-radius:var(--ct-card-radius);padding:13px;background:var(--surface)}.ct-custom-group h3{font-size:12px;margin-bottom:9px}.ct-custom-field{display:grid;grid-template-columns:minmax(0,1fr) minmax(90px,150px);gap:10px;align-items:center;padding:7px 0;border-top:1px solid color-mix(in srgb,var(--border) 70%,transparent)}.ct-custom-field:first-of-type{border-top:0}.ct-custom-field label{font-size:10px;color:var(--muted)}.ct-custom-field input[type=color]{width:100%;height:34px;padding:2px;background:var(--surface-2);border:1px solid var(--border);border-radius:7px}.ct-custom-field input[type=range]{width:100%}.ct-custom-toggle{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:7px 0}.ct-preset-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.ct-preset{padding:10px;border:1px solid var(--border);border-radius:9px;background:var(--surface-2);color:var(--text);cursor:pointer;text-align:left}.ct-preset strong{display:block;font-size:10px}.ct-preset span{display:block;font-size:9px;color:var(--muted);margin-top:3px}.ct-preset.active{border-color:var(--blue);box-shadow:0 0 0 2px color-mix(in srgb,var(--blue) 12%,transparent)}
+
+html[data-ct-animations="off"] *,html[data-ct-animations="off"] *::before,html[data-ct-animations="off"] *::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+html[data-ct-glass="off"] .header,html[data-ct-glass="off"] .tabs,html[data-ct-glass="off"] .ct-command-dock{backdrop-filter:none!important}
+html[data-ct-shadows="off"] .card,html[data-ct-shadows="off"] .study-hero,html[data-ct-shadows="off"] .gate-block,html[data-ct-shadows="off"] .ct3-card,html[data-ct-shadows="off"] .ct-learning-focus,html[data-ct-shadows="off"] .ct-command-dock{box-shadow:none!important}
+html[data-ct-nav="compact"] .tab{padding:10px 11px;font-size:11px}
+html[data-ct-badges="compact"] .badge,html[data-ct-badges="compact"] .badge-tier,html[data-ct-badges="compact"] .badge-track,html[data-ct-badges="compact"] .badge-prio{font-size:9px;padding:1px 5px}
+
+@media(max-width:760px){
+  .content{padding:10px 9px 76px}.ct-command-dock{bottom:8px;max-width:calc(100vw - 16px);overflow-x:auto;justify-content:flex-start}.ct-command-dock button{padding:9px!important}
+  .ct-learning-hero,.ct-learning-columns,.ct-custom-grid{grid-template-columns:1fr}.ct-learning-phase{grid-template-columns:1fr}.ct-learning-phase-label{position:static;text-align:left;display:flex;gap:8px;align-items:baseline}.ct-learning-phase-label strong{font-size:13px}.ct-learning-topic-list{border-left:0;border-top:1px solid var(--border)}.ct-learning-gate{margin-left:0}.ct-preset-grid{grid-template-columns:repeat(2,1fr)}
+}
