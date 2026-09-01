@@ -1,29 +1,37 @@
-// Cert Tracker v3.1 — central configuration. No build step required.
+// Cert Tracker — central configuration. No build step required.
 (function initConfig(global) {
   'use strict';
 
   const CT = global.CertTrackerV3 = global.CertTrackerV3 || {};
 
   CT.version = Object.freeze({
-    app: '3.1.0',
-    data: 59,
-    storage: 4,
-    backup: 3,
-    sync: 1,
-    market: 1
+    app: '4.0.0',
+    data: 60,
+    storage: 5,
+    backup: 4,
+    sync: 2,
+    market: 2,
+    intelligence: 1
   });
 
   CT.config = Object.freeze({
-    myPathKey: 'ct3-mypath',
-    legacyMyPathKeys: ['ct2-mypath', 'undefined'],
-    storageSchemaKey: 'ct3-storage-schema',
-    lastChangeKey: 'ct3-last-change',
-    lastBackupKey: 'ct3-last-backup-export',
-    recoveryKey: 'ct3-recovery-point',
-    undoKey: 'ct3-undo-point',
-    goalKey: 'ct3-goal-profile',
-    syncConfigKey: 'ct3-sync-config',
-    onboardingKey: 'ct3-onboarded',
+    myPathKey: 'ct4-mypath',
+    legacyMyPathKeys: ['ct3-mypath', 'ct2-mypath', 'undefined'],
+    storageSchemaKey: 'ct4-storage-schema',
+    lastChangeKey: 'ct4-last-change',
+    lastBackupKey: 'ct4-last-backup-export',
+    recoveryKey: 'ct4-recovery-point',
+    undoKey: 'ct4-undo-point',
+    goalKey: 'ct4-goal-profile',
+    syncConfigKey: 'ct4-sync-config',
+    onboardingKey: 'ct4-onboarded',
+    plannerKey: 'ct4-planner-settings',
+    objectiveKey: 'ct4-objective-progress',
+    evidenceKey: 'ct4-competency-evidence',
+    deviceKey: 'ct4-device-id',
+    syncRevisionKey: 'ct4-sync-revision',
+    syncCommonHashKey: 'ct4-sync-common-hash',
+    syncEtagKey: 'ct4-sync-etag',
     freshness: Object.freeze({ freshDays: 180, reviewDays: 365 }),
     allowedTracks: Object.freeze(['CORE', 'FOUNDATION', 'CONDITIONAL', 'OPTIONAL', 'ROLE-DRIVEN', 'ARCHITECT', 'IDENTITY-SEC', 'POST-PLAN'])
   });
@@ -82,6 +90,22 @@
         ? (Number(cert.hours[0]) + Number(cert.hours[1])) / 2
         : 0;
     },
-    nowIso() { return new Date().toISOString(); }
+    nowIso() { return new Date().toISOString(); },
+    validIsoDate(value) {
+      if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+      const d = new Date(`${value}T12:00:00Z`);
+      return Number.isFinite(d.getTime()) && d.toISOString().slice(0, 10) === value;
+    },
+    stableStringify(value) {
+      const seen = new WeakSet();
+      function normalise(input) {
+        if (!input || typeof input !== 'object') return input;
+        if (seen.has(input)) throw new TypeError('Cannot stringify circular data.');
+        seen.add(input);
+        if (Array.isArray(input)) return input.map(normalise);
+        return Object.fromEntries(Object.keys(input).sort().map(key => [key, normalise(input[key])]));
+      }
+      return JSON.stringify(normalise(value));
+    }
   });
 })(window);

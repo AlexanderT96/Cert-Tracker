@@ -1,145 +1,11 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// CERT TRACKER v2 — APP LOGIC
+// CERT TRACKER — UI RENDERER
 // ═══════════════════════════════════════════════════════════════════════════
 
-// ───── STATE ──────────────────────────────────────────────────────────────
-const SK = {
-  passes:   'ct2-passes',
-  exams:    'ct2-exams',
-  cpe:      'ct2-cpe',
-  notify:   'ct2-notify',
-  openPh:   'ct2-open-phase',
-  notes:    'ct2-notes',
-  gates:    'ct2-gates',
-  study:    'ct2-study',
-  filter:   'ct2-filter',
-  skipped:  'ct2-skipped',
-  mpDefault:'ct2-mypath-default',
-  backup:   'ct2-lastbackup',
-  salary:   'ct2-salary',
-  eventsDis:'ct2-events-dismissed',
-  pace2:    'ct2-pace2',
-  explog:   'ct2-explog',
-};
-
-const state = {
-  passes: {},        // {certId: 'YYYY-MM-DD'}
-  skipped: {},       // {certId: 'YYYY-MM-DD'} — dropped/abandoned/deferred
-  exams: {},         // {certId: 'YYYY-MM-DD'}
-  activities: [],    // [{id, certId, date, desc, credits}]
-  notes: {},         // {certId: {text, link, imageData}}
-  gates: {},         // {gateId: true}
-  studyLog: [],      // [{id, date, hours, type, certId?, desc}]
-  openPhase: 1,
-  openCerts: {},     // {certId: true}
-  currentTab: 'dashboard',
-  filter: 'my-path', // My Path is the default lens (other filters via the chips)
-  searchQuery: '',   // Free-text search across cert library
-  showStudyForm: false,
-  lastBackup: null,
-  dismissedBackup: false,
-  currentSalary: 0, // optional baseline; any entered value stays only in this browser
-  pace2: 6,             // h/wk after the Sep 2026 pace drop (editable, browser-only)
-  simMode: false,       // what-if simulator (session-only)
-  simPasses: {},        // hypothetical passes (session-only)
-  expLog: [],           // experience/portfolio entries (browser-only)
-  eventsDismissed: [],  // dismissed market-event banner ids
-};
-
-function loadState() {
-  try { state.passes     = JSON.parse(localStorage.getItem(SK.passes)  || '{}'); } catch {}
-  try { state.exams      = JSON.parse(localStorage.getItem(SK.exams)   || '{}'); } catch {}
-  try { state.notes      = JSON.parse(localStorage.getItem(SK.notes)   || '{}'); } catch {}
-  try { state.studyLog   = JSON.parse(localStorage.getItem(SK.study)   || '[]'); } catch {}
-  try { state.lastBackup = localStorage.getItem(SK.backup) || null; } catch {}
-  try { state.openPhase  = parseInt(localStorage.getItem(SK.openPh)    || '1'); } catch {}
-  try { state.filter     = localStorage.getItem(SK.filter) || 'my-path'; } catch {}
-  try { state.passedOnly  = localStorage.getItem('cert.passedOnly') === '1'; } catch {}
-  try { state.artifacts = JSON.parse(localStorage.getItem('ct2-artifacts') || '{}'); } catch { state.artifacts = {}; }
-  try { state.partners  = JSON.parse(localStorage.getItem('ct2-partners')  || '{}'); } catch { state.partners  = {}; }
-  try { state.certOrder = JSON.parse(localStorage.getItem('ct2-order') || '{}'); } catch { state.certOrder = {}; }
-  try { state.phaseOverrides = JSON.parse(localStorage.getItem('ct2-phase-ovr') || '{}'); } catch { state.phaseOverrides = {}; }
-  Object.entries(state.phaseOverrides).forEach(([id, ph]) => { const c = CERTS.find(x => x.id === id); if (c && ph >= 1 && ph <= 6) c.phase = ph; });
-  if (state.filter === 'passed') { state.filter = 'all'; state.passedOnly = true; try { localStorage.setItem(SK.filter,'all'); localStorage.setItem('cert.passedOnly','1'); } catch {} }
-  try { const s = parseInt(localStorage.getItem(SK.salary), 10); if (!isNaN(s) && s >= 0) state.currentSalary = s; } catch {}
-  try { const p = parseInt(localStorage.getItem(SK.pace2), 10); if (!isNaN(p) && p >= 0) state.pace2 = p; } catch {}
-  try { state.expLog = JSON.parse(localStorage.getItem(SK.explog)) || []; } catch {}
-  try { state.eventsDismissed = JSON.parse(localStorage.getItem(SK.eventsDis)) || []; } catch {}
-  // One-time: adopt My Path as the default lens for existing installs, then respect user choices
-  try { if (!localStorage.getItem(SK.mpDefault)) { state.filter = 'my-path'; localStorage.setItem(SK.filter, 'my-path'); localStorage.setItem(SK.mpDefault, '1'); } } catch {}
-  try { state.skipped    = JSON.parse(localStorage.getItem(SK.skipped) || '{}'); } catch {}
-  try { state.openFilterGroups = JSON.parse(localStorage.getItem('cert.openFilterGroups') || '{}'); } catch {}
-  const MYPATH_VERSION = 57;
-  try {
-    state.myPath = JSON.parse(localStorage.getItem(SK.myPath) || 'null');
-  } catch { state.myPath = null; }
-  const storedVersion = parseInt(localStorage.getItem('cert.myPathVersion') || '0', 10);
-  if (!state.myPath || Object.keys(state.myPath).length === 0 || storedVersion < MYPATH_VERSION) {
-    // Default curated convergence-security technical path
-    state.myPath = state.myPath || {};
-    const defaults = window.CERT_TRACKER_DEFAULT_PATH || [];
-    defaults.forEach(id => { state.myPath[id] = true; });
-    localStorage.setItem(SK.myPath, JSON.stringify(state.myPath));
-    localStorage.setItem('cert.myPathVersion', String(MYPATH_VERSION));
-  }
-
-  // One-time bench (v57): UKCSC direct-entry verified — Associate/Practitioner rungs not required
-  try {
-    if (!localStorage.getItem('ct2-bench-v57')) {
-      ['ukcsc-assoc','ukcsc-pract'].forEach(id => { if (state.myPath) delete state.myPath[id]; });
-      localStorage.setItem(SK.myPath, JSON.stringify(state.myPath));
-      localStorage.setItem('ct2-bench-v57', '1');
-    }
-  } catch {}
-
-  // One-time bench (v50): retire consulting/management holdovers from existing paths
-  try {
-    if (!localStorage.getItem('ct2-bench-v50')) {
-      ['cism','prince2-prac','cipm','aigp','aaism','togaf-10'].forEach(id => { if (state.myPath) delete state.myPath[id]; });
-      localStorage.setItem(SK.myPath, JSON.stringify(state.myPath));
-      localStorage.setItem('ct2-bench-v50', '1');
-    }
-  } catch {}
-  try {
-    if (!localStorage.getItem('ct2-mig-v336')) {
-      ['secot-plus','nse-4'].forEach(id => { if (state.myPath) delete state.myPath[id]; });
-      ['claroty-cert-eng','nozomi-cert-eng','google-cyber','cczt','cdcdp'].forEach(id => { if (state.myPath) state.myPath[id] = true; });
-      ['arcgis-foundation','arcgis-associate','esri-dev-found','arcgis-py-api','esri-online-admin'].forEach(id => { if (state.myPath) delete state.myPath[id]; });
-      localStorage.setItem(SK.myPath, JSON.stringify(state.myPath));
-      localStorage.setItem('ct2-mig-v336', '1');
-    }
-  } catch {}
-
-
-  // One-time bench (v51): retire the GIS-admin/enterprise ESRI certs + upper Python ladder — off-target for an OT-Convergence Security Architect
-  try {
-    if (!localStorage.getItem('ct2-bench-v51')) {
-      ['arcgis-utility-net','esri-ent-admin','arcgis-pro-pro','esri-ent-prof','esri-geodata-prof','esri-system-design','pcpp1','pcpp2'].forEach(id => { if (state.myPath) delete state.myPath[id]; });
-      localStorage.setItem(SK.myPath, JSON.stringify(state.myPath));
-      localStorage.setItem('ct2-bench-v51', '1');
-    }
-  } catch {}
-
-
-  // Migration: drop references to certs no longer in the data
-  const validIds = new Set(CERTS.map(c => c.id));
-  Object.keys(state.passes).forEach(id => { if (!validIds.has(id)) delete state.passes[id]; });
-  Object.keys(state.exams).forEach(id =>  { if (!validIds.has(id)) delete state.exams[id]; });
-  Object.keys(state.skipped).forEach(id => { if (!validIds.has(id)) delete state.skipped[id]; });
-}
-const save = {
-  passes: () => localStorage.setItem(SK.passes, JSON.stringify(state.passes)),
-  myPath: () => localStorage.setItem(SK.myPath, JSON.stringify(state.myPath)),
-  exams:  () => localStorage.setItem(SK.exams,  JSON.stringify(state.exams)),
-  notes:  () => localStorage.setItem(SK.notes,  JSON.stringify(state.notes)),
-  study:  () => localStorage.setItem(SK.study,  JSON.stringify(state.studyLog)),
-  openPh: () => localStorage.setItem(SK.openPh, state.openPhase),
-  filter: () => localStorage.setItem(SK.filter, state.filter),
-  skipped:() => localStorage.setItem(SK.skipped, JSON.stringify(state.skipped)),
-  backup: () => localStorage.setItem(SK.backup, state.lastBackup || ''),
-};
+// State and persistence are defined in src/state-core.js.
 
 // ───── HELPERS ────────────────────────────────────────────────────────────
+function certPhase(cert) { return window.CertTrackerV3?.store?.effectivePhase ? window.CertTrackerV3.store.effectivePhase(cert) : Number(cert?.phase || 6); }
 function today() { return new Date().toISOString().split('T')[0]; }
 function formatPassDate(iso) {
   if (!iso) return '';
@@ -239,7 +105,7 @@ function weeklyActions(cert) {
   const studyMap = {
     'security-plus':  ['Watch Professor Messer SY0-701 free YouTube series (~12 hrs total — break into 30-min blocks).', 'Drill subnetting and port memorisation daily — 15 min via subnettingpractice.com.'],
     'cysa-plus':      ['Build one KQL query a day in a free Sentinel tenant — start with sign-in anomalies.', 'Review Jason Dion CySA+ Udemy practice exam questions in 30-min daily blocks.'],
-    'secai-plus':     ['Read OWASP LLM Top 10 (~2 hrs total). It is 80% of the exam content.', 'Run one PyRIT probe against the Azure OpenAI sandbox this week.'],
+    'secai-plus':     ['Read OWASP LLM Top 10 (~2 hrs total). Use it as a core reference and verify coverage against the current exam objectives.', 'Run one PyRIT probe against the Azure OpenAI sandbox this week.'],
     'az-104':         ['Spin up a free Azure tenant and follow Scott Duffy AZ-104 Udemy Module 1.', 'Build one VNet + subnet + NSG combo from scratch (no GUI — use CLI or Bicep).'],
     'az-400':         ['Set up an Azure DevOps pipeline that deploys a Bicep template via OIDC — 2 hours, covers ~30% of the exam.', 'Watch John Savill AZ-400 Study Cram (~4 hrs, free).'],
     'sc-300':         ['Configure a Conditional Access policy with named locations and break-glass account in the Entra tenant.', 'Document one PIM activation flow as a runbook — exportable portfolio piece.'],
@@ -257,7 +123,7 @@ function weeklyActions(cert) {
     'az-900':         ['Watch John Savill AZ-900 Study Cram (~4 hrs, free).', 'Take Microsoft Learn practice assessment — score 80%+ before booking.'],
     'sc-900':         ['Read Microsoft Learn SC-900 path (~6 hrs).', 'Practice questions on Microsoft Learn until 85%+.'],
     'ccna':           ['Set up Cisco Packet Tracer (free) and build a 2-router static-route lab.', 'Watch Jeremy IT Lab CCNA YouTube — Module 1 (free).'],
-    'mcit':           ['Complete Milestone XProtect VMS Essentials (free, ~4 hrs) on Axis Academy.', 'Build a small XProtect Express+ test deployment — even just two cameras.'],
+    'mcit':           ['Complete Milestone XProtect VMS Essentials (free, ~4 hrs) in the Milestone Learning Portal.', 'Build a small XProtect Express+ test deployment — even just two cameras.'],
     'mcie':           ['Tour the Milestone Integration Tools and document one integration scenario.', 'Practise XProtect troubleshooting flows — the exam tests these heavily.'],
     'acp':            ['Complete the Axis Academy ACP eLearning path (free, ~15 hrs).', 'Configure one Axis camera end-to-end in the home lab — record the steps.'],
     'lca':            ['Complete LenelS2 fundamentals on the partner portal (~6 hrs).', 'Practise OnGuard or Elements navigation — exam tests UI fluency.'],
@@ -283,7 +149,7 @@ function weeklyActions(cert) {
 }
 function currentPhase() {
   for (let p = 1; p <= 6; p++) {
-    if (CERTS.filter(c => c.phase === p && c.track === 'CORE').some(c => !state.passes[c.id])) return p;
+    if (CERTS.filter(c => certPhase(c) === p && c.track === 'CORE').some(c => !state.passes[c.id])) return p;
   }
   return 6;
 }
@@ -298,10 +164,10 @@ function nextCoreCert(filterTest) {
   // Otherwise, restrict to current phase (original behaviour).
   const pool = filterTest
     ? CERTS.filter(c => filterTest(c) && !state.passes[c.id] && !state.skipped[c.id])
-    : CERTS.filter(c => c.phase === ph && !state.passes[c.id] && !state.skipped[c.id]);
+    : CERTS.filter(c => certPhase(c) === ph && !state.passes[c.id] && !state.skipped[c.id]);
 
   const candidates = pool
-    .map(c => ({ cert: c, ps: priorityScore(c), depsOK: depsMet(c), inCurrentPhase: c.phase === ph }))
+    .map(c => ({ cert: c, ps: priorityScore(c), depsOK: depsMet(c), inCurrentPhase: certPhase(c) === ph }))
     .sort((a, b) => {
       // Filter-aware mode prefers current-phase certs first; otherwise stays unchanged
       if (filterTest && a.inCurrentPhase !== b.inCurrentPhase) return a.inCurrentPhase ? -1 : 1;
@@ -814,7 +680,7 @@ function renderDashboard() {
         <div class="stat-pill"><div class="stat-pill-num" style="color:var(--amber)">${gatewayPassed}/${gatewayCerts.length}</div><div class="stat-pill-label">🔑 Gateway</div></div>
         <div class="stat-pill"><div class="stat-pill-num" style="color:${thisWeekHours >= studyTarget ? 'var(--green)' : thisWeekHours >= studyTarget * 0.5 ? 'var(--blue)' : 'var(--amber)'}">${thisWeekHours.toFixed(1)}h</div><div class="stat-pill-label">This week (${studyTarget}h target)</div></div>
         <div class="stat-pill"><div class="stat-pill-num">${(() => {
-          const phaseSet = scopeCerts.filter(c => c.phase === ph);
+          const phaseSet = scopeCerts.filter(c => certPhase(c) === ph);
           const phPassed = phaseSet.filter(c => state.passes[c.id]).length;
           return `${phPassed}/${phaseSet.length}`;
         })()}</div><div class="stat-pill-label">Phase ${ph}${scoped ? ' (scoped)' : ''}</div></div>
@@ -822,7 +688,7 @@ function renderDashboard() {
       ${(() => {
         // Pace outlook — deadline-free: remaining hours ÷ pace = ETA
         const hoursNeeded = scopeCerts
-          .filter(c => c.phase === ph && !state.passes[c.id] && !state.skipped[c.id])
+          .filter(c => certPhase(c) === ph && !state.passes[c.id] && !state.skipped[c.id])
           .reduce((s2, c) => s2 + (c.hours ? (c.hours[0]+c.hours[1])/2 : 0), 0);
         if (hoursNeeded === 0) return '';
         const pace = (state.pace2 && Date.now() >= new Date('2026-09-01')) ? state.pace2 : studyTarget;
@@ -903,7 +769,7 @@ function renderDashboard() {
       const found = allChips.find(f => f.id === activeFilterId);
       if (found && found.test) filterTest = found.test;
     }
-    const all = CERTS.filter(c => c.phase === p && (filterTest ? filterTest(c) : true));
+    const all = CERTS.filter(c => certPhase(c) === p && (filterTest ? filterTest(c) : true));
     const core = all.filter(c => c.track === 'CORE');
     const cpPassed = core.filter(c => state.passes[c.id]).length;
     const allPassed = all.filter(c => state.passes[c.id]).length;
@@ -2158,7 +2024,7 @@ function renderCertifications() {
     </div>`;
 
   const blocks = [1, 2, 3, 4, 5, 6].map(ph => {
-    let phaseCerts = CERTS.filter(c => c.phase === ph).filter(activeFilter.test);
+    let phaseCerts = CERTS.filter(c => certPhase(c) === ph).filter(activeFilter.test);
     if (state.passedOnly) phaseCerts = phaseCerts.filter(c => state.passes[c.id]);
     if (searchTest) phaseCerts = phaseCerts.filter(searchTest);
     let certs = orderPhaseCerts(phaseCerts);
@@ -2175,7 +2041,7 @@ function renderCertifications() {
     const totalCerts = phaseCerts.length;
     const passed = phaseCerts.filter(c => state.passes[c.id]).length;
     // Phase ROI summary — average ROI across non-passed certs (what's still ahead)
-    const remaining = CERTS.filter(c => c.phase === ph && !state.passes[c.id] && c.roi > 0);
+    const remaining = CERTS.filter(c => certPhase(c) === ph && !state.passes[c.id] && c.roi > 0);
     const avgROI = remaining.length ? (remaining.reduce((s, c) => s + c.roi, 0) / remaining.length).toFixed(1) : null;
     const isOpen = state.openPhase === ph;
     const numClass = passed === totalCerts ? 'done' : passed > 0 ? 'partial' : 'pending';
@@ -2435,7 +2301,7 @@ function renderCertRow(cert, isNext = false) {
       <button class="cert-expand-toggle">${isOpen ? '▲' : '▼'}</button>
     </div>`;
 
-  if (!isOpen) return `<div class="cert-row roi-${cert.roi || 0} ${pd ? 'passed' : ''} ${cert.gateway ? 'gateway' : ''} ${isNext ? 'is-next' : ''} ${state.skipped[cert.id] ? 'is-skipped' : ''} ${cert.pending && !pd ? 'is-pending' : ''} ${cert.applicationBased && !pd ? 'is-portfolio' : ''}" data-cid="${cert.id}" data-cph="${cert.phase}"><span class="drag-handle" title="Hold and drag to reorder">⠿</span>${summary}</div>`;
+  if (!isOpen) return `<div class="cert-row roi-${cert.roi || 0} ${pd ? 'passed' : ''} ${cert.gateway ? 'gateway' : ''} ${isNext ? 'is-next' : ''} ${state.skipped[cert.id] ? 'is-skipped' : ''} ${cert.pending && !pd ? 'is-pending' : ''} ${cert.applicationBased && !pd ? 'is-portfolio' : ''}" data-cid="${cert.id}" data-cph="${certPhase(cert)}"><span class="drag-handle" title="Hold and drag to reorder">⠿</span>${summary}</div>`;
 
   const deps = (cert.deps || []).map(id => CERTS.find(c => c.id === id)).filter(Boolean);
   const depsPassed = deps.every(d => state.passes[d.id]);
@@ -2506,7 +2372,7 @@ function renderCertRow(cert, isNext = false) {
       ${state.openCerts[cert.id + '_notes'] ? renderNotesPanel(cert, certNotes) : ''}
     </div>`;
 
-  return `<div class="cert-row roi-${cert.roi || 0} ${pd ? 'passed' : ''} ${cert.gateway ? 'gateway' : ''} ${isNext ? 'is-next' : ''} ${state.skipped[cert.id] ? 'is-skipped' : ''} ${cert.pending && !pd ? 'is-pending' : ''} ${cert.applicationBased && !pd ? 'is-portfolio' : ''}" data-cid="${cert.id}" data-cph="${cert.phase}"><span class="drag-handle" title="Hold and drag to reorder">⠿</span>${summary}${details}</div>`;
+  return `<div class="cert-row roi-${cert.roi || 0} ${pd ? 'passed' : ''} ${cert.gateway ? 'gateway' : ''} ${isNext ? 'is-next' : ''} ${state.skipped[cert.id] ? 'is-skipped' : ''} ${cert.pending && !pd ? 'is-pending' : ''} ${cert.applicationBased && !pd ? 'is-portfolio' : ''}" data-cid="${cert.id}" data-cph="${certPhase(cert)}"><span class="drag-handle" title="Hold and drag to reorder">⠿</span>${summary}${details}</div>`;
 }
 
 function renderNotesPanel(cert, certNotes) {
@@ -2631,8 +2497,6 @@ function togglePartner(k) {
       const newPh = parseInt(drag.targetPhase, 10);
       state.phaseOverrides = state.phaseOverrides || {};
       state.phaseOverrides[id] = newPh;
-      const c = CERTS.find(x => x.id === id);
-      if (c) c.phase = newPh;
       state.certOrder = state.certOrder || {};
       state.certOrder[drag.ph] = (state.certOrder[drag.ph] || []).filter(x => x !== id);
       state.certOrder[newPh] = [...(state.certOrder[newPh] || []).filter(x => x !== id), id];
@@ -2785,7 +2649,7 @@ function shade(hex, pct) {
   return '#' + [r,g,b].map(function(v){ return Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0'); }).join('');
 }
 const CAPSTONE_CERTS = new Set(['cissp','iec-62443-expert','ukcsc-chcsp','csyp','issap','sc-100']);
-function medalScore(c){ return (c.difficulty||0) + 0.8*((c.phase||1)-1) + 0.4*(c.roi||0) + (c.gateway&&!CAPSTONE_CERTS.has(c.id)?1:0); }
+function medalScore(c){ return (c.difficulty||0) + 0.8*((certPhase(c)||1)-1) + 0.4*(c.roi||0) + (c.gateway&&!CAPSTONE_CERTS.has(c.id)?1:0); }
 let _MEDAL_RANK = null;
 function medalRankMap(){
   if(_MEDAL_RANK) return _MEDAL_RANK;
@@ -2825,7 +2689,7 @@ function certBadgeSVG(cert) {
   const faceC = FACES[mtier] || FACES.silver;
   const c1n = faceC[1], c2n = faceC[0];
   const PHASE_NEON = {1:'#55d6ff',2:'#ff6ee0',3:'#3ee6a0',4:'#ffc94d',5:'#ff5d7d',6:'#b3a6e0'};
-  const accentN = PHASE_NEON[cert.phase] || '#ff7ad9';
+  const accentN = PHASE_NEON[certPhase(cert)] || '#ff7ad9';
   const faceTop = shade(c2n, 0.12);
 
   let outer, inner, midband = '', beading = '';
@@ -3102,7 +2966,7 @@ function phaseETA(ph) {
   // Live estimate: remaining unpassed/unskipped/self-funded hours in this and prior phases ÷ pace
   const pace = (state.pace2 && Date.now() >= new Date('2026-09-01')) ? state.pace2 : (state.studyTarget || 13);
   let hrs = 0;
-  CERTS.filter(c => state.myPath[c.id] && c.phase <= ph && !state.passes[c.id] && !state.skipped[c.id])
+  CERTS.filter(c => state.myPath[c.id] && certPhase(c) <= ph && !state.passes[c.id] && !state.skipped[c.id])
        .forEach(c => hrs += (c.hours ? (c.hours[0]+c.hours[1])/2 : 0));
   if (hrs <= 0 || pace <= 0) return null;
   const eta = new Date(Date.now() + (hrs/pace)*7*86400000);
@@ -3235,7 +3099,7 @@ function importJSON() {
         if (data.artifacts) { state.artifacts = data.artifacts; try { localStorage.setItem('ct2-artifacts', JSON.stringify(state.artifacts)); } catch {} }
         if (data.partners) { state.partners = data.partners; try { localStorage.setItem('ct2-partners', JSON.stringify(state.partners)); } catch {} }
         if (data.certOrder) { state.certOrder = data.certOrder; try { localStorage.setItem('ct2-order', JSON.stringify(state.certOrder)); } catch {} }
-        if (data.phaseOverrides) { state.phaseOverrides = data.phaseOverrides; try { localStorage.setItem('ct2-phase-ovr', JSON.stringify(state.phaseOverrides)); } catch {} Object.entries(state.phaseOverrides).forEach(([id, ph]) => { const c = CERTS.find(x => x.id === id); if (c && ph >= 1 && ph <= 6) c.phase = ph; }); }
+        if (data.phaseOverrides) { state.phaseOverrides = data.phaseOverrides; try { localStorage.setItem('ct2-phase-ovr', JSON.stringify(state.phaseOverrides)); } catch {} }
         if (Array.isArray(data.eventsDismissed)) state.eventsDismissed = data.eventsDismissed;
         save.passes(); save.exams(); save.cpe(); save.notes(); save.gates(); save.study();
         try {
@@ -3261,8 +3125,3 @@ function importJSON() {
 // ───── INIT ───────────────────────────────────────────────────────────────
 loadState();
 renderApp();
-checkAndNotify();
-
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js').catch(() => {});
-}

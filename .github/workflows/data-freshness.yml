@@ -1,4 +1,4 @@
-name: Certification Data Freshness
+name: Certification Data Health
 
 on:
   schedule:
@@ -12,11 +12,11 @@ jobs:
   freshness:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Generate freshness review summary
+      - name: Check stored verification age
         run: npm run test:freshness
+      - name: Check audited official sources
+        run: npm run test:sources

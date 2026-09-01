@@ -12,11 +12,21 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Run regression and data-contract checks
+      - name: Static, data-contract and privacy checks
         run: npm test
+      - name: Browser regression suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 >/tmp/certtracker-http.log 2>&1 &
+          server=$!
+          trap 'kill $server || true' EXIT
+          sleep 2
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
+          test -n "$chrome"
+          "$chrome" --headless=new --no-sandbox --disable-gpu --disable-dev-shm-usage --virtual-time-budget=45000 --dump-dom http://127.0.0.1:4173/tests.html > /tmp/certtracker-tests.html
+          grep -Eq 'All [0-9]+ executed checks passed' /tmp/certtracker-tests.html || { grep -E 'summary|PASS|FAIL|SKIP|Fatal browser error|Fatal promise rejection' /tmp/certtracker-tests.html || cat /tmp/certtracker-tests.html; exit 1; }

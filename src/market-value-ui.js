@@ -1,64 +1,12 @@
-// Cert Tracker v3.1 — transparent £ market-value view.
-(function initMarketValueUI(global) {
+// Cert Tracker — transparent £ market-value view.
+(function initMarketValueUI(global){
   'use strict';
-  const CT = global.CertTrackerV3;
-  if (!CT?.marketValue) return;
-  const esc = CT.util.escapeHtml;
-
-  function injectStyle() {
-    if (document.getElementById('ct31-market-style')) return;
-    const style = document.createElement('style');
-    style.id = 'ct31-market-style';
-    style.textContent = `
-      #ct31-market-launcher{position:fixed;right:92px;bottom:18px;z-index:9997;border:1px solid rgba(255,255,255,.18);background:rgba(23,17,48,.94);color:#fff;border-radius:999px;padding:10px 13px;font:600 12px/1 IBM Plex Sans,sans-serif;box-shadow:0 8px 30px rgba(0,0,0,.28);cursor:pointer;backdrop-filter:blur(14px)}
-      .ct31-value-band{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:9px}.ct31-value-band>div{padding:9px;border:1px solid rgba(255,255,255,.09);border-radius:9px;text-align:center}.ct31-value-band strong{display:block;font:700 15px IBM Plex Mono,monospace}.ct31-value-band span{font-size:10px;color:#aaa4c8}
-      @media(max-width:640px){#ct31-market-launcher{right:82px;bottom:12px;padding:10px 11px}}
-    `;
-    document.head.appendChild(style);
-  }
-
-  function close(wrap) { wrap?.remove(); }
-  function open() {
-    const old = document.getElementById('ct31-market-modal');
-    if (old) { old.remove(); return; }
-    const summary = CT.marketValue.portfolioSummary();
-    const picks = CT.recommendations?.recommend({ limit: 8 }) || [];
-    const role = summary.dominantRole;
-    const rows = picks.map((item, index) => {
-      const v = item.marketValue || CT.marketValue.contribution(item.cert);
-      const ratio = v.valueToCostRatio == null ? 'employer/free' : `${v.valueToCostRatio}× signal/cost`;
-      return `<div class="ct3-row"><div><strong>${index + 1}. ${esc(item.name)}</strong><div class="ct3-muted">${esc(v.role.label)} · ${esc(v.evidence)} · ${Math.round(v.valuePerStudyHour).toLocaleString('en-GB')} £-signal/study-hour</div></div><div style="text-align:right"><strong>${esc(v.contributionLabel)}</strong><div class="ct3-muted">${esc(v.confidence)} · ${esc(ratio)}</div></div></div>`;
-    }).join('');
-
-    const wrap = document.createElement('div');
-    wrap.id = 'ct31-market-modal';
-    wrap.className = 'ct3-backdrop';
-    wrap.innerHTML = `<section class="ct3-panel" role="dialog" aria-modal="true" aria-label="Market value"><div class="ct3-head"><div><div class="ct3-title">£ Market value & ROI</div><div class="ct3-sub">UK benchmark snapshot ${esc(CT.marketValue.SNAPSHOT.asOf)} · ranges, not salary promises</div></div><button class="ct3-close" aria-label="Close">×</button></div><div class="ct3-body">
-      <div class="ct3-grid"><div class="ct3-card"><h3>Dominant path market</h3><div class="ct3-big">${esc(role.label)}</div><div class="ct31-value-band"><div><strong>${CT.marketValue.money(role.low)}</strong><span>LOW</span></div><div><strong>${CT.marketValue.money(role.median)}</strong><span>MEDIAN</span></div><div><strong>${CT.marketValue.money(role.high)}</strong><span>HIGH</span></div></div></div><div class="ct3-card"><h3>Completed-path signal</h3><div class="ct3-big">${CT.marketValue.money(summary.indicativeSignalBuilt)}</div><div class="ct3-muted">Aggregate CV/career signal estimate — deliberately not added to salary.</div></div></div>
-      <div class="ct3-notice">${esc(CT.marketValue.SNAPSHOT.disclaimer)}</div>
-      <div class="ct3-card"><h3>Highest-value available moves</h3>${rows || '<div class="ct3-muted">No available certifications.</div>'}</div>
-      <div class="ct3-card" style="margin-top:12px"><h3>Method</h3><div class="ct3-muted">Role salary bands come from current UK market benchmarks. Per-cert contribution starts from the tracker’s historical £ CV-value signal, then widens or narrows according to data confidence and certification seniority. ROI is also shown against focused study time and direct self-funded cost. These numbers estimate market signalling value, not guaranteed compensation.</div></div>
-    </div></section>`;
-    wrap.addEventListener('mousedown', e => { if (e.target === wrap) close(wrap); });
-    wrap.querySelector('.ct3-close').addEventListener('click', () => close(wrap));
-    document.body.appendChild(wrap);
-    wrap.querySelector('.ct3-close').focus();
-  }
-
-  function init() {
-    injectStyle();
-    if (document.getElementById('ct31-market-launcher')) return;
-    const button = document.createElement('button');
-    button.id = 'ct31-market-launcher';
-    button.type = 'button';
-    button.textContent = '£ ROI';
-    button.setAttribute('aria-label', 'Open market value and ROI');
-    button.addEventListener('click', open);
-    document.body.appendChild(button);
-  }
-
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
-  else init();
-
-  CT.marketValueUI = Object.freeze({ open });
+  const CT=global.CertTrackerV3;if(!CT?.marketValue)return;const esc=CT.util.escapeHtml;
+  function injectStyle(){if(document.getElementById('ct31-market-style'))return;const style=document.createElement('style');style.id='ct31-market-style';style.textContent=`#ct31-market-launcher{position:fixed;right:92px;bottom:18px;z-index:9997;border:1px solid rgba(255,255,255,.18);background:rgba(23,17,48,.94);color:#fff;border-radius:999px;padding:10px 13px;font:600 12px/1 ui-sans-serif,system-ui,sans-serif;box-shadow:0 8px 30px rgba(0,0,0,.28);cursor:pointer;backdrop-filter:blur(14px)}.ct31-value-band{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:9px}.ct31-value-band>div{padding:9px;border:1px solid rgba(255,255,255,.09);border-radius:9px;text-align:center}.ct31-value-band strong{display:block;font:700 15px ui-monospace,monospace}.ct31-value-band span{font-size:10px;color:#aaa4c8}@media(max-width:640px){#ct31-market-launcher{right:82px;bottom:12px;padding:10px 11px}}`;document.head.appendChild(style);}
+  function close(wrap){wrap?.remove();}
+  function open(){const old=document.getElementById('ct31-market-modal');if(old){old.remove();return;}const summary=CT.marketValue.portfolioSummary(),picks=CT.recommendations?.recommend({limit:8})||[],role=summary.dominantRole;const rows=picks.map((item,index)=>{const v=item.marketValue||CT.marketValue.contribution(item.cert),ratio=v.valueToCostRatio==null?'employer/free':`${v.valueToCostRatio}× signal/cost`;return `<div class="ct3-row"><div><strong>${index+1}. ${esc(item.name)}</strong><div class="ct3-muted">${esc(v.role.label)} · ${esc(v.evidence)} · ${Math.round(v.valuePerStudyHour).toLocaleString('en-GB')} £-signal/study-hour · ${v.overlap}% overlap</div></div><div style="text-align:right"><strong>${esc(v.contributionLabel)}</strong><div class="ct3-muted">${esc(v.confidence)} · ${esc(ratio)}</div></div></div>`;}).join('');
+    const wrap=document.createElement('div');wrap.id='ct31-market-modal';wrap.className='ct3-backdrop';wrap.innerHTML=`<section class="ct3-panel" role="dialog" aria-modal="true" aria-label="Market value"><div class="ct3-head"><div><div class="ct3-title">£ Market value & ROI</div><div class="ct3-sub">UK benchmark snapshot ${esc(CT.marketValue.SNAPSHOT.asOf)} · marginal ranges, not salary promises</div></div><button class="ct3-close" aria-label="Close">×</button></div><div class="ct3-body"><div class="ct3-grid"><div class="ct3-card"><h3>Dominant path market</h3><div class="ct3-big">${esc(role.label)}</div><div class="ct31-value-band"><div><strong>${CT.marketValue.money(role.low)}</strong><span>LOW</span></div><div><strong>${CT.marketValue.money(role.median)}</strong><span>MEDIAN</span></div><div><strong>${CT.marketValue.money(role.high)}</strong><span>HIGH</span></div></div></div><div class="ct3-card"><h3>Completed-path signal</h3><div class="ct3-big">${CT.marketValue.money(summary.indicativeSignalBuilt)}</div><div class="ct3-muted">Aggregate marginal career-signal estimate after competency overlap; deliberately not added to salary.</div></div></div><div class="ct3-notice">${esc(CT.marketValue.SNAPSHOT.disclaimer)}</div><div class="ct3-card"><h3>Highest-value available moves</h3>${rows||'<div class="ct3-muted">No available certifications.</div>'}</div><div class="ct3-card" style="margin-top:12px"><h3>Method</h3><div class="ct3-muted">Role bands come from UK market benchmarks. Each certification starts with a historical career-signal estimate, adjusted for ROI, seniority and data confidence, then discounted for competency overlap with the completed portfolio. Gateway credentials retain a minimum signalling floor. The figures estimate marginal market signalling value, not guaranteed compensation.</div></div></div></section>`;
+    wrap.addEventListener('mousedown',e=>{if(e.target===wrap)close(wrap);});wrap.querySelector('.ct3-close').addEventListener('click',()=>close(wrap));document.body.appendChild(wrap);wrap.querySelector('.ct3-close').focus();}
+  function init(){injectStyle();if(document.getElementById('ct31-market-launcher'))return;const button=document.createElement('button');button.id='ct31-market-launcher';button.type='button';button.textContent='£ ROI';button.setAttribute('aria-label','Open market value and ROI');button.addEventListener('click',open);document.body.appendChild(button);}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();CT.marketValueUI=Object.freeze({open});
 })(window);
