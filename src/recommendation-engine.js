@@ -166,9 +166,14 @@
     };
   }
 
+  // Keep legacy dashboard priority labels consistent with the v3 catalogue.
   if (typeof priorityScore === 'function') {
     const original = priorityScore;
-    priorityScore = cert => cert?.track === 'FOUNDATION' ? 4 : original(cert);
+    priorityScore = cert => {
+      if (cert?.track === 'FOUNDATION' || cert?.track === 'ARCHITECT') return 4;
+      if (cert?.track === 'IDENTITY-SEC') return 3;
+      return original(cert);
+    };
   }
 
   CT.recommendations = Object.freeze({ GOALS, currentGoal, setGoal, dependencies, goalRelevance, score, recommend, explainTop, scenario });
