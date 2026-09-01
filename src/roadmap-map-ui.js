@@ -13,6 +13,13 @@
     const certs=state.filter==='my-path'?CERTS.filter(c=>state.myPath?.[c.id]):CERTS.slice();
     return {certs,label:state.filter==='my-path'?'My Path':'All certs',scoped:state.filter!=='all'};
   }
+  function filterOptions(){
+    if(typeof global.getFilterDefs!=='function')return[{id:'my-path',label:'My Path'},{id:'all',label:'All'}];
+    const {filters,filterGroups}=global.getFilterDefs(),rows=[];
+    (filters||[]).filter(x=>x.test).forEach(x=>rows.push({id:x.id,label:x.label.replace(/\s*▾$/,'')}));
+    Object.values(filterGroups||{}).forEach(group=>(group.chips||[]).filter(x=>x.test).forEach(x=>rows.push({id:x.id,label:x.label.replace(/\s*▾$/,'')})));
+    return [...new Map(rows.map(x=>[x.id,x])).values()];
+  }
   function sortCerts(rows){return rows.slice().sort((a,b)=>{
     const ap=!!state.passes?.[a.id],bp=!!state.passes?.[b.id];if(ap!==bp)return ap?-1:1;
     const ad=(a.deps||[]).filter(id=>!state.passes?.[id]).length,bd=(b.deps||[]).filter(id=>!state.passes?.[id]).length;if(ad!==bd)return ad-bd;
@@ -57,7 +64,7 @@
   function certNode(cert,scopeIds){
     const card=CT.careerFramework.scoreCard(cert),profile=CT.learningResources.profile(cert),done=!!state.passes?.[cert.id],blocked=(cert.deps||[]).some(id=>!state.passes?.[id]),readiness=CT.competency?.readiness?.(cert)?.score||0;
     const status=done?'Completed':blocked?'Dependency blocked':`${card.T} · K${card.K} · M${card.M}`;
-    return `<details class="ct-map-cert ${done?'done':''} ${blocked&&!done?'blocked':''}">
+    return `<details id="ct-map-cert-${esc(cert.id)}" class="ct-map-cert ${done?'done':''} ${blocked&&!done?'blocked':''}" data-map-cert="${esc(cert.id)}">
       <summary><span class="ct-map-node-dot"></span><div class="ct-map-cert-main"><strong>${esc(cert.name)}</strong><span>${esc(cert.code||'')} ${cert.code?'· ':''}${esc(status)} · ${readiness}% exam ready</span></div><span class="ct-map-class">${esc(CT.capabilityGates.portfolioClass(cert,card))}</span></summary>
       <div class="ct-map-cert-body">
         ${dependencyLine(cert,scopeIds)}
@@ -74,30 +81,32 @@
     const key=GATE_AFTER[phase],g=key?CT.capabilityGates.roleGateStatus(key):null;if(!g)return'';
     const pillarRows=Object.entries(g.requirements.pillars||{}).map(([pillar,required])=>{const snap=CT.capabilityGates.pillarSnapshot()[pillar];return `<li class="${(snap?.score||0)>=required?'met':''}"><b>${esc(snap?.label||pillar)}</b><span>${snap?.score||0}% / ${required}%</span></li>`;}).join('');
     const evidenceRows=Object.entries(g.requirements.evidence||{}).map(([id,required])=>evidenceRequirement(id,required)).join('');
-    return `<details class="ct-map-gate ${g.ready?'ready':''}"><summary><span>PHASE ${phase} EXIT / ROLE GATE</span><strong>${esc(g.label)}</strong><b>${g.score}%${g.ready?' ✓':''}</b></summary><div class="ct-map-gate-body"><div><h4>Capability thresholds</h4><ul>${pillarRows}</ul></div><div><h4>Practical evidence thresholds</h4><ul>${evidenceRows}</ul></div>${g.blockers.length?`<div class="ct-map-gate-blockers"><h4>Current blockers</h4>${g.blockers.slice(0,8).map(x=>`<span>→ ${esc(x)}</span>`).join('')}</div>`:'<div class="ct-map-gate-ready">Gate requirements are currently met.</div>'}</div></details>`;
+    return `<details id="ct-map-gate-${phase}" class="ct-map-gate ${g.ready?'ready':''}"><summary><span>PHASE ${phase} EXIT / ROLE GATE</span><strong>${esc(g.label)}</strong><b>${g.score}%${g.ready?' ✓':''}</b></summary><div class="ct-map-gate-body"><div><h4>Capability thresholds</h4><ul>${pillarRows}</ul></div><div><h4>Practical evidence thresholds</h4><ul>${evidenceRows}</ul></div>${g.blockers.length?`<div class="ct-map-gate-blockers"><h4>Current blockers</h4>${g.blockers.slice(0,8).map(x=>`<span>→ ${esc(x)}</span>`).join('')}</div>`:'<div class="ct-map-gate-ready">Gate requirements are currently met.</div>'}</div></details>`;
   }
   function phaseSummary(phase,certs){
     const subjects=certs.flatMap(c=>CT.learningResources.profile(c).subjects.map(s=>({cert:c,subject:s,advice:tutorAdvice(c,s)}))),tutors=subjects.filter(x=>x.advice),deep=subjects.filter(x=>x.subject.depth>=4),done=certs.filter(c=>state.passes?.[c.id]).length;
     return `<div class="ct-map-phase-summary"><span><b>${done}/${certs.length}</b> certifications complete</span><span><b>${subjects.length}</b> subject branches</span><span><b>${deep.length}</b> D4/D5 depth areas</span><span><b>${tutors.length}</b> tutor checkpoints / escalation points</span></div>`;
+  }
+  function navigation(rows){
+    const filters=filterOptions(),certs=sortCerts(rows),filterHtml=filters.map(x=>`<option value="${esc(x.id)}"${x.id===state.filter?' selected':''}>${esc(x.label)}</option>`).join(''),certHtml=certs.map(c=>`<option value="${esc(c.id)}">P${CT.store.effectivePhase(c)} · ${esc(c.code||c.name)}${c.code?` · ${esc(c.name)}`:''}</option>`).join('');
+    return `<div class="ct-map-toolbar"><div class="ct-map-tool"><label>Path filter</label><select data-map-filter>${filterHtml}</select></div><div class="ct-map-tool grow"><label>Jump to certification</label><select data-map-jump-cert><option value="">Choose certification…</option>${certHtml}</select></div><div class="ct-map-tool"><label>Jump to phase / gate</label><select data-map-jump-phase><option value="">Choose…</option>${[1,2,3,4,5,6].map(p=>`<option value="phase:${p}">Phase ${p}</option><option value="gate:${p}">Phase ${p} gate</option>`).join('')}</select></div><button type="button" class="ct-map-home" data-map-home>Map start</button></div>`;
   }
   function render(){
     const s=scope(),rows=s.certs,scopeIds=new Set(rows.map(c=>c.id)),done=rows.filter(c=>state.passes?.[c.id]).length;
     const phases=[];
     for(let p=1;p<=6;p++){
       const certs=phaseCerts(p,rows),spec=PHASES[p]||{title:`Phase ${p}`,sub:''},pc=certs.filter(c=>state.passes?.[c.id]).length;
-      phases.push(`<section class="ct-map-phase" data-phase="${p}">
-        <header><div class="ct-map-phase-number">P${p}</div><div><strong>${esc(spec.title)}</strong><span>${esc(spec.sub||'')}</span></div><b>${pc}/${certs.length}</b></header>
-        ${phaseSummary(p,certs)}
-        <div class="ct-map-spine">${certs.length?certs.map(c=>certNode(c,scopeIds)).join(''):'<div class="ct-map-empty">No certifications in this filter for Phase '+p+'.</div>'}</div>
-      </section>${gate(p)}${p<6?'<div class="ct-map-phase-arrow" aria-hidden="true">↓</div>':''}`);
+      phases.push(`<section id="ct-map-phase-${p}" class="ct-map-phase" data-phase="${p}"><header><div class="ct-map-phase-number">P${p}</div><div><strong>${esc(spec.title)}</strong><span>${esc(spec.sub||'')}</span></div><b>${pc}/${certs.length}</b></header>${phaseSummary(p,certs)}<div class="ct-map-spine">${certs.length?certs.map(c=>certNode(c,scopeIds)).join(''):'<div class="ct-map-empty">No certifications in this filter for Phase '+p+'.</div>'}</div></section>${gate(p)}${p<6?'<div class="ct-map-phase-arrow" aria-hidden="true">↓</div>':''}`);
     }
-    return `<div class="ct-roadmap-map-workspace">
-      <div class="ct3-card ct-map-hero"><div><div class="ct3-title">Certification Roadmap Map</div><div class="ct3-sub">The entire selected pathway visualised: phases → certification roadmap → prerequisites → subject/sub-domain branches → D1–D5 exam depth → tutor bottlenecks → practical evidence → role gates.</div></div><div class="ct-map-scope"><span>ACTIVE FILTER</span><strong>${esc(s.label)}</strong><b>${done}/${rows.length} complete</b></div></div>
-      <div class="ct3-notice"><strong>Filter-aware:</strong> this map is rebuilt from the currently selected filter chip. Use My Path for the personal certification roadmap, All for the complete catalogue, or select Cloud / Physical / Cyber / role chips to isolate that pathway. Knowledge ROI, dependencies and timing drive sequence before CV value.</div>
-      <div class="ct-map-legend"><span><i class="node"></i> Certification</span><span><i class="branch"></i> Subject / sub-domain branch</span><span>${gauge(4)} D1–D5 exam depth</span><span>🎓 Tutor bottleneck / escalation</span><span><i class="gate"></i> Phase + role gate</span></div>
-      <div class="ct-roadmap-flow">${phases.join('')}</div>
-    </div>`;
+    return `<div class="ct-roadmap-map-workspace"><div class="ct3-card ct-map-hero"><div><div class="ct3-title">Certification Roadmap Map</div><div class="ct3-sub">The entire selected pathway visualised: phases → certification roadmap → prerequisites → subject/sub-domain branches → D1–D5 exam depth → tutor bottlenecks → practical evidence → role gates.</div></div><div class="ct-map-scope"><span>ACTIVE FILTER</span><strong>${esc(s.label)}</strong><b>${done}/${rows.length} complete</b></div></div><div class="ct3-notice"><strong>Filter-aware:</strong> this map is rebuilt from the selected filter chip. On mobile, drag the map naturally in any direction. Use the shortcuts to change pathway scope or jump straight to a certification, phase or gate.</div>${navigation(rows)}<div class="ct-map-legend"><span><i class="node"></i> Certification</span><span><i class="branch"></i> Subject / sub-domain branch</span><span>${gauge(4)} D1–D5 exam depth</span><span>🎓 Tutor bottleneck / escalation</span><span><i class="gate"></i> Phase + role gate</span></div><div class="ct-map-viewport" tabindex="0" aria-label="Scrollable certification roadmap map"><div class="ct-map-canvas">${phases.join('')}</div></div></div>`;
   }
-  function bind(root=document){root.querySelectorAll?.('[data-cert-open]').forEach(button=>button.addEventListener('click',()=>{const cert=CERTS.find(c=>c.id===button.dataset.certOpen);if(!cert)return;state.searchQuery=cert.name;state.currentTab='certifications';global.renderApp?.();}));}
-  CT.roadmapMap=Object.freeze({render,bind,scope,phaseCerts,subdomain,tutorAdvice});
+  function reveal(root,selector){const target=root.querySelector(selector);if(!target)return;if(target.tagName==='DETAILS')target.open=true;target.scrollIntoView({behavior:'smooth',block:'center',inline:'center'});target.classList.add('ct-map-flash');setTimeout(()=>target.classList.remove('ct-map-flash'),1400);}
+  function bind(root=document){
+    root.querySelectorAll?.('[data-cert-open]').forEach(button=>button.addEventListener('click',()=>{const cert=CERTS.find(c=>c.id===button.dataset.certOpen);if(!cert)return;state.searchQuery=cert.name;state.currentTab='certifications';global.renderApp?.();}));
+    root.querySelector?.('[data-map-filter]')?.addEventListener('change',e=>{const id=e.target.value;if(typeof global.setFilter==='function')global.setFilter(id);else{state.filter=id;save.filter?.();global.renderApp?.();}});
+    root.querySelector?.('[data-map-jump-cert]')?.addEventListener('change',e=>{if(e.target.value)reveal(root,`#ct-map-cert-${CSS.escape(e.target.value)}`);});
+    root.querySelector?.('[data-map-jump-phase]')?.addEventListener('change',e=>{const [kind,value]=String(e.target.value||'').split(':');if(!value)return;reveal(root,kind==='gate'?`#ct-map-gate-${value}`:`#ct-map-phase-${value}`);});
+    root.querySelector?.('[data-map-home]')?.addEventListener('click',()=>{const view=root.querySelector('.ct-map-viewport');view?.scrollTo({top:0,left:0,behavior:'smooth'});});
+  }
+  CT.roadmapMap=Object.freeze({render,bind,scope,phaseCerts,subdomain,tutorAdvice,filterOptions});
 })(window);
