@@ -22,8 +22,9 @@
 <script>try{if(sessionStorage.getItem('booted')){document.getElementById('boot-veil').style.display='none';}else{sessionStorage.setItem('booted','1');}}catch(e){}</script>
 <div id="app"></div>
 
-<!-- Canonical catalogue + legacy renderer. v3 modules own domain logic around it. -->
+<!-- Canonical catalogue + frozen legacy renderer. Product logic lives in src/. -->
 <script src="certs.js"></script>
+<script src="src/path-defaults.js"></script>
 <script src="app.js"></script>
 <script src="src/config.js"></script>
 <script src="src/dates.js"></script>
@@ -31,6 +32,7 @@
 <script src="src/validation.js"></script>
 <script src="src/phase-engine.js"></script>
 <script src="src/data-health.js"></script>
+<script src="src/market-value.js"></script>
 <script src="src/recommendation-engine.js"></script>
 <script src="src/exports.js"></script>
 <script src="src/notifications.js"></script>
