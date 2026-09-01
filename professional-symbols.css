@@ -1,47 +1,102 @@
-/* Cert Tracker — professional iconography cleanup.
-   Loads after the depth layer to remove the final legacy palette/icon remnants. */
+/* Cert Tracker — professional iconography and progression-tier system.
+   Loads after the depth layer to remove legacy palette/icon remnants. */
 .header-count{
-  background:none!important;
-  background-image:none!important;
-  -webkit-background-clip:initial!important;
-  background-clip:initial!important;
-  -webkit-text-fill-color:var(--text)!important;
-  color:var(--text)!important;
-  text-shadow:none!important;
+  background:none!important;background-image:none!important;
+  -webkit-background-clip:initial!important;background-clip:initial!important;
+  -webkit-text-fill-color:var(--text)!important;color:var(--text)!important;text-shadow:none!important;
 }
 .header-count small{
-  background:none!important;
-  -webkit-text-fill-color:var(--muted)!important;
-  color:var(--muted)!important;
-  text-shadow:none!important;
+  background:none!important;-webkit-text-fill-color:var(--muted)!important;
+  color:var(--muted)!important;text-shadow:none!important;
 }
 
-/* The old custom medal artwork is replaced at runtime with a neutral credential mark. */
+/* Legacy medal artwork stays hidden. Runtime replaces it with a tier-aware credential emblem. */
 .cert-badge-medallion{display:none!important}
 .ct-credential-mark{
-  width:32px;height:32px;min-width:32px;display:inline-grid;place-items:center;
-  border:1px solid color-mix(in srgb,var(--blue) 34%,var(--border));
-  border-radius:9px;
-  background:linear-gradient(155deg,color-mix(in srgb,var(--blue) 7%,var(--surface-2)),color-mix(in srgb,var(--surface) 94%,black 6%));
-  box-shadow:0 5px 14px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.04);
-  color:var(--blue-text);
+  --ct-tier-accent:var(--border-2);
+  --ct-tier-bg:color-mix(in srgb,var(--surface-2) 92%,black 8%);
+  width:34px;height:34px;min-width:34px;display:inline-grid;place-items:center;position:relative;
+  border:1px solid color-mix(in srgb,var(--ct-tier-accent) 62%,var(--border));
+  background:linear-gradient(155deg,color-mix(in srgb,var(--ct-tier-accent) 11%,var(--surface-2)),var(--ct-tier-bg));
+  box-shadow:0 6px 15px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.045);
+  color:color-mix(in srgb,var(--ct-tier-accent) 72%,white 28%);
   vertical-align:middle;
+  transition:transform .15s ease,border-color .15s ease,box-shadow .15s ease;
 }
-.ct-credential-mark svg{width:18px;height:18px;display:block;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.cert-row.passed .ct-credential-mark,.cert-summary.passed .ct-credential-mark{
-  color:var(--green-text);border-color:color-mix(in srgb,var(--green) 42%,var(--border));
-  background:linear-gradient(155deg,color-mix(in srgb,var(--green) 8%,var(--surface-2)),color-mix(in srgb,var(--surface) 94%,black 6%));
+.ct-credential-mark svg{width:18px;height:18px;display:block;fill:none;stroke:currentColor;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round;position:relative;z-index:2}
+.ct-credential-mark::after{
+  content:"";position:absolute;width:6px;height:6px;right:4px;top:4px;
+  background:var(--ct-tier-accent);border:2px solid var(--surface);border-radius:50%;
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--ct-tier-accent) 48%,transparent);
 }
+.ct-credential-tier-bronze{--ct-tier-accent:#b98558;border-radius:8px}
+.ct-credential-tier-silver{--ct-tier-accent:#a9b7c6;border-radius:7px;clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px)}
+.ct-credential-tier-gold{--ct-tier-accent:#e2b64f;clip-path:polygon(25% 3%,75% 3%,97% 25%,97% 75%,75% 97%,25% 97%,3% 75%,3% 25%)}
+.ct-credential-tier-platinum{--ct-tier-accent:#77bdd5;clip-path:polygon(14% 3%,86% 3%,97% 18%,90% 72%,50% 98%,10% 72%,3% 18%)}
+.ct-credential-tier-diamond{--ct-tier-accent:#71d6c5;clip-path:polygon(50% 0,94% 22%,100% 63%,72% 100%,28% 100%,0 63%,6% 22%)}
+@media(hover:hover) and (pointer:fine){.ct-credential-mark:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.06)}}
+
+/* The prior tier ladder remains recognisable, but badges are restrained and goal-oriented. */
+.badge-tier,.badge-prio,.badge-gateway{
+  border:1px solid transparent!important;
+  box-shadow:none!important;
+  text-transform:uppercase;
+}
+.badge-tier-S,.badge-prio-5{
+  background:color-mix(in srgb,var(--red) 16%,var(--surface-2))!important;
+  color:color-mix(in srgb,var(--red) 64%,white 36%)!important;
+  border-color:color-mix(in srgb,var(--red) 48%,var(--border))!important;
+}
+.badge-tier-A,.badge-prio-4{
+  background:color-mix(in srgb,var(--amber) 13%,var(--surface-2))!important;
+  color:color-mix(in srgb,var(--amber) 62%,white 38%)!important;
+  border-color:color-mix(in srgb,var(--amber) 42%,var(--border))!important;
+}
+.badge-tier-B,.badge-prio-3{
+  background:color-mix(in srgb,var(--blue) 12%,var(--surface-2))!important;
+  color:color-mix(in srgb,var(--blue) 58%,white 42%)!important;
+  border-color:color-mix(in srgb,var(--blue) 40%,var(--border))!important;
+}
+.badge-tier-C,.badge-prio-2{
+  background:color-mix(in srgb,var(--green) 8%,var(--surface-2))!important;
+  color:color-mix(in srgb,var(--green) 48%,var(--muted) 52%)!important;
+  border-color:color-mix(in srgb,var(--green) 28%,var(--border))!important;
+}
+.badge-tier-D,.badge-prio-1{
+  background:color-mix(in srgb,var(--surface-3) 86%,black 14%)!important;
+  color:var(--muted)!important;
+  border-color:var(--border)!important;
+}
+.badge-gateway{
+  background:linear-gradient(180deg,color-mix(in srgb,var(--amber) 19%,var(--surface-2)),color-mix(in srgb,var(--amber) 8%,var(--surface)))!important;
+  color:color-mix(in srgb,var(--amber) 70%,white 30%)!important;
+  border-color:color-mix(in srgb,var(--amber) 54%,var(--border))!important;
+  position:relative;
+}
+.badge-gateway::before{content:"";width:6px;height:6px;border:1.5px solid currentColor;border-radius:50%;display:inline-block;margin-right:5px;box-shadow:inset 0 0 0 1.5px var(--surface-2)}
+
+/* Track and metadata badges use only professional domain accents. */
+.badge-track-A{background:color-mix(in srgb,var(--blue) 10%,var(--surface-2))!important;color:var(--blue-text)!important;border:1px solid color-mix(in srgb,var(--blue) 30%,var(--border))!important}
+.badge-track-B{background:color-mix(in srgb,var(--green) 9%,var(--surface-2))!important;color:var(--green-text)!important;border:1px solid color-mix(in srgb,var(--green) 28%,var(--border))!important}
+.badge-track-C{background:color-mix(in srgb,var(--slate) 11%,var(--surface-2))!important;color:var(--slate-text)!important;border:1px solid color-mix(in srgb,var(--slate) 30%,var(--border))!important}
+.badge-track-all,.badge-pathway,.badge-roi,.badge-diff,.phase-stage-tag,.ct3-pill{
+  background:color-mix(in srgb,var(--slate) 7%,var(--surface-2))!important;
+  color:var(--muted)!important;
+  border:1px solid color-mix(in srgb,var(--slate) 22%,var(--border))!important;
+  box-shadow:none!important;
+}
+.badge-core{background:color-mix(in srgb,var(--amber) 16%,var(--surface-2))!important;color:var(--amber-text)!important;border:1px solid color-mix(in srgb,var(--amber) 34%,var(--border))!important}
+.badge-role{background:color-mix(in srgb,var(--green) 12%,var(--surface-2))!important;color:var(--green-text)!important;border:1px solid color-mix(in srgb,var(--green) 30%,var(--border))!important}
+.badge-cond{background:color-mix(in srgb,var(--blue) 11%,var(--surface-2))!important;color:var(--blue-text)!important;border:1px solid color-mix(in srgb,var(--blue) 30%,var(--border))!important}
+.badge-opt,.badge-post{background:var(--surface-3)!important;color:var(--muted)!important;border:1px solid var(--border)!important}
 
 /* Unified line icons replacing decorative emoji badges. */
 .ct-line-icon{width:16px;height:16px;min-width:16px;display:inline-grid;place-items:center;color:var(--muted);vertical-align:-3px;margin-right:6px}
 .ct-line-icon svg{width:16px;height:16px;display:block;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .banner .ct-line-icon{color:currentColor;opacity:.9;margin-right:1px}
-
-/* Kill remaining legacy medallion glow/palette effects even before runtime replacement. */
 .cbm-svg,.cbm-check{filter:none!important;text-shadow:none!important;box-shadow:none!important}
-
-/* Command dock labels are plain-language only. */
 .ct-command-dock #ct3-launcher{letter-spacing:.01em!important}
 
-@media(max-width:760px){.ct-credential-mark{width:30px;height:30px;min-width:30px}.ct-credential-mark svg{width:17px;height:17px}}
+@media(max-width:760px){
+  .ct-credential-mark{width:31px;height:31px;min-width:31px}.ct-credential-mark svg{width:17px;height:17px}.ct-credential-mark::after{right:3px;top:3px}
+}
