@@ -23,22 +23,32 @@
     if (!/v\d/.test(host.textContent || '')) host.insertAdjacentText('afterbegin', `v${CT.version.app} · `);
   }
 
-  function patchFoundationTrackRow() {
-    const foundation = CERTS.filter(cert => cert.track === 'FOUNDATION');
-    if (!foundation.length || document.querySelector('[data-foundation-track]')) return;
+  function patchMissingTrackRows() {
     const card = [...document.querySelectorAll('.card')].find(el => /Overall & Tracks/i.test(el.querySelector('.card-title')?.textContent || ''));
     if (!card) return;
-    const passed = foundation.filter(cert => state.passes?.[cert.id]).length;
-    const pct = Math.round((passed / foundation.length) * 100);
-    const row = document.createElement('div');
-    row.className = 'track-row'; row.dataset.foundationTrack = '1';
-    row.innerHTML = `<div class="track-row-meta"><span class="badge badge-cond">FOUNDATION</span><span style="font-size:10px;color:var(--dim)">${passed}/${foundation.length}</span></div>${typeof progressBarHTML === 'function' ? progressBarHTML(pct, 'var(--blue)', '5px') : ''}`;
-    card.appendChild(row);
+
+    const tracks = [
+      { track: 'FOUNDATION', colour: 'var(--blue)' },
+      { track: 'ARCHITECT', colour: 'var(--purple, var(--blue))' },
+      { track: 'IDENTITY-SEC', colour: 'var(--cyan, var(--blue))' }
+    ];
+
+    tracks.forEach(({ track, colour }) => {
+      const certs = CERTS.filter(cert => cert.track === track);
+      if (!certs.length || card.querySelector(`[data-v3-track="${track}"]`)) return;
+      const passed = certs.filter(cert => state.passes?.[cert.id]).length;
+      const pct = Math.round((passed / certs.length) * 100);
+      const row = document.createElement('div');
+      row.className = 'track-row';
+      row.dataset.v3Track = track;
+      row.innerHTML = `<div class="track-row-meta"><span class="badge badge-cond">${CT.util.escapeHtml(track)}</span><span style="font-size:10px;color:var(--dim)">${passed}/${certs.length}</span></div>${typeof progressBarHTML === 'function' ? progressBarHTML(pct, colour, '5px') : ''}`;
+      card.appendChild(row);
+    });
   }
 
   function postRender() {
     applyVersionLabel();
-    patchFoundationTrackRow();
+    patchMissingTrackRows();
     if (CT.ux && !document.getElementById('ct3-launcher')) CT.ux.init();
   }
 
@@ -54,8 +64,6 @@
     global[name] = wrapped;
   }
 
-  // Classic-script function declarations normally live on window; direct fallback
-  // below covers engines that expose them only through the shared global scope.
   wrapRenderer('renderApp');
   wrapRenderer('renderTabContent');
   wrapRenderer('updateHeaderCount');
