@@ -1,0 +1,156 @@
+/* Cert Tracker — Professional Depth System
+   Final visual layer for the enterprise theme. No legacy sakura/purple defaults.
+   Adds hierarchy, material depth and restrained pointer-responsive lighting. */
+
+:root{
+  --ct-elev-1:0 8px 22px rgba(0,0,0,.22),0 1px 0 rgba(255,255,255,.025) inset;
+  --ct-elev-2:0 14px 38px rgba(0,0,0,.30),0 1px 0 rgba(255,255,255,.04) inset;
+  --ct-elev-3:0 22px 60px rgba(0,0,0,.38),0 1px 0 rgba(255,255,255,.055) inset;
+  --ct-edge:color-mix(in srgb,var(--border) 78%,white 22%);
+  --ct-panel-top:color-mix(in srgb,var(--surface) 94%,white 6%);
+  --ct-panel-bottom:color-mix(in srgb,var(--surface) 96%,black 4%);
+  --ct-steel:color-mix(in srgb,var(--blue) 44%,var(--green) 18%,var(--muted) 38%);
+}
+
+html,body{background:var(--bg)!important}
+html::before,html::after,body::before,body::after{content:none!important;display:none!important;animation:none!important;background:none!important}
+body{
+  background-image:
+    radial-gradient(900px 520px at 9% -8%,color-mix(in srgb,var(--blue) 10%,transparent),transparent 62%),
+    radial-gradient(760px 460px at 92% 8%,color-mix(in srgb,var(--green) 5%,transparent),transparent 68%),
+    linear-gradient(90deg,color-mix(in srgb,var(--border) 13%,transparent) 1px,transparent 1px),
+    linear-gradient(0deg,color-mix(in srgb,var(--border) 10%,transparent) 1px,transparent 1px),
+    linear-gradient(180deg,color-mix(in srgb,var(--surface) 16%,var(--bg)),var(--bg) 34%,color-mix(in srgb,var(--surface-2) 8%,var(--bg)))!important;
+  background-size:auto,auto,56px 56px,56px 56px,auto!important;
+  background-attachment:fixed!important;
+}
+
+/* Product shell */
+.header{
+  background:linear-gradient(180deg,color-mix(in srgb,var(--surface) 97%,white 3%),color-mix(in srgb,var(--surface) 93%,black 7%))!important;
+  border-bottom:1px solid var(--ct-edge)!important;
+  box-shadow:0 14px 38px rgba(0,0,0,.34),0 -1px 0 rgba(255,255,255,.03) inset!important;
+  backdrop-filter:blur(20px) saturate(120%)!important;
+}
+.header-title{font-weight:780!important;letter-spacing:-.025em!important;text-shadow:0 1px 0 rgba(0,0,0,.35)!important}
+.header-sub{color:var(--muted)!important}.header-count{color:var(--text)!important}.header-count small{color:var(--dim)!important}
+.tabs{
+  background:linear-gradient(180deg,color-mix(in srgb,var(--surface-2) 96%,white 2%),color-mix(in srgb,var(--surface) 96%,black 4%))!important;
+  border-bottom:1px solid var(--border)!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.22)!important;
+}
+.tab{position:relative;border-radius:8px 8px 0 0!important;transition:color .16s ease,background .16s ease,transform .16s ease!important}
+.tab:hover{background:color-mix(in srgb,var(--blue) 7%,var(--surface-2))!important;transform:translateY(-1px)}
+.tab.active{background:linear-gradient(180deg,color-mix(in srgb,var(--blue) 10%,transparent),transparent)!important;color:var(--text)!important}
+.tab.active::after{content:"";position:absolute;left:18%;right:18%;bottom:-1px;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,var(--blue),color-mix(in srgb,var(--blue) 55%,white 45%),var(--blue),transparent);box-shadow:0 0 16px color-mix(in srgb,var(--blue) 40%,transparent)}
+
+.content{max-width:var(--ct-content-width)!important;padding-top:18px!important;position:relative;isolation:isolate}
+
+/* Elevated material hierarchy */
+.card,.study-hero,.gate-block,.ct3-card,.ct-learning-focus,.ct-learning-phase-body,.ct-map-phase,.ct-map-cert,.ct-map-gate,.cert-summary,.cert-row{
+  border-color:var(--ct-edge)!important;
+}
+.card,.study-hero,.gate-block,.ct3-card,.ct-learning-focus,.ct-learning-phase-body,.ct-map-phase,.ct-map-gate{
+  background:linear-gradient(155deg,var(--ct-panel-top),var(--ct-panel-bottom))!important;
+  box-shadow:var(--ct-elev-1)!important;
+}
+.ct-learning-focus,.study-hero,.ct-map-phase,.gate-block{box-shadow:var(--ct-elev-2)!important}
+
+/* Pointer-responsive depth surfaces: JS supplies --ct-depth-x/y and tilt values. */
+.ct-depth-surface{
+  --ct-depth-x:50%;--ct-depth-y:50%;--ct-rx:0deg;--ct-ry:0deg;
+  position:relative;
+  transform:perspective(1200px) translateZ(0) rotateX(0deg) rotateY(0deg);
+  transform-style:preserve-3d;
+  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease,background .18s ease!important;
+}
+.ct-depth-surface::after{
+  content:""!important;display:block!important;position:absolute!important;inset:0!important;pointer-events:none!important;border-radius:inherit!important;
+  background:radial-gradient(440px circle at var(--ct-depth-x) var(--ct-depth-y),rgba(255,255,255,.085),rgba(255,255,255,.025) 18%,transparent 46%)!important;
+  opacity:0!important;transition:opacity .18s ease!important;z-index:3!important;mix-blend-mode:screen;
+}
+@media(hover:hover) and (pointer:fine){
+  .ct-depth-surface[data-depth-active="true"]{transform:perspective(1200px) translateY(-3px) rotateX(var(--ct-rx)) rotateY(var(--ct-ry));border-color:color-mix(in srgb,var(--blue) 28%,var(--ct-edge))!important;box-shadow:var(--ct-elev-2)!important}
+  .ct-depth-surface[data-depth-active="true"]::after{opacity:1!important}
+}
+
+/* Rows and cards feel layered instead of flat. */
+.cert-row,.ct-learning-item,.ct-map-cert,.ct-map-subject,.ct3-row{
+  transition:background .15s ease,border-color .15s ease,transform .15s ease,box-shadow .15s ease!important;
+}
+.cert-row{background:linear-gradient(90deg,color-mix(in srgb,var(--surface-2) 88%,transparent),color-mix(in srgb,var(--surface) 96%,transparent))!important;border-left:2px solid color-mix(in srgb,var(--border-2) 75%,transparent)!important}
+.cert-row:hover{background:linear-gradient(90deg,color-mix(in srgb,var(--blue) 8%,var(--surface-2)),color-mix(in srgb,var(--surface) 94%,transparent))!important;border-left-color:var(--blue)!important;transform:translateX(2px);box-shadow:0 9px 20px rgba(0,0,0,.18)!important}
+.ct-map-cert{background:linear-gradient(155deg,color-mix(in srgb,var(--surface) 95%,white 5%),color-mix(in srgb,var(--surface-2) 86%,black 14%))!important;box-shadow:0 7px 20px rgba(0,0,0,.22)!important}
+.ct-map-cert[open]{box-shadow:0 15px 38px rgba(0,0,0,.30)!important}
+.ct-map-subject-main{padding:5px 6px;border-radius:7px;transition:background .15s ease,transform .15s ease}.ct-map-subject:hover .ct-map-subject-main{background:color-mix(in srgb,var(--blue) 5%,var(--surface));transform:translateX(2px)}
+
+/* Control depth */
+button,.btn-tool,.ct3-btn,.filter-chip,select,input,textarea,.ct-map-open-cert{
+  box-shadow:0 3px 10px rgba(0,0,0,.16),0 1px 0 rgba(255,255,255,.035) inset!important;
+  transition:transform .14s ease,box-shadow .14s ease,border-color .14s ease,background .14s ease!important;
+}
+button:hover,.btn-tool:hover,.ct3-btn:hover,.filter-chip:hover,.ct-map-open-cert:hover{transform:translateY(-1px);box-shadow:0 7px 16px rgba(0,0,0,.22),0 1px 0 rgba(255,255,255,.05) inset!important}
+button:active,.btn-tool:active,.ct3-btn:active,.filter-chip:active,.ct-map-open-cert:active{transform:translateY(1px) scale(.995);box-shadow:0 2px 6px rgba(0,0,0,.20) inset!important}
+
+/* Strip remaining old pink/purple visual language from common legacy components. */
+.role-pill{
+  background:linear-gradient(180deg,color-mix(in srgb,var(--blue) 9%,var(--surface-2)),color-mix(in srgb,var(--surface-3) 86%,black 14%))!important;
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--blue) 30%,var(--border)),0 2px 6px rgba(0,0,0,.16)!important;
+  color:var(--text)!important;
+}
+.badge-track-C,.badge-roi,.phase-stage-tag,.ct3-pill{
+  background:color-mix(in srgb,var(--ct-steel) 11%,var(--surface-2))!important;
+  color:color-mix(in srgb,var(--ct-steel) 70%,white 30%)!important;
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ct-steel) 38%,transparent)!important;
+}
+.filter-chip.active{
+  background:linear-gradient(135deg,color-mix(in srgb,var(--blue) 18%,var(--surface-2)),color-mix(in srgb,var(--green) 8%,var(--surface-2)))!important;
+  border-color:color-mix(in srgb,var(--blue) 58%,var(--border))!important;
+  color:var(--text)!important;
+  box-shadow:0 5px 16px rgba(0,0,0,.18),inset 0 0 0 1px rgba(255,255,255,.035)!important;
+}
+
+/* Banners become stacked status surfaces rather than flat coloured strips. */
+.banner,.notify-banner{
+  position:relative;overflow:hidden;
+  box-shadow:0 7px 18px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.035)!important;
+}
+.banner.info,.notify-banner{background:linear-gradient(135deg,color-mix(in srgb,var(--blue) 16%,var(--surface-2)),color-mix(in srgb,var(--surface-2) 95%,black 5%))!important}
+.banner.warn{background:linear-gradient(135deg,color-mix(in srgb,var(--amber) 14%,var(--surface-2)),color-mix(in srgb,var(--surface-2) 96%,black 4%))!important}
+.banner.critical{background:linear-gradient(135deg,color-mix(in srgb,var(--red) 13%,var(--surface-2)),color-mix(in srgb,var(--surface-2) 96%,black 4%))!important}
+
+/* Command dock is now one elevated tool shelf; Today joins it instead of floating separately. */
+.ct-command-dock{
+  padding:7px 8px!important;border:1px solid var(--ct-edge)!important;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--surface-2) 96%,white 4%),color-mix(in srgb,var(--surface) 96%,black 4%))!important;
+  box-shadow:0 20px 54px rgba(0,0,0,.44),0 1px 0 rgba(255,255,255,.05) inset!important;
+}
+.ct-command-dock::before{content:"";position:absolute;left:14%;right:14%;top:-1px;height:1px;background:linear-gradient(90deg,transparent,var(--blue),color-mix(in srgb,var(--blue) 45%,var(--green) 55%),transparent);opacity:.75}
+.ct-command-dock #ct3-launcher{position:static!important;right:auto!important;bottom:auto!important;background:transparent!important;color:var(--muted)!important;border:1px solid transparent!important;border-radius:9px!important;padding:9px 11px!important;font:650 11px/1 var(--ct-font-family)!important;box-shadow:none!important;backdrop-filter:none!important}
+.ct-command-dock #ct3-launcher:hover{background:var(--surface-3)!important;border-color:var(--border)!important;color:var(--text)!important}
+
+/* More sculpted phase and roadmap surfaces. */
+.ct-learning-phase-label,.ct-map-phase-number{
+  box-shadow:0 8px 18px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.10)!important;
+}
+.ct-learning-gate,.ct-map-gate{background:linear-gradient(155deg,color-mix(in srgb,var(--amber) 8%,var(--surface)),color-mix(in srgb,var(--surface-2) 94%,black 6%))!important}
+.ct-map-gate.ready{background:linear-gradient(155deg,color-mix(in srgb,var(--green) 8%,var(--surface)),color-mix(in srgb,var(--surface-2) 94%,black 6%))!important}
+
+/* Scrollbars and focus: restrained enterprise treatment. */
+*{scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--border-2) 88%,transparent) color-mix(in srgb,var(--surface) 90%,transparent)}
+*::-webkit-scrollbar{width:10px;height:10px}*::-webkit-scrollbar-track{background:color-mix(in srgb,var(--surface) 90%,transparent)}*::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--border-2),color-mix(in srgb,var(--border-2) 70%,var(--surface)));border:2px solid var(--surface);border-radius:999px}
+:focus-visible{outline:2px solid color-mix(in srgb,var(--blue) 75%,white 25%)!important;outline-offset:2px!important}
+
+html[data-ct-shadows="off"] .ct-depth-surface,html[data-ct-shadows="off"] .ct-command-dock,html[data-ct-shadows="off"] .header,html[data-ct-shadows="off"] .tabs{box-shadow:none!important}
+html[data-ct-animations="off"] .ct-depth-surface{transform:none!important}
+
+@media(max-width:760px){
+  body{background-size:auto,auto,42px 42px,42px 42px,auto!important}
+  .content{padding-top:12px!important}
+  .header{box-shadow:0 10px 26px rgba(0,0,0,.28)!important}
+  .ct-depth-surface{transform:none!important}
+  .ct-command-dock{max-width:calc(100vw - 14px)!important}
+  .ct-command-dock #ct3-launcher{padding:9px!important}
+}
+
+@media(prefers-reduced-motion:reduce){.ct-depth-surface,button,.btn-tool,.ct3-btn,.filter-chip,.cert-row,.ct-map-subject-main{transition:none!important;transform:none!important}}
