@@ -42,7 +42,7 @@ try {
 }
 
 if (Array.isArray(certs)) {
-  const allowedTracks = new Set(['CORE','FOUNDATION','CONDITIONAL','OPTIONAL','ROLE-DRIVEN','POST-PLAN']);
+  const allowedTracks = new Set(['CORE','FOUNDATION','CONDITIONAL','OPTIONAL','ROLE-DRIVEN','ARCHITECT','IDENTITY-SEC','POST-PLAN']);
   const ids = new Set();
   const byId = new Map();
   for (const [index, cert] of certs.entries()) {
