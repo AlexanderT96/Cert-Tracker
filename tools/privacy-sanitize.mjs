@@ -1,12 +1,11 @@
 import fs from 'node:fs';
 
-const files = ['certs.js', 'app.js'];
 const replacements = [
   [/p1-nwsg-doc/g, 'p1-env-doc'],
   [/current employer's/gi, "a representative organisation's"],
   [/current employer/gi, 'a representative organisation'],
-  [/current role/gi, 'relevant hands-on experience'],
   [/your current role/gi, 'relevant hands-on experience'],
+  [/current role/gi, 'relevant hands-on experience'],
   [/your employer's/gi, "the relevant organisation's"],
   [/your employer/gi, 'the relevant organisation'],
   [/your technical director/gi, 'a technical lead'],
@@ -35,10 +34,8 @@ const replacements = [
   [/for your path/gi, 'for the selected path'],
   [/for your use case/gi, 'for the selected use case'],
   [/for you\b/gi, 'for this path'],
-  [/CNI \/ defence-adjacent client/gi, 'regulated or critical-infrastructure-style'],
+  [/CNI \/ defence-adjacent client/gi, 'regulated or critical-infrastructure-style scenario'],
   [/defence-adjacent client/gi, 'regulated-industry scenario'],
-  [/current employer client/gi, 'sanitised client'],
-  [/current employer customer/gi, 'sanitised customer'],
   [/North-West/gi, 'UK-wide'],
   [/North West/gi, 'UK-wide'],
   [/Manchester chapter \(UK-wide\)/gi, 'UK chapter network'],
@@ -48,8 +45,6 @@ const replacements = [
   [/\bNW median\b/gi, 'UK median'],
   [/current strength/gi, 'existing strength'],
   [/current-role/gi, 'role'],
-  [/current role IS the experience evidence/gi, 'relevant hands-on work provides the experience evidence'],
-  [/Your current role IS the experience evidence/gi, 'Relevant hands-on work provides the experience evidence'],
   [/your natural exposure/gi, 'natural hands-on exposure'],
   [/your exact/gi, 'the exact'],
   [/your near-term/gi, 'the near-term'],
@@ -58,8 +53,8 @@ const replacements = [
   [/your target/gi, 'the target'],
   [/your application/gi, 'the application'],
   [/your evidence/gi, 'the evidence'],
-  [/your referee/gi, 'a referee'],
   [/your referees/gi, 'referees'],
+  [/your referee/gi, 'a referee'],
   [/your technical knowledge/gi, 'the applicant’s technical knowledge'],
   [/your cyber/gi, 'cyber'],
   [/your security/gi, 'security'],
@@ -69,8 +64,6 @@ const replacements = [
   [/your cloud/gi, 'cloud'],
   [/your networking/gi, 'networking'],
   [/your architecture/gi, 'architecture'],
-  [/your employer-funded/gi, 'employer-funded'],
-  [/your self-funded/gi, 'self-funded'],
   [/your situation/gi, 'the situation'],
   [/your timeline/gi, 'the timeline'],
   [/your case/gi, 'the case'],
@@ -92,12 +85,26 @@ const replacements = [
   [/site mapping \+ build the camera-analytics pipeline \+ deliver per-customer web COP/g, 'site mapping + camera-analytics pipeline + web common-operating-picture delivery']
 ];
 
-for (const file of files) {
-  let text = fs.readFileSync(file, 'utf8');
+function sanitize(text) {
   for (const [pattern, replacement] of replacements) text = text.replace(pattern, replacement);
-  // Remove location-specific salary snippets where the surrounding figure cannot be safely relabelled.
-  text = text.replace(/\s*[·|]\s*(?:UK-wide|North(?:-| )West)\s+(?:median|salary)[^·\n"]*/gi, '');
-  fs.writeFileSync(file, text);
+  return text.replace(/\s*[·|]\s*(?:UK-wide|North(?:-| )West)\s+(?:median|salary)[^·\n"]*/gi, '');
 }
 
-console.log('Privacy sanitization applied to canonical data and legacy renderer.');
+let certs = sanitize(fs.readFileSync('certs.js', 'utf8'));
+fs.writeFileSync('certs.js', certs);
+
+let app = sanitize(fs.readFileSync('app.js', 'utf8'));
+
+// Move the curated path inventory out of the legacy renderer. The extraction is
+// source-preserving: the exact array contents are relocated, not re-authored.
+const pathMatch = app.match(/\n\s*const defaults = \[(.*?)\];\n\s*defaults\.forEach/s);
+if (pathMatch) {
+  const arrayBody = pathMatch[1];
+  const module = `// Cert Tracker v3.1 — curated default path configuration.\n// Kept outside app.js so the legacy renderer no longer owns product strategy.\n(function initDefaultPath(global) {\n  'use strict';\n  global.CERT_TRACKER_DEFAULT_PATH = Object.freeze([${arrayBody}\n  ]);\n})(window);\n`;
+  fs.mkdirSync('src', { recursive: true });
+  fs.writeFileSync('src/path-defaults.js', module);
+  app = app.replace(/\n\s*const defaults = \[(.*?)\];\n\s*defaults\.forEach/s, '\n    const defaults = window.CERT_TRACKER_DEFAULT_PATH || [];\n    defaults.forEach');
+}
+
+fs.writeFileSync('app.js', app);
+console.log('Privacy sanitization and legacy path extraction complete.');
