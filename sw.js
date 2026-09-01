@@ -1,10 +1,11 @@
-// Cert Tracker v3 service worker — offline-first without stale application code.
-const CACHE = 'cert-tracker-assets-v3.0.0';
+// Cert Tracker v3.1 service worker — offline-first without stale application code.
+const CACHE = 'cert-tracker-assets-v3.1.0';
 const CORE_ASSETS = [
   './',
   './index.html',
   './styles.css',
   './certs.js',
+  './src/path-defaults.js',
   './app.js',
   './src/config.js',
   './src/dates.js',
@@ -12,6 +13,7 @@ const CORE_ASSETS = [
   './src/validation.js',
   './src/phase-engine.js',
   './src/data-health.js',
+  './src/market-value.js',
   './src/recommendation-engine.js',
   './src/exports.js',
   './src/notifications.js',
