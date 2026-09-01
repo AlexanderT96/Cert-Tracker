@@ -31,21 +31,24 @@
     'security-plus':{market:8,knowledge:7}, 'cysa-plus':{market:7,knowledge:8}, 'linux-plus':{market:6.5,knowledge:8.5},
     'google-cyber':{market:4,knowledge:6}, 'pcep':{market:3.5,knowledge:7}, 'pcap':{market:4.5,knowledge:8.5},
     'pcpp1':{market:5,knowledge:9}, 'pcpp2':{market:5.5,knowledge:9.5},
-    'az-900':{market:5,knowledge:5.5}, 'az-104':{market:8,knowledge:8.5}, 'az-305':{market:8.5,knowledge:9},
+    'az-900':{market:5,knowledge:5.5}, 'ai-901':{market:4.5,knowledge:6.5}, 'az-104':{market:8,knowledge:8.5}, 'az-305':{market:8.5,knowledge:9},
     'az-802':{market:7.5,knowledge:9}, 'sc-900':{market:5,knowledge:6}, 'sc-200':{market:7.5,knowledge:8},
-    'sc-300':{market:7.5,knowledge:8}, 'sc-500':{market:8,knowledge:8.5}, 'sc-100':{market:8.5,knowledge:9},
+    'sc-300':{market:7.5,knowledge:8}, 'sc-500':{market:8,knowledge:9}, 'sc-100':{market:8.5,knowledge:9},
     'acp':{market:6.5,knowledge:9}, 'mcit':{market:5.5,knowledge:8}, 'mcde':{market:6,knowledge:8.5}, 'mcie':{market:6,knowledge:9},
     'briefcam-tech':{market:5.5,knowledge:8}, 'arcules-csp':{market:4,knowledge:5},
     'pan-apprentice':{market:4.5,knowledge:6.5}, 'pan-practitioner':{market:6,knowledge:7.5}, 'pan-netsec-pro':{market:7.5,knowledge:8.5},
     'pan-ngfw-eng':{market:9,knowledge:9.5}, 'pan-cloudsec-pro':{market:8,knowledge:8.5}, 'pan-netsec-arch':{market:9,knowledge:9.5},
     'iec-62443-cfs':{market:8,knowledge:9}, 'iec-62443-cra':{market:8.5,knowledge:9.5}, 'iec-62443-cds':{market:8.5,knowledge:9.5},
-    'iec-62443-cms':{market:8.5,knowledge:9.5}, 'iec-62443-expert':{market:9,knowledge:10}, 'isa95-fund':{market:8,knowledge:9.5},
+    'iec-62443-cms':{market:8.5,knowledge:9.5}, 'iec-62443-expert':{market:9,knowledge:10}, 'isa95-fund':{market:7.5,knowledge:9.5},
+    'isa-cap-associate':{market:6.5,knowledge:9}, 'isa-cap':{market:8.5,knowledge:9.5}, 'isa-apm':{market:6.5,knowledge:8.5},
+    'isa-61511-sis-fund':{market:7,knowledge:9}, 'isa-61511-sil-select':{market:7.5,knowledge:9}, 'isa-61511-sil-verify':{market:7.5,knowledge:9}, 'isa-61511-expert':{market:8,knowledge:9.5},
     'gicsp':{market:9,knowledge:9}, 'grid':{market:8.5,knowledge:9}, 'ccsk':{market:7,knowledge:8}, 'ccsp':{market:9,knowledge:8.5},
     'cissp':{market:10,knowledge:8}, 'issap':{market:8,knowledge:9.5}, 'crisc':{market:8,knowledge:8}, 'sabsa-found':{market:7.5,knowledge:9},
-    'bcs-arch-found':{market:5,knowledge:7.5}, 'bcs-esa':{market:7,knowledge:9}, 'asis-psp':{market:8,knowledge:8.5}
+    'bcs-arch-found':{market:6,knowledge:8}, 'bcs-arch-solution':{market:6.5,knowledge:8.5}, 'bcs-arch-security':{market:6.5,knowledge:9}, 'bcs-arch-cloud':{market:6,knowledge:8},
+    'bcs-esa':{market:7,knowledge:9}, 'asis-psp':{market:8,knowledge:8.5}
   });
 
-  const EXPERIENCE_GATED = new Set(['ccie-enterprise','cissp','issap','asis-psp','ukcsc-princ','ukcsc-chart','csyp','pan-netsec-arch']);
+  const EXPERIENCE_GATED = new Set(['ccie-enterprise','cissp','issap','asis-psp','ukcsc-princ','ukcsc-chart','csyp','pan-netsec-arch','isa-cap','bcs-esa']);
 
   function selected(key, fallback) {const value = localStorage.getItem(STORAGE[key]);return value && ROLE_PROFILES[value] ? value : fallback;}
   function context() {return Object.freeze({current:selected('currentRole','generalIT'),next:selected('nextRole','cyber'),target:selected('targetRole','convergence')});}
