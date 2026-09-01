@@ -1,13 +1,32 @@
-// ───── SERVICE WORKER ─────────────────────────────────────────────────────
-// Relative paths keep GitHub Pages subdirectory deployments working.
-const CACHE = 'cert-tracker-assets-v2.1.0';
-const ASSETS = [
-  './', './index.html', './styles.css', './certs.js', './app.js', './stability.js',
-  './manifest.json', './icon.svg', './header-art.jpg', './icon-192.png', './icon-512.png'
+// Cert Tracker v3 service worker — offline-first without stale application code.
+const CACHE = 'cert-tracker-assets-v3.0.0';
+const CORE_ASSETS = [
+  './',
+  './index.html',
+  './styles.css',
+  './certs.js',
+  './app.js',
+  './src/config.js',
+  './src/dates.js',
+  './src/storage.js',
+  './src/validation.js',
+  './src/phase-engine.js',
+  './src/data-health.js',
+  './src/recommendation-engine.js',
+  './src/exports.js',
+  './src/notifications.js',
+  './src/sync.js',
+  './src/ux.js',
+  './src/bootstrap.js',
+  './manifest.json',
+  './icon.svg',
+  './header-art.jpg',
+  './icon-192.png',
+  './icon-512.png'
 ];
 
 self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)));
+  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(CORE_ASSETS)));
   self.skipWaiting();
 });
 
@@ -19,30 +38,30 @@ self.addEventListener('activate', event => {
   })());
 });
 
-async function networkFirst(request, fallback) {
+async function networkFirst(request, fallbackPath = null) {
   const cache = await caches.open(CACHE);
   try {
-    const response = await fetch(request);
-    if (response && response.ok) cache.put(request, response.clone());
+    const response = await fetch(request, { cache: 'no-store' });
+    if (response?.ok) await cache.put(request, response.clone());
     return response;
   } catch {
-    return (await cache.match(request)) || (fallback ? cache.match(fallback) : Response.error());
+    return (await cache.match(request)) || (fallbackPath ? await cache.match(fallbackPath) : Response.error());
   }
 }
 
-async function cacheFirst(request) {
+async function staleWhileRevalidate(request) {
   const cache = await caches.open(CACHE);
   const cached = await cache.match(request);
-  if (cached) return cached;
-  const response = await fetch(request);
-  if (response && response.ok) cache.put(request, response.clone());
-  return response;
+  const refresh = fetch(request).then(response => {
+    if (response?.ok) cache.put(request, response.clone());
+    return response;
+  }).catch(() => null);
+  return cached || (await refresh) || Response.error();
 }
 
 self.addEventListener('fetch', event => {
   const request = event.request;
   if (request.method !== 'GET') return;
-
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
@@ -51,21 +70,23 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  const destination = request.destination;
-  if (destination === 'script' || destination === 'style') {
+  if (request.destination === 'script' || request.destination === 'style') {
     event.respondWith(networkFirst(request));
     return;
   }
 
-  event.respondWith(cacheFirst(request));
+  event.respondWith(staleWhileRevalidate(request));
 });
 
 self.addEventListener('message', event => {
-  if (event.data && event.data.type === 'NOTIFY') {
-    const { title, body, tag } = event.data;
-    const iconUrl = new URL('./icon.svg', self.registration.scope).href;
-    event.waitUntil(self.registration.showNotification(title, {
-      body, tag, icon: iconUrl, badge: iconUrl, requireInteraction: false
-    }));
-  }
+  if (event.data?.type !== 'NOTIFY') return;
+  const { title, body, tag } = event.data;
+  const iconUrl = new URL('./icon.svg', self.registration.scope).href;
+  event.waitUntil(self.registration.showNotification(title, {
+    body,
+    tag,
+    icon: iconUrl,
+    badge: iconUrl,
+    requireInteraction: false
+  }));
 });
