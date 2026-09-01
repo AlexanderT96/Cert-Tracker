@@ -6,13 +6,14 @@ It may contain:
 - generic certification metadata and official-source links;
 - generic role profiles and competency taxonomies;
 - generic Market ROI / Knowledge ROI / role-relevance scoring logic;
+- generic capability pillars, evidence maturity templates and role-transition gates;
 - generic planning, readiness, timing and experience-gate logic;
 - UI, tests and browser-local settings;
 - optional client-side encrypted device-state sync adapters that write/read only a user-configured vault file in a user-selected private storage location.
 
 It must **not** contain:
 - a named user's employer, role history, salary, weaknesses or personal priorities;
-- personalised certification score overrides or private sequencing decisions;
+- personalised certification score overrides, private sequencing decisions or personal evidence notes;
 - private career notes or conversation-derived context;
 - embedded credentials, access tokens, private-repository tokens or vault passphrases;
 - code that automatically reads or exposes plaintext private career-context files from a private repository;
@@ -20,11 +21,11 @@ It must **not** contain:
 
 ## Intended architecture
 
-The public application stays standalone and privacy-safe. Role selections and other generic preferences may be stored locally in the browser.
+The public application stays standalone and privacy-safe. Role selections, certification progress and practical evidence maturity may be stored locally in the browser. Generic evidence templates describe *what kinds of capability can be evidenced*; the user's actual evidence status is state, not public source code.
 
 A separate private context store may be used by an authorised assistant or private workflow to make personalised career decisions. Private facts should influence recommendations outside this public repository; only reusable algorithms or anonymised generic capabilities belong here.
 
-The public app may optionally sync **its own tracker state** through a private repository. That state must be encrypted locally before upload. Repository coordinates may be stored in that browser because they are configuration, but authentication tokens and encryption passphrases must remain session-only.
+The public app may optionally sync **its own tracker state** through a private repository. That state, including practical-evidence maturity, must be encrypted locally before upload. Repository coordinates may be stored in that browser because they are configuration, but authentication tokens and encryption passphrases must remain session-only.
 
 ### Device-state isolation rule
 
@@ -36,4 +37,4 @@ The sync UI requires an explicit session confirmation that the selected reposito
 
 ## Rule for contributions
 
-When a private career decision exposes a generally useful capability gap, add the **generic capability** here and keep the user's reason, values and history private.
+When a private career decision exposes a generally useful capability gap, add the **generic capability, evidence template or scoring rule** here and keep the user's reason, values, notes and history private.
