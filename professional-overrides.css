@@ -1,0 +1,105 @@
+/* Cert Tracker — final professional overrides.
+   This file intentionally loads last so legacy v2/v3 decorative rules cannot leak through.
+   It removes the former sakura/artwork presentation while preserving user-selected theme tokens. */
+
+/* Remove all legacy animated/decorative artwork layers. */
+#app::before,
+#app::after{
+  content:none!important;
+  display:none!important;
+  background:none!important;
+  background-image:none!important;
+  animation:none!important;
+  filter:none!important;
+  box-shadow:none!important;
+}
+
+/* Replace the former artwork header with the professional product shell. */
+.header{
+  background:color-mix(in srgb,var(--surface) calc(var(--ct-panel-opacity) * 100%),transparent)!important;
+  background-image:none!important;
+  border-bottom:var(--ct-border-width) solid var(--border)!important;
+  box-shadow:0 8px 30px rgba(0,0,0,calc(var(--ct-shadow-strength) * .45))!important;
+}
+.header::before,
+.header::after{
+  content:none!important;
+  display:none!important;
+  background:none!important;
+  animation:none!important;
+}
+.header-title{
+  background:none!important;
+  -webkit-background-clip:initial!important;
+  background-clip:initial!important;
+  -webkit-text-fill-color:currentColor!important;
+  color:var(--text)!important;
+  text-shadow:none!important;
+}
+
+/* Neutral professional launch veil — no legacy artwork or blossom icon flash. */
+#boot-veil{
+  background:linear-gradient(180deg,color-mix(in srgb,var(--surface) 26%,var(--bg)),var(--bg))!important;
+  background-image:none!important;
+}
+#boot-veil::before,
+#boot-veil::after{content:none!important;display:none!important}
+#boot-veil img{display:none!important}
+
+/* Suppress any legacy decorative pseudo-elements attached to the page chrome. */
+.tabs::before,.tabs::after,
+.content::before,.content::after,
+body::before,body::after{
+  background-image:none!important;
+}
+
+/* Roadmap study click-through affordances. The node itself remains expandable;
+   tapping the certification title or subject title opens its best-fit learning resource. */
+.ct-map-cert-main strong[data-study-click],
+.ct-map-subject strong[data-study-click]{
+  cursor:pointer;
+  color:var(--blue-text);
+  text-decoration:underline;
+  text-decoration-color:color-mix(in srgb,var(--blue) 42%,transparent);
+  text-underline-offset:3px;
+  text-decoration-thickness:1px;
+  touch-action:manipulation;
+}
+.ct-map-cert-main strong[data-study-click]::after{
+  content:'  Study ↗';
+  font-size:8px;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  color:var(--dim);
+  text-decoration:none;
+  white-space:nowrap;
+}
+.ct-map-subject strong[data-study-click]::after{
+  content:'  Learn ↗';
+  font-size:8px;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  color:var(--dim);
+  text-decoration:none;
+  white-space:nowrap;
+}
+.ct-map-cert-main strong[data-study-click]:hover,
+.ct-map-subject strong[data-study-click]:hover,
+.ct-map-cert-main strong[data-study-click]:focus-visible,
+.ct-map-subject strong[data-study-click]:focus-visible{
+  color:var(--text);
+  text-decoration-color:var(--blue);
+  outline:none;
+}
+
+@media(max-width:760px){
+  .ct-map-cert-main strong[data-study-click],
+  .ct-map-subject strong[data-study-click]{
+    display:inline-block;
+    min-height:28px;
+    padding:5px 2px;
+    margin:-5px -2px;
+  }
+  .ct-map-cert-main strong[data-study-click]::after,
+  .ct-map-subject strong[data-study-click]::after{font-size:7px}
+}
