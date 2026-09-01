@@ -2,6 +2,7 @@ import fs from 'node:fs';
 
 const replacements = [
   [/p1-nwsg-doc/g, 'p1-env-doc'],
+  [/NW Security/gi, 'a representative security integrator'],
   [/current employer's/gi, "a representative organisation's"],
   [/current employer/gi, 'a representative organisation'],
   [/your current role/gi, 'relevant hands-on experience'],
@@ -16,6 +17,18 @@ const replacements = [
   [/your background/gi, 'prior experience'],
   [/MSP background/gi, 'prior infrastructure/support experience'],
   [/support-engineer background/gi, 'support/infrastructure experience'],
+  [/your Milestone stack/gi, 'a Milestone-focused stack'],
+  [/your LenelS2\/Milestone work/gi, 'LenelS2/Milestone lab or project work'],
+  [/not your daily stack/gi, 'outside the primary production stack'],
+  [/your sandbox/gi, 'a lab sandbox'],
+  [/your relevant hands-on experience/gi, 'relevant hands-on experience'],
+  [/one a representative organisation client scenario/gi, 'a sanitised client scenario'],
+  [/a representative organisation cyber-relevant artefacts/gi, 'cyber-relevant workplace or lab artefacts'],
+  [/one of a representative organisation's larger accounts/gi, 'a larger enterprise environment'],
+  [/your technical and work-based experience/gi, "the applicant's technical and work-based experience"],
+  [/worked with you on incidents/gi, 'worked with the applicant on relevant incidents or projects'],
+  [/worked with you for/gi, 'worked with the applicant for'],
+  [/your specialism area/gi, 'the relevant specialism area'],
   [/your CV/gi, 'a CV'],
   [/your portfolio/gi, 'a portfolio'],
   [/your learning plan/gi, 'the learning plan'],
@@ -90,21 +103,5 @@ function sanitize(text) {
   return text.replace(/\s*[·|]\s*(?:UK-wide|North(?:-| )West)\s+(?:median|salary)[^·\n"]*/gi, '');
 }
 
-let certs = sanitize(fs.readFileSync('certs.js', 'utf8'));
-fs.writeFileSync('certs.js', certs);
-
-let app = sanitize(fs.readFileSync('app.js', 'utf8'));
-
-// Move the curated path inventory out of the legacy renderer. The extraction is
-// source-preserving: the exact array contents are relocated, not re-authored.
-const pathMatch = app.match(/\n\s*const defaults = \[(.*?)\];\n\s*defaults\.forEach/s);
-if (pathMatch) {
-  const arrayBody = pathMatch[1];
-  const module = `// Cert Tracker v3.1 — curated default path configuration.\n// Kept outside app.js so the legacy renderer no longer owns product strategy.\n(function initDefaultPath(global) {\n  'use strict';\n  global.CERT_TRACKER_DEFAULT_PATH = Object.freeze([${arrayBody}\n  ]);\n})(window);\n`;
-  fs.mkdirSync('src', { recursive: true });
-  fs.writeFileSync('src/path-defaults.js', module);
-  app = app.replace(/\n\s*const defaults = \[(.*?)\];\n\s*defaults\.forEach/s, '\n    const defaults = window.CERT_TRACKER_DEFAULT_PATH || [];\n    defaults.forEach');
-}
-
-fs.writeFileSync('app.js', app);
-console.log('Privacy sanitization and legacy path extraction complete.');
+for (const file of ['certs.js', 'app.js']) fs.writeFileSync(file, sanitize(fs.readFileSync(file, 'utf8')));
+console.log('Privacy sanitization complete.');
