@@ -24,7 +24,7 @@
     syncConfigKey: 'ct3-sync-config',
     onboardingKey: 'ct3-onboarded',
     freshness: Object.freeze({ freshDays: 180, reviewDays: 365 }),
-    allowedTracks: Object.freeze(['CORE', 'FOUNDATION', 'CONDITIONAL', 'OPTIONAL', 'ROLE-DRIVEN', 'POST-PLAN'])
+    allowedTracks: Object.freeze(['CORE', 'FOUNDATION', 'CONDITIONAL', 'OPTIONAL', 'ROLE-DRIVEN', 'ARCHITECT', 'IDENTITY-SEC', 'POST-PLAN'])
   });
 
   CT.vendorSources = Object.freeze({
@@ -52,7 +52,9 @@
     'ArcGIS': 'https://www.esri.com/training/certification/',
     'TryHackMe': 'https://tryhackme.com/paths',
     'Honeywell': 'https://buildings.honeywell.com/us/en/support/training',
-    'Paxton': 'https://www.paxton-access.com/training/'
+    'Paxton': 'https://www.paxton-access.com/training/',
+    'Claroty': 'https://www.claroty.com/xcel-enablement-and-training',
+    'Nozomi Networks': 'https://www.nozominetworks.com/academy'
   });
 
   const listeners = new Map();
