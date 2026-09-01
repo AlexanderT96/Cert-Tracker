@@ -1,0 +1,22 @@
+name: Certification Data Freshness
+
+on:
+  schedule:
+    - cron: '17 7 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  freshness:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Generate freshness review summary
+        run: npm run test:freshness
