@@ -14,15 +14,8 @@
     return Object.freeze({ weeklyHours,budget,targetDate,maxCerts });
   }
 
-  function horizonHours(cfg) {
-    if (!cfg.targetDate || !CT.util.validIsoDate(cfg.targetDate)) return Infinity;
-    const days = Math.max(0, CT.dates.daysUntil(cfg.targetDate));
-    return Math.max(0, days/7*cfg.weeklyHours);
-  }
-
-  function effectiveCost(cert) {
-    return cert.employer ? 0 : Math.max(0,Number(cert.costNum||0));
-  }
+  function horizonHours(cfg) {if (!cfg.targetDate || !CT.util.validIsoDate(cfg.targetDate)) return Infinity;const days = Math.max(0, CT.dates.daysUntil(cfg.targetDate));return Math.max(0, days/7*cfg.weeklyHours);}
+  function effectiveCost(cert) {return cert.employer ? 0 : Math.max(0,Number(cert.costNum||0));}
 
   function plan(options={}) {
     const cfg=settings(options); const goal=options.goal || CT.recommendations.currentGoal();
@@ -42,17 +35,12 @@
         const efficiency=(marginal.contributionRange.midpoint/Math.max(1,hours))/100;
         const score=rec.score + ready.score*.35 + coverage*.25 + Math.min(24,efficiency);
         return {cert,rec,marginal,ready,hours,cost,score};
-      }).filter(x=>usedHours+x.hours<=maxHours&&usedBudget+x.cost<=cfg.budget)
+      }).filter(x=>(!x.rec.experienceGate||x.rec.experienceGate.ready||x.rec.career.T!=='T3')&&usedHours+x.hours<=maxHours&&usedBudget+x.cost<=cfg.budget)
         .sort((a,b)=>b.score-a.score||a.hours-b.hours||a.cost-b.cost);
       if (!ranked.length) break;
       const pick=ranked[0]; completed.add(pick.cert.id); passes[pick.cert.id]='2099-01-01'; usedHours+=pick.hours; usedBudget+=pick.cost;
       const weeks=usedHours/cfg.weeklyHours; const eta=new Date(); eta.setDate(eta.getDate()+Math.ceil(weeks*7));
-      chosen.push(Object.freeze({
-        position:chosen.length+1,id:pick.cert.id,name:pick.cert.name,hours:pick.hours,cost:pick.cost,
-        readiness:pick.ready.score,goalFit:pick.rec.relevance.score,marginalValue:pick.marginal.contributionRange.midpoint,
-        marginalLabel:pick.marginal.contributionLabel,score:Math.round(pick.score),cumulativeHours:Math.round(usedHours),
-        cumulativeCost:Math.round(usedBudget),eta:CT.dates.localDateStamp(eta),reasons:pick.rec.reasons.slice(0,3)
-      }));
+      chosen.push(Object.freeze({position:chosen.length+1,id:pick.cert.id,name:pick.cert.name,hours:pick.hours,cost:pick.cost,readiness:pick.ready.score,goalFit:pick.rec.relevance.score,marginalValue:pick.marginal.contributionRange.midpoint,marginalLabel:pick.marginal.contributionLabel,score:Math.round(pick.score),cumulativeHours:Math.round(usedHours),cumulativeCost:Math.round(usedBudget),eta:CT.dates.localDateStamp(eta),portfolioClass:pick.rec.portfolioClass,reasons:pick.rec.reasons.slice(0,3)}));
     }
 
     const baseline=CT.competency.goalCoverage(goal).score;
