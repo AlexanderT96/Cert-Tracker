@@ -1,0 +1,130 @@
+/* Cert Tracker — professional typography and formatting system.
+   Final text layer: consistent rhythm, readable hierarchy, no cramped inline labels. */
+:root{
+  --ct-font-family:"Segoe UI Variable Text","Segoe UI Variable","Segoe UI",Aptos,Inter,-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  --ct-display-family:"Segoe UI Variable Display","Segoe UI Variable","Segoe UI",Aptos,Inter,-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  --ct-mono-family:"Cascadia Code","Cascadia Mono","SFMono-Regular",Consolas,"Liberation Mono",monospace;
+  --ct-leading-tight:1.2;
+  --ct-leading-body:1.52;
+  --ct-leading-relaxed:1.62;
+}
+
+html,body{
+  font-family:var(--ct-font-family)!important;
+  font-optical-sizing:auto;
+  font-kerning:normal;
+  font-synthesis:none;
+  text-rendering:optimizeLegibility;
+  line-height:var(--ct-leading-body);
+  letter-spacing:0;
+}
+button,input,select,textarea{font-family:inherit}
+h1,h2,h3,h4,h5,h6,.header-title,.phase-header-title,.dash-hero-title,.ct-learning-phase-title,.ct-map-phase-title,.ct3-title{
+  font-family:var(--ct-display-family)!important;
+  font-kerning:normal;
+  text-wrap:balance;
+  letter-spacing:-.018em;
+}
+code,kbd,samp,.cert-code,.header-count,.header-count small,.big-number,.big-sub,.trophy-count,.stat-num{
+  font-family:var(--ct-mono-family)!important;
+  font-variant-numeric:tabular-nums slashed-zero;
+}
+strong,b{font-weight:680}
+small{line-height:1.45}
+p,li,.ct3-muted,.dash-hero-sub,.ct-learning-focus p{line-height:var(--ct-leading-relaxed)}
+
+/* Navigation and control typography */
+.tab,.btn-tool,.ct3-btn,.ct-command-dock button{
+  font-weight:620!important;
+  letter-spacing:.005em!important;
+}
+.tab{line-height:1.15}
+.tools-bar-label,.card-title,.ct-learning-eyebrow,.ct-learning-section-label{
+  font-weight:700!important;
+  letter-spacing:.075em!important;
+}
+
+/* Badge system: readable, compact and never glued to neighbouring text. */
+.badge,.badge-tier,.badge-track,.badge-prio,.badge-roi,.badge-diff,.badge-pathway,.badge-se,.badge-parked,.status-badge,.phase-stage-tag,.ct3-pill{
+  line-height:1.18!important;
+  white-space:nowrap;
+  vertical-align:middle;
+  font-family:var(--ct-font-family)!important;
+  font-weight:680!important;
+  letter-spacing:.015em!important;
+}
+.badge{padding:4px 8px!important}
+.badge-tier,.badge-track,.badge-prio,.badge-roi,.badge-diff,.badge-pathway,.badge-se,.badge-parked,.status-badge{padding:4px 8px!important}
+.phase-stage-tag{padding:4px 7px!important}
+.badge + .badge,.badge + .badge-tier,.badge-prio + .badge,.badge-tier + .badge,.status-badge + .badge{margin-left:2px}
+
+/* Dashboard hierarchy */
+.dash-hero-next{
+  line-height:1.48!important;
+  padding:12px 14px!important;
+}
+.dash-hero-next > div:first-child{margin-bottom:7px!important;gap:7px!important}
+.dash-hero-next > strong{
+  display:inline-block;
+  margin-right:.38em;
+  font-weight:700;
+  letter-spacing:-.005em;
+}
+.dash-hero-next br + span{
+  display:inline-block;
+  margin-top:3px;
+  line-height:1.45;
+}
+.dash-hero-title{line-height:1.2!important}
+.dash-hero-sub{margin-top:4px!important}
+.dash-hero-week li{margin:.2em 0}
+
+/* Certification rows */
+.cert-title,.cert-name{
+  line-height:1.3!important;
+  font-weight:680!important;
+  letter-spacing:-.008em;
+  overflow-wrap:break-word;
+}
+.cert-code{
+  display:inline-block;
+  margin-left:.42em;
+  color:var(--dim)!important;
+  font-size:.82em!important;
+  letter-spacing:0!important;
+  white-space:nowrap;
+}
+.cert-meta,.cert-summary-meta,.cert-details-meta{
+  line-height:1.5!important;
+  row-gap:6px!important;
+  column-gap:8px!important;
+}
+.cert-row,.cert-summary{line-height:1.46}
+.cert-row summary,.cert-summary{align-items:center}
+
+/* Phase, gate and roadmap labels */
+.phase-header-title,.ct-learning-phase-title,.ct-map-phase-title{line-height:1.25!important}
+.phase-header-sub,.ct-learning-phase-sub,.ct-map-phase-sub{line-height:1.45!important}
+.ct-map-cert-main,.ct-map-subject-main,.ct-learning-item{line-height:1.42!important}
+.ct-map-cert-main strong,.ct-map-subject-main strong,.ct-learning-item strong{line-height:1.32!important}
+.ct-map-cert-main small,.ct-map-subject-main small,.ct-learning-item small{line-height:1.48!important}
+
+/* Prevent accidental visual concatenation around common inline labels. */
+.dash-hero-next strong + span,
+.card strong + span,
+.ct3-row strong + span,
+.cert-title + span,
+.cert-name + span{margin-left:.35em}
+
+/* Tables and structured metrics */
+table{line-height:1.42;border-collapse:separate;border-spacing:0}
+th{font-weight:680;letter-spacing:.01em}
+td,th{padding-block:.58em}
+
+/* Mobile: preserve breathing room without wasting screen space. */
+@media(max-width:760px){
+  html,body{line-height:1.48}
+  .badge,.badge-tier,.badge-track,.badge-prio,.badge-roi,.badge-diff,.badge-pathway,.badge-se,.badge-parked,.status-badge{padding:3px 7px!important}
+  .dash-hero-next{padding:11px 12px!important}
+  .cert-code{margin-left:.32em}
+}
