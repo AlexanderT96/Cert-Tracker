@@ -10,7 +10,8 @@
   await test('Certification IDs are unique',()=>new Set(CERTS.map(c=>c.id)).size===CERTS.length);
   await test('Dependencies resolve',()=>{const ids=new Set(CERTS.map(c=>c.id));return CERTS.every(c=>(c.deps||[]).every(dep=>ids.has(dep)&&dep!==c.id));});
   await test('Gateway certifications have audited official sources',()=>CERTS.filter(c=>c.gateway).every(c=>{const h=CertTrackerV3.dataHealth.record(c);return h.sourceLevel==='CERT'&&h.provenance==='AUDITED_REGISTRY';}));
-  await test('New structured-learning records are present',()=>['ccnp-enterprise','isa-cap-associate','isa95-fund','bcs-arch-solution','bcs-arch-security','ai-901','sc-500'].every(id=>CERTS.some(c=>c.id===id)));
+  await test('New structured-learning records are present',()=>['ccnp-enterprise','ccie-enterprise','isa-cap-associate','isa-cap','isa95-fund','bcs-arch-solution','bcs-arch-security','ai-901','sc-500'].every(id=>CERTS.some(c=>c.id===id)));
+  await test('CCIE remains an explicit post-CCNP expert branch',()=>{const ccie=CERTS.find(c=>c.id==='ccie-enterprise');return !!ccie&&ccie.deps.includes('ccnp-enterprise')&&window.CERT_TRACKER_DEFAULT_PATH.includes('ccie-enterprise')&&CertTrackerV3.careerFramework.values(ccie).knowledge>=9.5;});
   await test('Local date stamp is ISO-shaped',()=>/^\d{4}-\d{2}-\d{2}$/.test(CertTrackerV3.dates.localDateStamp(new Date())));
   await test('ICS all-day dates use exclusive DTEND',()=>{const original=state.exams;const cert=CERTS[0];state.exams={[cert.id]:'2026-09-01'};try{const text=CertTrackerV3.exports.buildICS().content;return text.includes('DTSTART;VALUE=DATE:20260901')&&text.includes('DTEND;VALUE=DATE:20260902');}finally{state.exams=original;}});
   await test('Deep backup rejects future versions',()=>!CertTrackerV3.storage.validateBackup({...CertTrackerV3.storage.serializableState(),version:999}).ok);
@@ -39,9 +40,11 @@
   await test('Curriculum rungs receive explicit classification',()=>{const cert=CERTS.find(c=>c.id==='pcep');return !cert||['CURRICULUM RUNG','CORE CAPABILITY','PRIMARY SPECIALISATION','SUPPORTING','CAPSTONE'].includes(CertTrackerV3.capabilityGates.portfolioClass(cert));});
   await test('Experience-gated recommendations expose role gate status where mapped',()=>{const cert=CERTS.find(c=>c.id==='cissp')||CERTS.find(c=>c.id==='ccie-enterprise');if(!cert)return true;const row=CertTrackerV3.recommendations.score(cert,{horizon:'now'});return !!row.experienceGate&&typeof row.experienceGate.ready==='boolean';});
   await test('Topic engine returns a bounded learning recommendation',()=>{const row=CertTrackerV3.topicEngine.next({cert:CertTrackerV3.recommendations.recommend({limit:1})[0]?.cert});return !row||(row.mastery>=0&&row.mastery<=100&&row.score>=0&&Array.isArray(row.topic.actions));});
-  await test('Visual learning path renders all six phases and role gates',()=>{const html=CertTrackerV3.learningPath.render();return [1,2,3,4,5,6].every(p=>html.includes(`P${p}`))&&html.includes('ROLE GATE');});
+  await test('Visual learning path renders all six phases and role gates',()=>{const html=CertTrackerV3.learningPath.render();return [1,2,3,4,5,6].every(p=>html.includes(`P${p}`))&&html.includes('ROLE GATE')&&html.includes('ccie')===false;});
   await test('Professional theme defaults are available',()=>CertTrackerV3.personalization.PRESETS.professional&&CertTrackerV3.personalization.DEFAULTS.preset==='professional');
   await test('Customize remains present in workspace order',()=>CertTrackerV3.personalization.tabOrder().includes('customize'));
+  await test('Workspace shell exposes dedicated Learning Path and Customize spaces',()=>!!CertTrackerV3.workspaceShell&&['learning','customize'].every(tab=>CertTrackerV3.workspaceShell.availableTabs().includes(tab)));
+  await test('Dashboard learning focus pairs next certification and topic',()=>{const html=CertTrackerV3.workspaceShell.focusHtml();return !html||(html.includes('Recommended certification')&&html.includes('Study alongside it'));});
   await test('Planner respects maximum certification count',()=>CertTrackerV3.planner.plan({maxCerts:3}).sequence.length<=3);
   await test('Planner respects a zero self-funded budget',()=>CertTrackerV3.planner.plan({budget:0,maxCerts:10}).sequence.every(item=>item.cost===0));
   await test('Planner produces ordered cumulative effort',()=>{const rows=CertTrackerV3.planner.plan({maxCerts:8}).sequence;return rows.every((x,i)=>i===0||x.cumulativeHours>=rows[i-1].cumulativeHours);});
