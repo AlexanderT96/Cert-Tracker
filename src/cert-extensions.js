@@ -2,11 +2,11 @@
 // This file contains no user-specific career context. It exists so the public
 // tracker can represent useful structured learning ladders that were missing
 // from the original canonical dataset.
-(function extendCertifications(global) {
+(function extendCertifications() {
   'use strict';
-  if (!Array.isArray(global.CERTS)) throw new Error('certs.js must load before cert-extensions.js');
+  if (typeof CERTS === 'undefined' || !Array.isArray(CERTS)) throw new Error('certs.js must load before cert-extensions.js');
 
-  const existing = new Set(global.CERTS.map(cert => cert.id));
+  const existing = new Set(CERTS.map(cert => cert.id));
   const additions = [
     {
       id:'briefcam-tech', name:'BriefCam Technical Certification / Training', code:'BRIEFCAM-TECH',
@@ -100,5 +100,5 @@
     }
   ];
 
-  additions.forEach(cert => { if (!existing.has(cert.id)) { global.CERTS.push(cert); existing.add(cert.id); } });
-})(window);
+  additions.forEach(cert => { if (!existing.has(cert.id)) { CERTS.push(cert); existing.add(cert.id); } });
+})();
