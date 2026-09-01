@@ -42,7 +42,7 @@ const CERTS = [
     vendor: "Google",
     skills: ["Security foundations", "SIEM basics", "Linux/SQL basics", "Python for security"],
     examFormat: "Graded quizzes + labs per course, no proctored exam. Certificate on completion of all 8 courses.",
-    projectRec: "None needed — but the Python-for-security capstone can seed your detection-automation portfolio piece.",
+    projectRec: "None needed — but the Python-for-security capstone can seed the detection-automation portfolio piece.",
     note: "QUICK WIN with a live discount: completing this unlocks 30% off the CompTIA Sec+ exam voucher (~£95 saved on $425 list) — SEQUENCE THIS BEFORE BOOKING SEC+. Plus Google brand for HR filters and the Python-for-security module. Speedrun it; do not let it eat Sec-study-grade hours.",
     deps: []
   },
@@ -129,7 +129,7 @@ const CERTS = [
     skills: ["OnGuard", "Access control", "Card readers"],
     examFormat: "LenelS2 partner training online exam. Multiple choice. In-portal.",
     projectRec: "Entry-level OnGuard config doc — users, readers, alarm zones — for a redacted client scenario. 🎯 PROMOTED: LCA is the foundation rung of the LenelS2 Architecture Track — the first of four certs (LCA → LCP → LCE → LCDA) that define one of two strategic ownership plays in this domain.",
-    note: "🎯 LenelS2 ARCHITECTURE TRACK — rung 1 of 4. Employer funded. Register via employer's LenelS2 partner account. OnGuard Core course + Associate exam. VAR-affiliated — deactivates if you leave a representative organisation. 1-year validity, maintained by Distance Learning within 120 days of each OnGuard release. Recertification exam every 2 years. Prereq for LCP/LCE/LCDA.",
+    note: "🎯 LenelS2 ARCHITECTURE TRACK — rung 1 of 4. Employer funded. Register via employer's LenelS2 partner account. OnGuard Core course + Associate exam. VAR-affiliated — deactivates if the candidate leave a representative organisation. 1-year validity, maintained by Distance Learning within 120 days of each OnGuard release. Recertification exam every 2 years. Prereq for LCP/LCE/LCDA.",
     deps: []
   },
   {
@@ -196,7 +196,7 @@ const CERTS = [
     cpe: 0, cpePeriod: 0, difficulty: 2, roi: 6, hours: [20, 30],
     skills: ["Azure concepts", "Cloud basics"],
     examFormat: "Multiple choice + multi-response + drag-drop. ~40-60 Qs, 60 min, passing 700/1000. No case studies or labs.",
-    projectRec: "Deploy a single VM + VNet + storage in Azure free tier. Document costs and scale rationale in a README. This seeds your AZ-104 portfolio.",
+    projectRec: "Deploy a single VM + VNet + storage in Azure free tier. Document costs and scale rationale in a README. This seeds the AZ-104 portfolio.",
     note: "Cheapest route: free Microsoft Virtual Training Day for Azure Fundamentals unlocks a 50% voucher (~£45, 90-day validity). Never expires. Study: John Savill's AZ-900 Study Cram (free, ~4hr).",
     deps: []
   },
@@ -275,7 +275,7 @@ const CERTS = [
       cost: "£362.40 application fee (CIISec). CIISec membership separate if not already a member (~£75-150/yr depending on grade).",
       timeline: "Realistic 3-4 months end-to-end: 6-8 weeks evidence assembly + referee outreach, 4-6 weeks internal review, 2-4 weeks scheduling professional discussion, ~1 week post-discussion to award. Plan for ACSP application AFTER passing Security+ — Sec+ is the realistic technical evidence anchor.",
       steps: [
-        { title: "1. Confirm eligibility timing — DO NOT apply early", detail: "Apply 3-6 months AFTER Security+ pass, NOT before. The 'Knowledge & application of cyber security' competence area is where pre-Sec+ applications risk being referred back. A+ and Network+ are general IT certs, not cyber credentials — they evidence IT competence, not cyber competence. Sec+ is the recognised cyber technical anchor; without it the knowledge claim is fragile. Beyond Sec+, you also need ~3-6 months of a representative organisation work where you can point to specific cyber-relevant deliverables (camera/VMS hardening, access control security configuration, vendor security baselines applied, M365 security work). Better to wait and submit a strong application than rush one that gets referred back." },
+        { title: "1. Confirm eligibility timing — DO NOT apply early", detail: "Apply 3-6 months AFTER Security+ pass, NOT before. The 'Knowledge & application of cyber security' competence area is where pre-Sec+ applications risk being referred back. A+ and Network+ are general IT certs, not cyber credentials — they evidence IT competence, not cyber competence. Sec+ is the recognised cyber technical anchor; without it the knowledge claim is fragile. Beyond Sec+, the candidate also need ~3-6 months of a representative organisation work where the candidate can point to specific cyber-relevant deliverables (camera/VMS hardening, access control security configuration, vendor security baselines applied, M365 security work). Better to wait and submit a strong application than rush one that gets referred back." },
         { title: "2. Join CIISec first if not already", detail: "Visit ciisec.org/membership. Apply for the appropriate grade (likely Affiliate or Associate Member based on Sec+ + experience). This is the gateway requirement before UKCSC application can proceed via CIISec route." },
         { title: "3. Read UKCSC SPCC v4.2 thoroughly", detail: "Download from ukcybersecuritycouncil.org.uk. Read the 5 core competency areas: (a) Knowledge & application, (b) Communication, (c) Management & supervision, (d) Ethics & integrity, (e) Continuing development. Note the Associate-specific competence statements in detail." },
         { title: "4. Build the evidence portfolio using STAR", detail: "Recommended structure: Situation → Task → Action → Result for each piece of evidence. Section A3 of the application accounts for 60% of available marks — invest disproportionately here. Map each piece of evidence to specific SPCC statements." },
@@ -287,13 +287,13 @@ const CERTS = [
       evidence: [
         "Knowledge & application (the make-or-break area for this path): Sec+ as the technical anchor. Beyond Sec+, cyber-relevant workplace or lab artefacts: Milestone XProtect / Axis camera firmware update + security hardening procedures; access control system (LenelS2/Paxton) security configuration baselines; network segmentation work for OT/IoT physical security devices; vendor security advisory reviews (CVE assessments, firmware patch decisions); M365 security configuration from prior infrastructure/support experience (conditional access, Defender baseline, identity protection). Each piece of evidence should be STAR-formatted with the SECURITY decision and SECURITY outcome called out explicitly — not just the IT/configuration work. Frame work as 'I made a security decision because X' not 'I configured Y'.",
         "Communication: written reports, customer-facing emails, technical documentation, presentations, training delivered to others",
-        "Management & supervision: any work where you've directed activities (even informally), mentored junior staff, led a project workstream",
+        "Management & supervision: any work where the candidate has directed activities (even informally), mentored junior staff, led a project workstream",
         "Ethics & integrity: examples of professional judgement calls, handling sensitive data appropriately, raising concerns through proper channels",
         "Continuing development: cert achievements with dates, conferences attended, books/courses completed, learning plan documented"
       ],
       referees: {
         guidance: "Two referees required, both familiar with the applicant's technical and work-based experience. Best practice: one internal (manager/senior colleague) + one external (peer, customer contact, former colleague). Both should have worked with the applicant for ≥6 months and seen cyber work first-hand.",
-        outreachTemplate: "LinkedIn / email outreach script: 'Hi [Name], I'm applying for UKCSC Associate Cyber Security Professional registration via CIISec — it's the new UK national registration scheme for cyber professionals. I need two referees who can speak to my cyber security work. Would you be willing to act as a referee? It involves a brief written confirmation of my experience and competence. The application form is shared with referees, and CIISec runs random verification checks. Happy to walk through what's involved on a quick call if helpful. No urgency — application takes 3-4 months end-to-end.' Approach 3-4 candidates to ensure 2 confirmed yeses.",
+        outreachTemplate: "LinkedIn / email outreach script: 'Hi [Name], I'm applying for UKCSC Associate Cyber Security Professional registration via CIISec — it's the new UK national registration scheme for cyber professionals. I need two referees who can speak to my cyber security work. Would the candidate be willing to act as a referee? It involves a brief written confirmation of my experience and competence. The application form is shared with referees, and CIISec runs random verification checks. Happy to walk through what's involved on a quick call if helpful. No urgency — application takes 3-4 months end-to-end.' Approach 3-4 candidates to ensure 2 confirmed yeses.",
         whoToAsk: [
           "a technical lead or senior engineer",
           "Former colleague at MSP-side senior level",
@@ -309,7 +309,7 @@ const CERTS = [
         "Referees who can't speak to cyber work specifically — choose referees with cyber-relevant context, not just senior colleagues",
         "Applying too early — wait until Sec+ passed AND ~3-6 months of a representative organisation cyber work to draw on"
       ],
-      note: "✓ Verified against CIISec/UKCSC documentation (April 2026). ACSP is the near-term application target — but ONLY post-Sec+ + 3-6 months a representative organisation cyber-relevant work. Pre-Sec+ application risks Knowledge & Application referral-back. £362.40 fee. Timeline: 3-4 months end-to-end. The specialism choice doesn't lock in here (Associate is broader) — but consider what you'll choose at Practitioner tier. UK CONTEXT: UKCSC is a Royal Charter body — ACSP is the only fully UK-sovereign cyber registration available. The UK Government is gradually mapping UKCSC titles to the Government Cyber Security Career Framework, NCSC Assured roles, and CNI sector requirements. CIISec membership (the route here) also opens UK-specific opportunities: regional chapter events (London, Manchester, Bristol, Edinburgh), CIISec Skills Framework alignment for UK CV branding, eligibility to apply for CIISec mentoring scheme. Application fee is GBP — no FX risk. Consider claiming CIISec membership + £362.40 ACSP fee as a professional subscription via HMRC (if employer doesn't reimburse). (UK CIISec chapters: London, Manchester, Bristol, Edinburgh). Worth attending one event before applying — it's where you may meet a referee or the ChCSP holder you eventually need at Phase 6."
+      note: "✓ Verified against CIISec/UKCSC documentation (April 2026). ACSP is the near-term application target — but ONLY post-Sec+ + 3-6 months a representative organisation cyber-relevant work. Pre-Sec+ application risks Knowledge & Application referral-back. £362.40 fee. Timeline: 3-4 months end-to-end. The specialism choice doesn't lock in here (Associate is broader) — but consider what the candidate will choose at Practitioner tier. UK CONTEXT: UKCSC is a Royal Charter body — ACSP is the only fully UK-sovereign cyber registration available. The UK Government is gradually mapping UKCSC titles to the Government Cyber Security Career Framework, NCSC Assured roles, and CNI sector requirements. CIISec membership (the route here) also opens UK-specific opportunities: regional chapter events (London, Manchester, Bristol, Edinburgh), CIISec Skills Framework alignment for UK CV branding, eligibility to apply for CIISec mentoring scheme. Application fee is GBP — no FX risk. Consider claiming CIISec membership + £362.40 ACSP fee as a professional subscription via HMRC (if employer doesn't reimburse). (UK CIISec chapters: London, Manchester, Bristol, Edinburgh). Worth attending one event before applying — it's where the candidate may meet a referee or the ChCSP holder the candidate eventually need at Phase 6."
     }
   },
 
@@ -328,7 +328,7 @@ const CERTS = [
     skills: ["Threat modeling", "Cryptography", "IAM", "Risk"],
     examFormat: "Multiple choice + multi-response + PBQs (simulated scenarios). Max 90 Qs, 90 min, passing 750/900.",
     projectRec: "Threat-model a sanitised client scenario (sanitised) using STRIDE. Document mitigations. Post to GitHub as an .md file with diagrams.",
-    note: "🔑 GATEWAY CERT. Buy from comptia.org (~£280 via resellers, £164 via CompTIA UK academic store if accessible; $425 US list) or Jason Dion Udemy (10% off). Results immediate. Credly within 1–3 days. Auto-renews Network+ and SecAI+. 3-year validity. Renewal via 50 CEUs/3yr OR cascade-renew by passing CySA+/Pentest+/SecurityX. ⚠ SY0-701 estimated retirement May 2027 — sit before then or study the SY0-801 successor (CompTIA typically gives 6-month grace period where both versions are valid). Study: Professor Messer free YouTube + Jason Dion. ⏳ UPCOMING: SY0-801 (adds dedicated AI/LLM security content) previews ~Oct 2026, GA late 2026/early 2027; SY0-701 likely retires ~mid-2027. Take SY0-701 NOW — mature materials, and your cert stays valid 3 yrs from pass date regardless of version.",
+    note: "🔑 GATEWAY CERT. Buy from comptia.org (~£280 via resellers, £164 via CompTIA UK academic store if accessible; $425 US list) or Jason Dion Udemy (10% off). Results immediate. Credly within 1–3 days. Auto-renews Network+ and SecAI+. 3-year validity. Renewal via 50 CEUs/3yr OR cascade-renew by passing CySA+/Pentest+/SecurityX. ⚠ SY0-701 estimated retirement May 2027 — sit before then or study the SY0-801 successor (CompTIA typically gives 6-month grace period where both versions are valid). Study: Professor Messer free YouTube + Jason Dion. ⏳ UPCOMING: SY0-801 (adds dedicated AI/LLM security content) previews ~Oct 2026, GA late 2026/early 2027; SY0-701 likely retires ~mid-2027. Take SY0-701 NOW — mature materials, and the cert stays valid 3 yrs from pass date regardless of version.",
     deps: ["network-plus"]
   },
   {
@@ -429,7 +429,7 @@ const CERTS = [
   },
   {
     coverage: "CompTIA Linux+ XK0-006 (current — XK0-005 retired 13 January 2026, all study materials must reference XK0-006). Released 15 July 2025. Five domains: (1) System Management 30% — file/directory mgmt, ownership/permissions (chmod, chown, setuid/setgid/sticky), users/groups, packages (apt, dnf, rpm, snap, flatpak), services (systemd, journalctl), kernel modules, storage (LVM, partitioning, filesystem types), networking config. (2) Security 19% — SSH config, hardening, certificates/PKI, file integrity monitoring, SELinux/AppArmor, firewall (iptables, nftables, firewalld, ufw), authentication (PAM, sudo), AI best practices (NEW in 006 — ethical considerations and securing AI workloads on Linux). (3) Scripting, Containers, and Automation 22% — THE LARGEST GROWTH AREA from XK0-005. Bash scripting (variables, loops, conditionals, arrays, regex), Python basics (NEW in 006), Git version control (NEW in 006), automation (cron, at, systemd timers), Ansible playbooks (NEW — moved from optional to core), Puppet basics, containers (Docker, Podman), orchestration intro (k8s manifests). (4) Troubleshooting 18% — disk/filesystem issues, network troubleshooting (ip, ss, dig, tcpdump), service issues, performance (top, htop, iotop, iostat). (5) Operations Deployment 11% — server roles, virtualisation, cloud deployment, IaC intro. Depth: applied admin level — XK0-006 raised the bar significantly on automation/scripting vs XK0-005. 90 questions max, 90 mins, passing 720/900 scaled.",
-    prerequisites: "CompTIA recommends A+ (you have ✓) and Network+ (you have ✓) plus 12+ months practical Linux admin experience. Realistic skills before sitting: comfortable in Bash shell, familiar with SSH, sudo, package managers, systemd basics, can read Linux logs, basic Bash scripting confidence. NEW for XK0-006: Python basics + Git workflow + one Ansible playbook ideally written. Lab time critical — most candidates fail without 40+ hours hands-on practice.",
+    prerequisites: "CompTIA recommends A+ (the candidate have ✓) and Network+ (the candidate have ✓) plus 12+ months practical Linux admin experience. Realistic skills before sitting: comfortable in Bash shell, familiar with SSH, sudo, package managers, systemd basics, can read Linux logs, basic Bash scripting confidence. NEW for XK0-006: Python basics + Git workflow + one Ansible playbook ideally written. Lab time critical — most candidates fail without 40+ hours hands-on practice.",
     studyMaterials: "PRIMARY: Jason Dion XK0-006 Udemy course (~£12 on sale, ~£100 full). SECONDARY: Sander van Vugt Linux+ Cert Guide (Pearson, ~£35) — verify edition is XK0-006 not -005. FREE: Linux Journey, Linux Survival, OverTheWire bandit war games (essential lab time), Killer Coda interactive Linux scenarios, EXPLAINSHELL.com for command parsing. AMBIENT: Pocket Prep Linux+ on phone. VM LAB: Ubuntu Server 24.04 LTS + AlmaLinux 9 in Hyper-V on a capable laptop. CompTIA CertMaster Learn (~£375) only if employer-funded. ⚠ Materials referencing XK0-005 lack the new Python/Git/Ansible content — don't rely on -005-era resources.",
     tutorFlag: null,
     subjects: ["Linux administration", "Bash scripting", "Container basics", "Cloud-foundation Linux skill", "Automation"],
@@ -475,7 +475,7 @@ const CERTS = [
     skills: ["Server hardware", "Windows Server admin", "Disaster recovery planning", "Hardware troubleshooting", "RAID configuration"],
     examFormat: "Multiple choice + multi-response + Performance-Based Questions (PBQs). 90 Qs max, 90 min, passing 750/900 scaled.",
     projectRec: "Document a small-business DR plan for a fictional 50-user UK SME: server inventory, RAID strategy, backup schedule (3-2-1 rule), RPO/RTO targets, DR runbook with stepwise recovery procedure. The deliverable IS the project — committed to GitHub as a sanitised template thin relevant hands-on experience customers could use.",
-    note: "⚠ GOOD-FOR-LIFE — does NOT expire (one of CompTIA's few remaining lifetime certs as of 2026). No CPE/CEU obligation, no renewal fee. Lower priority than Linux+ for the intended career progression: prior infrastructure/support experience already covers most Server+ knowledge — value here is CV signal + the CompTIA stackable (A+ + Net+ + Server+ = CompTIA Server Infrastructure Specialist CSIS post-nominal). Activate if (a) employer reimburses, (b) Track B becomes primary direction, (c) you want CSIS post-nominal on LinkedIn alongside CIOS, or (d) gap to fill before AZ-104 deep dive. Combined with Linux+ + Cloud+ creates a strong systems-architect CompTIA stack. Hours estimate (50-80) is lower than other Sec+/Net+-tier certs because of prior infrastructure/support experience overlap.",
+    note: "⚠ GOOD-FOR-LIFE — does NOT expire (one of CompTIA's few remaining lifetime certs as of 2026). No CPE/CEU obligation, no renewal fee. Lower priority than Linux+ for the intended career progression: prior infrastructure/support experience already covers most Server+ knowledge — value here is CV signal + the CompTIA stackable (A+ + Net+ + Server+ = CompTIA Server Infrastructure Specialist CSIS post-nominal). Activate if (a) employer reimburses, (b) Track B becomes primary direction, (c) the candidate want CSIS post-nominal on LinkedIn alongside CIOS, or (d) gap to fill before AZ-104 deep dive. Combined with Linux+ + Cloud+ creates a strong systems-architect CompTIA stack. Hours estimate (50-80) is lower than other Sec+/Net+-tier certs because of prior infrastructure/support experience overlap.",
     deps: ["a-plus", "network-plus"]
   },
   {
@@ -526,7 +526,7 @@ const CERTS = [
     skills: ["Linux CLI", "Security engineering", "Defensive controls"],
     examFormat: "Multiple choice + practical tasks on TryHackMe labs. Online, on-demand.",
     projectRec: "Exam scenario walkthrough (sanitised) — use it in interviews to demonstrate hands-on security engineering.",
-    note: "Hands-on live lab exam. Most directly aligned THM cert to your defensive end-goal. No expiry. Pairs with CySA+.",
+    note: "Hands-on live lab exam. Most directly aligned THM cert to the defensive end-goal. No expiry. Pairs with CySA+.",
     deps: ["thm-sec1", "security-plus"]
   },
   {
@@ -629,7 +629,7 @@ const CERTS = [
     cpe: 0, cpePeriod: 0, difficulty: 7, roi: 7, hours: [60, 100],
     skills: ["OnGuard expert", "Enterprise deployment"],
     examFormat: "LenelS2 partner training online exam. Multiple choice + enterprise OnGuard scenarios. In-portal.",
-    projectRec: "🎯 LenelS2 ARCHITECTURE TRACK — rung 3 of 4. Moved to Phase 3 to reflect eligibility driven by deployment hours. LCE is technical depth tier; pursue when a representative organisation has given you 2-3 enterprise OnGuard deployments to build on.",
+    projectRec: "🎯 LenelS2 ARCHITECTURE TRACK — rung 3 of 4. Moved to Phase 3 to reflect eligibility driven by deployment hours. LCE is technical depth tier; pursue when a representative organisation has given the candidate 2-3 enterprise OnGuard deployments to build on.",
     note: "🎯 LenelS2 ARCHITECTURE TRACK — rung 3 of 4. Prereq: active LCP. Employer funded. Technical depth tier. ⚠ 1-year validity, annual DL, recert every 2 years.",
     deps: ["lcp"]
   },
@@ -681,12 +681,12 @@ const CERTS = [
     cpe: 0, cpePeriod: 0, difficulty: 6, roi: 6, hours: [50, 80],
     skills: ["Advanced Python OOP", "tkinter GUI", "Network/REST", "Coding standards"],
     examFormat: "Multiple choice + scenario. ~45 Qs, online proctored, passing ~70%.",
-    projectRec: "Build a real Python tool you'd actually use: a camera-event → ArcGIS bridge, a Sentinel KQL-results emailer, or a multi-camera health-check REST client. The portfolio piece matters more than the badge.",
-    note: "The genuinely useful Python cert tier — proves you can engineer, not just script. Most relevant for camera-analytics–GIS integration code, AI-security tooling, and detection automation. Self-funded.",
+    projectRec: "Build a real Python tool the candidate would actually use: a camera-event → ArcGIS bridge, a Sentinel KQL-results emailer, or a multi-camera health-check REST client. The portfolio piece matters more than the badge.",
+    note: "The genuinely useful Python cert tier — proves the candidate can engineer, not just script. Most relevant for camera-analytics–GIS integration code, AI-security tooling, and detection automation. Self-funded.",
     deps: ["pcap"]
   },
   {
-    coverage: "Python Institute PCPP2 (Certified Professional Python Programming 2, Exam PCPP-32-20x). Expert tier. Covers: design patterns (creational/structural/behavioural) in Python, advanced interprocess communication and networking, selected advanced Standard and non-Standard Library modules, creating/accessing/processing SQL and NoSQL databases from Python, and writing/executing unit and functional tests with the standard frameworks. Aimed at experienced programmers maintaining multi-module systems and tools. Note: PCPP2 explicitly covers SQL-from-Python — so it doubles as your applied-SQL validation in a Python-data context.",
+    coverage: "Python Institute PCPP2 (Certified Professional Python Programming 2, Exam PCPP-32-20x). Expert tier. Covers: design patterns (creational/structural/behavioural) in Python, advanced interprocess communication and networking, selected advanced Standard and non-Standard Library modules, creating/accessing/processing SQL and NoSQL databases from Python, and writing/executing unit and functional tests with the standard frameworks. Aimed at experienced programmers maintaining multi-module systems and tools. Note: PCPP2 explicitly covers SQL-from-Python — so it doubles as the applied-SQL validation in a Python-data context.",
     prerequisites: "PCPP1. Substantial real Python engineering experience — this is not a study-only cert.",
     studyMaterials: "PRIMARY: Python Institute 'Python Advanced 2 (PCPP2)' official courseware. SECONDARY: 'Python Design Patterns' resources + the Python docs for asyncio/multiprocessing/sqlite3. HANDS-ON: build a multi-module tool with a DB layer + test suite. EXAM: ~£195.",
     tutorFlag: null,
@@ -756,17 +756,17 @@ const CERTS = [
     applicationGuide: {
           "verified": "2026-05-02",
           "verifyAt": "ciisec.org/chartering + ukcybersecuritycouncil.org.uk",
-          "route": "CIISec Process A (or CREST/Cyber Scheme depending on specialism). PCSP IS specialism-specific (unlike Associate). Choose one of: Cyber Security Governance & Risk Management, Secure System Architecture & Design, Cyber Security Audit & Assurance, Security Testing, Incident Response, Secure Operations. Application includes form + CV + 2 referees + professional discussion (interview) with 2 CIISec Council-approved assessors at least one in your specialism.",
+          "route": "CIISec Process A (or CREST/Cyber Scheme depending on specialism). PCSP IS specialism-specific (unlike Associate). Choose one of: Cyber Security Governance & Risk Management, Secure System Architecture & Design, Cyber Security Audit & Assurance, Security Testing, Incident Response, Secure Operations. Application includes form + CV + 2 referees + professional discussion (interview) with 2 CIISec Council-approved assessors at least one in the specialism.",
           "cost": "£500 + VAT (£600 inc. VAT) for CIISec route. Plus CIISec Associate membership prerequisite (~£75-150/yr). Practitioner tier requires being a CIISec Associate first.",
           "timeline": "Realistic 4-6 months end-to-end: 6-10 weeks evidence assembly (specialism-specific) + 4-8 weeks internal review + 2-4 weeks scheduling professional discussion + ~1 week post-discussion. Apply 6+ months ahead of any deadline.",
           "steps": [
                 {
-                      "title": "1. Choose your specialism deliberately",
+                      "title": "1. Choose the specialism deliberately",
                       "detail": "PCSP is specialism-specific — different from Associate. For the intended career progression, 'Secure System Architecture & Design' fits best (matches Track A/B). 'Cyber Security Governance & Risk Management' if pivoting toward Track A management. 'Secure Operations' if Track C. Read the contextualised standard for each specialism on UKCSC site BEFORE choosing. The specialism choice flows through PrCSP and ChCSP — switching later is painful."
                 },
                 {
                       "title": "2. Confirm CIISec Associate membership",
-                      "detail": "Practitioner tier requires CIISec Associate membership as prerequisite. If you're already CIISec member from ACSP application, this is settled. Otherwise apply for Associate grade first (separate application). UKCSC Practitioner application via CIISec is the second step."
+                      "detail": "Practitioner tier requires CIISec Associate membership as prerequisite. If the candidate is already CIISec member from ACSP application, this is settled. Otherwise apply for Associate grade first (separate application). UKCSC Practitioner application via CIISec is the second step."
                 },
                 {
                       "title": "3. Confirm experience suitability — Practitioner means practitioner",
@@ -774,11 +774,11 @@ const CERTS = [
                 },
                 {
                       "title": "4. Build evidence portfolio mapped to specialism",
-                      "detail": "STAR format. Map evidence to BOTH the generic UKCSC SPCC competence areas AND the contextualised standard for your chosen specialism. Section A3 still 60% of marks. Specialism-specific contextualised standards on the UKCSC website show what evidence each specialism wants (e.g. Architecture & Design wants design artefacts, Operations wants incident handling examples)."
+                      "detail": "STAR format. Map evidence to BOTH the generic UKCSC SPCC competence areas AND the contextualised standard for the chosen specialism. Section A3 still 60% of marks. Specialism-specific contextualised standards on the UKCSC website show what evidence each specialism wants (e.g. Architecture & Design wants design artefacts, Operations wants incident handling examples)."
                 },
                 {
-                      "title": "5. Identify 2 referees familiar with your specialism work",
-                      "detail": "Both referees need to speak credibly to relevant work IN YOUR CHOSEN SPECIALISM. For Architecture & Design specialism: a technical lead who's seen your design decisions, plus customer-side architect. For Operations: incident response colleague. Match referee credibility to specialism evidence."
+                      "title": "5. Identify 2 referees familiar with the specialism work",
+                      "detail": "Both referees need to speak credibly to relevant work IN the CHOSEN SPECIALISM. For Architecture & Design specialism: a technical lead who's seen the design decisions, plus customer-side architect. For Operations: incident response colleague. Match referee credibility to specialism evidence."
                 },
                 {
                       "title": "6. Submit application + £500 fee via CIISec portal",
@@ -786,7 +786,7 @@ const CERTS = [
                 },
                 {
                       "title": "7. Attend professional discussion",
-                      "detail": "~1 hour, remote, conducted by 2 CIISec Council-approved assessors with at least one in your chosen specialism. Treat as interview. Review a personal evidence beforehand. Be ready to discuss specific examples with depth — assessors probe beyond what's written."
+                      "detail": "~1 hour, remote, conducted by 2 CIISec Council-approved assessors with at least one in the chosen specialism. Treat as interview. Review a personal evidence beforehand. Be ready to discuss specific examples with depth — assessors probe beyond what's written."
                 },
                 {
                       "title": "8. Post-award: maintain via CPD + plan PrCSP timeline",
@@ -800,8 +800,8 @@ const CERTS = [
                 "CPD evidence forward-looking: 25 CPD/yr ongoing post-award required. Show a plan, not just history"
           ],
           "referees": {
-                "guidance": "Referees/endorsers must speak credibly to cyber security practitioner-level work in [your specialism] work. Best practice: one internal (manager/senior colleague) + one external (peer, customer-side contact, former colleague). Both should have worked with the applicant for ≥1 year and seen the relevant work first-hand.",
-                "outreachTemplate": "LinkedIn / email outreach script: 'Hi [Name], I'm applying for UKCSC Practitioner registration. The application requires someone familiar with my cyber security practitioner-level work in [your specialism] work to act as a [referee/endorser]. Would you be willing? It's typically a structured form or short written confirmation, plus possible follow-up if they need to verify details. Happy to walk through what's involved on a quick call. Application takes [N] months — no urgency. I'd really value support.' Approach 3-4 candidates to secure 2 confirmed yeses.",
+                "guidance": "Referees/endorsers must speak credibly to cyber security practitioner-level work in [the specialism] work. Best practice: one internal (manager/senior colleague) + one external (peer, customer-side contact, former colleague). Both should have worked with the applicant for ≥1 year and seen the relevant work first-hand.",
+                "outreachTemplate": "LinkedIn / email outreach script: 'Hi [Name], I'm applying for UKCSC Practitioner registration. The application requires someone familiar with my cyber security practitioner-level work in [the specialism] work to act as a [referee/endorser]. Would the candidate be willing? It's typically a structured form or short written confirmation, plus possible follow-up if they need to verify details. Happy to walk through what's involved on a quick call. Application takes [N] months — no urgency. I'd really value support.' Approach 3-4 candidates to secure 2 confirmed yeses.",
                 "whoToAsk": [
                       "a technical lead or senior engineer who has seen cyber/architecture work",
                       "Former colleague at MSP-side senior level",
@@ -817,13 +817,13 @@ const CERTS = [
                 "Weak Section A3 — same trap as ACSP, 60% of marks demands disproportionate investment",
                 "Referees who can't speak to specialism — generic 'good cyber pro' references don't satisfy specialism-level scrutiny"
           ],
-          "note": "✓ Verified against CIISec/UKCSC documentation (May 2026). Specialism choice is the most consequential decision — it locks in for PrCSP/ChCSP path. Likely choice for the intended career progression: Secure System Architecture & Design. UK CONTEXT: PCSP is the second rung of the UK Royal Charter cyber registration ladder. £500+VAT (£600 inc. VAT). UKCSC Practitioner specialisms recognised by NCSC for various roles. Holding PCSP signals 'practitioner-level competence' on UK CVs more strongly than US-origin certs alone — relevant for UK Government, CNI, and regulated sector roles. Process A interview conducted remotely (Zoom/Teams) by 2 CIISec Council-approved assessors with at least one in your specialism."
+          "note": "✓ Verified against CIISec/UKCSC documentation (May 2026). Specialism choice is the most consequential decision — it locks in for PrCSP/ChCSP path. Likely choice for the intended career progression: Secure System Architecture & Design. UK CONTEXT: PCSP is the second rung of the UK Royal Charter cyber registration ladder. £500+VAT (£600 inc. VAT). UKCSC Practitioner specialisms recognised by NCSC for various roles. Holding PCSP signals 'practitioner-level competence' on UK CVs more strongly than US-origin certs alone — relevant for UK Government, CNI, and regulated sector roles. Process A interview conducted remotely (Zoom/Teams) by 2 CIISec Council-approved assessors with at least one in the specialism."
     }
   },
 
   // ─── PHASE 3 · Cloud On-Ramp + DevOps · Apr–Nov 2027 ─────────────────────
   {
-    coverage: "Five functional domains (weights per Microsoft Learn, April 2026 study guide): (1) Manage Azure identities and governance 15-20% — Entra ID (users, groups, tenants, app registrations), RBAC (built-in/custom roles, scope assignments), subscriptions, management groups, Azure Policy, resource locks/tags. (2) Implement and manage storage 15-20% — blob storage tiers, SAS tokens (edge cases heavily tested), lifecycle rules, Azure Files, storage accounts, replication (LRS/ZRS/GRS/RA-GRS). (3) Deploy and manage Azure compute 20-25% — VMs, VM Scale Sets, availability sets vs availability zones, ARM templates/Bicep, containers (ACI, AKS, Container Apps), App Service. (4) Implement and manage virtual networking 20-25% — VNets, subnets, NSGs (rule priority evaluation), service tags, peering, VPN Gateway, ExpressRoute, Private Link/Endpoints, DNS, load balancers. (5) Monitor and maintain 10-15% — Azure Monitor, Log Analytics/KQL basics, alerts, diagnostic settings, Backup, Site Recovery. Late-2025 update: expanded Azure Arc, hybrid management, Entra ID rebrand fully reflected, Azure Container Apps and AKS expanded. Depth: applied. Exam is OPEN BOOK with Microsoft Learn split-pane access — rewards smart lookups but you cannot learn topics during the exam.",
+    coverage: "Five functional domains (weights per Microsoft Learn, April 2026 study guide): (1) Manage Azure identities and governance 15-20% — Entra ID (users, groups, tenants, app registrations), RBAC (built-in/custom roles, scope assignments), subscriptions, management groups, Azure Policy, resource locks/tags. (2) Implement and manage storage 15-20% — blob storage tiers, SAS tokens (edge cases heavily tested), lifecycle rules, Azure Files, storage accounts, replication (LRS/ZRS/GRS/RA-GRS). (3) Deploy and manage Azure compute 20-25% — VMs, VM Scale Sets, availability sets vs availability zones, ARM templates/Bicep, containers (ACI, AKS, Container Apps), App Service. (4) Implement and manage virtual networking 20-25% — VNets, subnets, NSGs (rule priority evaluation), service tags, peering, VPN Gateway, ExpressRoute, Private Link/Endpoints, DNS, load balancers. (5) Monitor and maintain 10-15% — Azure Monitor, Log Analytics/KQL basics, alerts, diagnostic settings, Backup, Site Recovery. Late-2025 update: expanded Azure Arc, hybrid management, Entra ID rebrand fully reflected, Azure Container Apps and AKS expanded. Depth: applied. Exam is OPEN BOOK with Microsoft Learn split-pane access — rewards smart lookups but the candidate cannot learn topics during the exam.",
     prerequisites: "Microsoft recommends 6 months of hands-on Azure administration. Realistic skills before study: ability to navigate Azure Portal fluently, create VMs/storage accounts/VNets from scratch, write basic ARM templates or Bicep, use Azure CLI or PowerShell for provisioning, read a JSON template. AZ-900 not required but recommended if no Azure background at all — the holder's MSP M365/Entra ID background covers roughly 50% of the identity domain already. Critical skill gap for MSP-to-cloud candidates: infrastructure-as-code literacy (write not just read templates).",
     studyMaterials: "PRIMARY: John Savill's AZ-104 YouTube series (FREE, COMPREHENSIVE, GOLD STANDARD — widely rated above all paid alternatives for Azure admin depth). SECONDARY: Pluralsight AZ-104 path for structured course pacing. SUPPLEMENT: Microsoft Learn AZ-104 path (FREE). LAB (CRITICAL): Azure free tier + Microsoft Learn sandboxes — actually run every Azure CLI and Az PowerShell command, don't just watch. AMBIENT: Pocket Prep daily. EXAM-READY: MeasureUp AZ-104 (Microsoft Partner). EXAM: ~£136.",
     tutorFlag: null,
@@ -853,7 +853,7 @@ const CERTS = [
     skills: ["Azure Virtual WAN", "Hub-spoke", "ExpressRoute", "Private Link", "Azure Firewall"],
     examFormat: "Multiple choice + drag-drop + case studies. ~40-60 Qs, 120 min, passing 700/1000.",
     projectRec: "Hub-and-spoke VNet topology with Azure Firewall + Private Endpoints + ExpressRoute simulation. Cost-vs-Virtual-WAN ADR. Genuine architecture evidence.",
-    note: "ROI upgraded for the selected path: AZ-700 is the cloud-networking bridge between your CCNA knowledge-building intent and cloud security goals. Best back-to-back with AZ-104 (heavy content overlap, ~50% prep saved). Strongly feeds AZ-305 architect work and SC-500 cloud-security narrative. ⚠ 1-year validity, free renewal via Learn.",
+    note: "ROI upgraded for the selected path: AZ-700 is the cloud-networking bridge between the CCNA knowledge-building intent and cloud security goals. Best back-to-back with AZ-104 (heavy content overlap, ~50% prep saved). Strongly feeds AZ-305 architect work and SC-500 cloud-security narrative. ⚠ 1-year validity, free renewal via Learn.",
     deps: ["az-104"]
   },
   {
@@ -903,7 +903,7 @@ const CERTS = [
     cpe: 0, cpePeriod: 0, difficulty: 5, roi: 9, hours: [40, 60],
     skills: ["HCL", "IaC", "Terraform state", "Modules"],
     examFormat: "Online proctored. Multiple choice + multi-response + true/false + fill-in-blank + text match. ~57 Qs, 60 min, passing ~70%.",
-    projectRec: "Redeploy your hub-and-spoke via Terraform instead of Portal. Same infrastructure, fully as code, in GitHub. This is the Phase 3 remote-role unlocker.",
+    projectRec: "Redeploy the hub-and-spoke via Terraform instead of Portal. Same infrastructure, fully as code, in GitHub. This is the Phase 3 remote-role unlocker.",
     note: "Best ROI-per-pound cert in the plan at ~£60. Book via Certiverse (NOT Pearson VUE). 34.58% of UK Systems Management listings cite Terraform. 2-year validity.",
     deps: ["az-104"]
   },
@@ -926,8 +926,8 @@ const CERTS = [
   },
   {
     coverage: "Seven domains (English exam content UPDATED 24 April 2026 — confirm study materials reflect new blueprint before booking): (1) Design and implement processes and communications 10-15% — Agile, GitHub Projects/Azure Boards, work item tracking, team structures. (2) Design and implement source control strategy 10-15% — Git branching strategies (GitFlow, trunk-based, GitHub Flow), monorepo vs polyrepo, pull request workflows, code review gates. (3) Design and implement build and release pipelines 50-55% — THE LARGEST DOMAIN. YAML pipelines in both Azure Pipelines AND GitHub Actions, multi-stage pipelines, templates/task groups/variables/variable groups, self-hosted runners/agents, deployment patterns (blue-green, canary, ring, progressive exposure, feature flags, A/B testing), checks and approvals, artifact management, dependency ordering. (4) Develop a security and compliance plan 10-15% — DevSecOps, secret management (Azure Key Vault, GitHub secrets, managed identities), code/dependency/secret scanning (GHAS, Dependabot, Defender for Cloud DevOps Security), gate releases on security findings, policy-as-code. (5) Implement an instrumentation strategy 5-10% — Azure Monitor, Application Insights, SLIs/SLOs, KQL basics, DORA metrics (lead time, failure rate, MTTR, deployment frequency). Depth: expert-level, case-study heavy. Expect hands-on Azure lab task within the exam.",
-    prerequisites: "AZ-104 OR AZ-204 is a hard prerequisite for the credential. Realistic skills before study: can write YAML pipelines from scratch (both Azure Pipelines and GitHub Actions), understand Git branching strategies, have deployed at least one end-to-end CI/CD to Azure, comfortable with containers (Docker + basic Kubernetes), can write KQL queries. Terraform literacy strongly recommended (IaC is near-mandatory). The 50-55% weight on build/release pipelines means if you have never written a production pipeline, you are not ready. prior infrastructure/support experience helps: you already understand 'something must be deployed reliably' — but now you must automate it.",
-    studyMaterials: "PRIMARY: John Savill's AZ-400 YouTube series (FREE, COMPREHENSIVE — Savill again is above paid alternatives). SECONDARY: Pluralsight AZ-400 path. SUPPLEMENT: Microsoft Learn AZ-400 path. LAB: Azure DevOps free tier + GitHub free tier + your AZ-104 sandbox infrastructure. AMBIENT: Pocket Prep. EXAM-READY: MeasureUp AZ-400. ⚠ Hardest AZ exam at expert tier — budget tutoring fallback for Terraform integration patterns. EXAM: ~£136.",
+    prerequisites: "AZ-104 OR AZ-204 is a hard prerequisite for the credential. Realistic skills before study: can write YAML pipelines from scratch (both Azure Pipelines and GitHub Actions), understand Git branching strategies, have deployed at least one end-to-end CI/CD to Azure, comfortable with containers (Docker + basic Kubernetes), can write KQL queries. Terraform literacy strongly recommended (IaC is near-mandatory). The 50-55% weight on build/release pipelines means if the candidate have never written a production pipeline, the candidate are not ready. prior infrastructure/support experience helps: the candidate already understand 'something must be deployed reliably' — but now the candidate must automate it.",
+    studyMaterials: "PRIMARY: John Savill's AZ-400 YouTube series (FREE, COMPREHENSIVE — Savill again is above paid alternatives). SECONDARY: Pluralsight AZ-400 path. SUPPLEMENT: Microsoft Learn AZ-400 path. LAB: Azure DevOps free tier + GitHub free tier + the AZ-104 sandbox infrastructure. AMBIENT: Pocket Prep. EXAM-READY: MeasureUp AZ-400. ⚠ Hardest AZ exam at expert tier — budget tutoring fallback for Terraform integration patterns. EXAM: ~£136.",
     tutorFlag: "MODERATE TUTORING CASE. Only if YAML pipelines and IaC are genuinely new. A Codementor session (£50-80/hr) with an Azure DevOps practitioner could save 40+ hours of trial-and-error on pipeline syntax and deployment patterns. If has already built working pipelines in relevant hands-on experience (likely via the upcoming cloud pivot), tutoring is not needed.",
     subjects: ["DevOps engineering","Azure Pipelines","GitHub Actions","Bicep/Terraform integration","PowerShell intermediate","Bash basics","YAML"],
     tracks: ["A"],
@@ -937,7 +937,7 @@ const CERTS = [
     cpe: 0, cpePeriod: 0, difficulty: 7, roi: 8, hours: [100, 150],
     skills: ["YAML pipelines", "GitHub Actions", "Azure DevOps", "CI/CD"],
     examFormat: "Multiple choice + drag-drop + case studies + live Azure lab (scenario-based tasks). ~40-60 Qs, 150 min, passing 700/1000.",
-    projectRec: "CI/CD pipeline that applies your Terraform config on every commit to main. Include security scans (tfsec, Checkov) and a manual approval gate. ADR explaining why.",
+    projectRec: "CI/CD pipeline that applies the Terraform config on every commit to main. Include security scans (tfsec, Checkov) and a manual approval gate. ADR explaining why.",
     note: "🔑 GATEWAY CERT. Prereq: valid AZ-104. Most demanded Azure cert in UK postings (37%). ⚠ 1-year validity, free renewal. IaC + CI/CD portfolio evidence unlocks national remote market. Renew AZ-104 first if both are expiring.",
     deps: ["az-104"]
   },
@@ -955,19 +955,19 @@ const CERTS = [
     cpe: 0, cpePeriod: 0, difficulty: 6, roi: 8, hours: [30, 40],
     skills: ["Architecture leadership", "Cross-specialism"],
     examFormat: "NOT AN EXAM. Evidence portfolio + senior panel interview. Years of senior experience required.",
-    projectRec: "Principal-level evidence: architecture decisions you've owned across AZ-104/AZ-400/SC-500/CKA + a representative organisation work. Package as a single evidence PDF.",
+    projectRec: "Principal-level evidence: architecture decisions the candidate has owned across AZ-104/AZ-400/SC-500/CKA + a representative organisation work. Package as a single evidence PDF.",
     note: "Specialism: Secure System Architecture & Design (CIISec only). Expert practitioner level. Portfolio of Phase 3–4 work is the evidence base. Sets up Chartered application at Phase 5.",
     deps: [],
     applicationGuide: {
           "verified": "2026-05-02",
           "verifyAt": "ciisec.org/chartering + ukcybersecuritycouncil.org.uk",
-          "route": "CIISec Process A (or CREST/Cyber Scheme depending on specialism). Same specialism as your PCSP (or change with justification). Principal tier: 'expert practitioner with experience in other Specialisms, operating at a level where professional expertise may reasonably be sought to contribute to the development of the Specialism'. Translation: senior expert, multi-specialism awareness. Application includes form + CV + 2 referees + professional discussion with 2 CIISec Council-approved assessors.",
+          "route": "CIISec Process A (or CREST/Cyber Scheme depending on specialism). Same specialism as the PCSP (or change with justification). Principal tier: 'expert practitioner with experience in other Specialisms, operating at a level where professional expertise may reasonably be sought to contribute to the development of the Specialism'. Translation: senior expert, multi-specialism awareness. Application includes form + CV + 2 referees + professional discussion with 2 CIISec Council-approved assessors.",
           "cost": "£700 + VAT (£840 inc. VAT) for CIISec route. CIISec Associate membership prerequisite continues (or Full Member if also pursuing Chartered).",
           "timeline": "Realistic 6-9 months end-to-end: 10-16 weeks evidence assembly (deeper than Practitioner) + 6-10 weeks internal review + 4-6 weeks scheduling professional discussion. Plan 9-12 months ahead.",
           "steps": [
                 {
                       "title": "1. Confirm Principal-level eligibility honestly",
-                      "detail": "Principal = 'expert practitioner contributing to the development of the Specialism'. By Phase 4-5 (~2029-2030) and several years post-PCSP, this should clear if you've been operating at architect/principal level. Realistic earliest: 7+ years total cyber experience post-Sec+. Don't apply too early — Principal refer-back is more painful than Practitioner."
+                      "detail": "Principal = 'expert practitioner contributing to the development of the Specialism'. By Phase 4-5 (~2029-2030) and several years post-PCSP, this should clear if the candidate has been operating at architect/principal level. Realistic earliest: 7+ years total cyber experience post-Sec+. Don't apply too early — Principal refer-back is more painful than Practitioner."
                 },
                 {
                       "title": "2. Confirm specialism continuity",
@@ -979,11 +979,11 @@ const CERTS = [
                 },
                 {
                       "title": "4. Demonstrate multi-specialism awareness",
-                      "detail": "Principal-level explicitly expects 'experience in other Specialisms' beyond your primary. Example for Architecture & Design primary: secondary evidence in Governance & Risk OR Secure Operations OR Audit & Assurance. Cross-specialism work artefacts strengthen the application materially."
+                      "detail": "Principal-level explicitly expects 'experience in other Specialisms' beyond the primary. Example for Architecture & Design primary: secondary evidence in Governance & Risk OR Secure Operations OR Audit & Assurance. Cross-specialism work artefacts strengthen the application materially."
                 },
                 {
                       "title": "5. Identify 2 senior referees",
-                      "detail": "Referees should themselves be Principal-tier or Chartered or equivalent senior-tier in your industry. By Phase 4-5 your network includes other CIISec/UKCSC registrants — use them. a technical lead (if Principal-equivalent) or external industry contact at senior architect level."
+                      "detail": "Referees should themselves be Principal-tier or Chartered or equivalent senior-tier in the industry. By Phase 4-5 the network includes other CIISec/UKCSC registrants — use them. a technical lead (if Principal-equivalent) or external industry contact at senior architect level."
                 },
                 {
                       "title": "6. Submit application + £700 fee via CIISec portal",
@@ -994,19 +994,19 @@ const CERTS = [
                       "detail": "~1 hour, remote, with 2 senior assessors at Principal+ level. Discussion goes deeper than Practitioner — assessors probe judgement on edge cases, multi-specialism reasoning, ability to contribute to specialism development. Treat as senior interview. Review the evidence + be ready for hypothetical scenarios."
                 },
                 {
-                      "title": "8. Post-award: positions you for ChCSP",
+                      "title": "8. Post-award: positions the candidate for ChCSP",
                       "detail": "Annual CPD required (25/yr). Principal is the immediate predecessor to Chartered. Begin building toward ChCSP evidence (Master's-equivalent knowledge demonstration, multi-year contribution to profession) from Principal award onwards."
                 }
           ],
           "evidence": [
                 "Expert-tier work: principal architect deliverables, ADRs at organisation-wide scope, reference architectures adopted by multiple teams, contribution to organisational security standards",
-                "Multi-specialism evidence: examples of work spanning your primary specialism plus 1-2 others (e.g. Architecture & Design + Governance & Risk; Architecture & Design + Secure Operations)",
+                "Multi-specialism evidence: examples of work spanning the primary specialism plus 1-2 others (e.g. Architecture & Design + Governance & Risk; Architecture & Design + Secure Operations)",
                 "Profession contribution: published articles, conference talks, internal best-practice documents, mentoring records, contribution to industry standards/frameworks (e.g. CIISec Skills Framework input, UKCSC working group participation)",
-                "Continuing development plan: forward-looking, showing how you'll contribute to specialism development over the next 3 years"
+                "Continuing development plan: forward-looking, showing how the candidate will contribute to specialism development over the next 3 years"
           ],
           "referees": {
-                "guidance": "Referees/endorsers must speak credibly to your expert-level work in [your specialism] and adjacent specialisms work. Best practice: one internal (manager/senior colleague) + one external (peer, customer-side contact, former colleague). Both should have worked with the applicant for ≥1 year and seen the relevant work first-hand.",
-                "outreachTemplate": "LinkedIn / email outreach script: 'Hi [Name], I'm applying for UKCSC Principal registration. The application requires someone familiar with my expert-level work in [your specialism] and adjacent specialisms work to act as a [referee/endorser]. Would you be willing? It's typically a structured form or short written confirmation, plus possible follow-up if they need to verify details. Happy to walk through what's involved on a quick call. Application takes [N] months — no urgency. I'd really value support.' Approach 3-4 candidates to secure 2 confirmed yeses.",
+                "guidance": "Referees/endorsers must speak credibly to the expert-level work in [the specialism] and adjacent specialisms work. Best practice: one internal (manager/senior colleague) + one external (peer, customer-side contact, former colleague). Both should have worked with the applicant for ≥1 year and seen the relevant work first-hand.",
+                "outreachTemplate": "LinkedIn / email outreach script: 'Hi [Name], I'm applying for UKCSC Principal registration. The application requires someone familiar with my expert-level work in [the specialism] and adjacent specialisms work to act as a [referee/endorser]. Would the candidate be willing? It's typically a structured form or short written confirmation, plus possible follow-up if they need to verify details. Happy to walk through what's involved on a quick call. Application takes [N] months — no urgency. I'd really value support.' Approach 3-4 candidates to secure 2 confirmed yeses.",
                 "whoToAsk": [
                       "a technical lead or senior engineer who has seen cyber/architecture work",
                       "Former colleague at MSP-side senior level",
@@ -1022,7 +1022,7 @@ const CERTS = [
                 "Switching specialism between PCSP and PrCSP without strong justification — usually loses momentum; continue same specialism",
                 "Referees not at Principal+ tier — assessors weigh referee credibility, weak referees hurt at this tier"
           ],
-          "note": "✓ Verified against CIISec/UKCSC documentation (May 2026). Principal is the senior-expert tier — typically 7-10 years cyber experience. Plan for Phase 4-5 (~2029-2030). UK CONTEXT: PrCSP is the senior tier UK sovereign credential, increasingly mapped to NCSC Assured Consultancy Scheme requirements as the legacy CCP scheme winds down (CCP closes Dec 2026). £700+VAT (£840 inc. VAT). At Principal tier you should be cultivating the network that includes ChCSP holders — CIISec Fellowship grade members, BCS Fellow grade, ChCSP registrants — these are your future ChCSP referees. UK regional CIISec chapters (London/Manchester/Bristol/Edinburgh) are the natural networking venues."
+          "note": "✓ Verified against CIISec/UKCSC documentation (May 2026). Principal is the senior-expert tier — typically 7-10 years cyber experience. Plan for Phase 4-5 (~2029-2030). UK CONTEXT: PrCSP is the senior tier UK sovereign credential, increasingly mapped to NCSC Assured Consultancy Scheme requirements as the legacy CCP scheme winds down (CCP closes Dec 2026). £700+VAT (£840 inc. VAT). At Principal tier the candidate should be cultivating the network that includes ChCSP holders — CIISec Fellowship grade members, BCS Fellow grade, ChCSP registrants — these are the future ChCSP referees. UK regional CIISec chapters (London/Manchester/Bristol/Edinburgh) are the natural networking venues."
     }
   },
 
@@ -1092,7 +1092,7 @@ const CERTS = [
     skills: ["Falco", "OPA/Gatekeeper", "CIS benchmarks", "Supply chain security"],
     examFormat: "Performance-based (terminal only). 15-20 hands-on tasks focused on K8s security. 2 hours, passing 67%. No multiple choice. CKA is prerequisite.",
     projectRec: "Extend CKA lab: Falco runtime rules + OPA policies + signed container images. Attack-and-defend narrative makes rare evidence at this level.",
-    note: "ROI upgraded for your defensive cloud trajectory: container security is a major UK gap area, CKS is rare and well-paid. Prereq: active, unexpired CKA. 2-year validity. Strongly recommended if CKA reveals K8s interest.",
+    note: "ROI upgraded for the defensive cloud trajectory: container security is a major UK gap area, CKS is rare and well-paid. Prereq: active, unexpired CKA. 2-year validity. Strongly recommended if CKA reveals K8s interest.",
     deps: ["cka"]
   },
   {
@@ -1113,10 +1113,10 @@ const CERTS = [
     deps: []
   },
   {
-    coverage: "Microsoft Security Operations Analyst Associate. Three domains (Microsoft Learn current skills measured, April 2026): (1) Manage a security operations environment 25-30% — Microsoft Defender XDR configuration, unified alert management, security alert settings, RBAC for SOC team, Microsoft Defender for Cloud deployment and multi-cloud connectors (AWS, GCP), data connectors setup in Microsoft Sentinel, Microsoft Security Copilot integration. (2) Configure protections and detections 15-20% — Microsoft Sentinel analytics rules (scheduled, near-real-time/NRT, threat intelligence, machine learning Fusion), custom analytics rule creation with KQL, watchlists and threat intelligence indicators, hunting queries, Microsoft Defender for Endpoint custom detections, Defender for Cloud Apps session/activity policies. (3) Manage incident response 50-55% — THE LARGEST DOMAIN. Incident investigation in M365 Defender and Sentinel, KQL queries for threat hunting (MUST BE FLUENT — half the exam), Sentinel Graph, automated investigation and response (AIR), Logic Apps playbooks for SOAR, incident triage, threat response across Defender for Endpoint/Identity/Office 365/Cloud/Cloud Apps, Microsoft Purview investigation, identity compromise remediation (Entra ID, Defender for Identity). Depth: applied operational. KQL fluency is non-negotiable — you will be shown queries and asked what they do, or given goals and asked to write queries. Understand where, summarize, join, project, extend, evaluate, mv-expand, and Sentinel-specific operators (union, lookup).",
+    coverage: "Microsoft Security Operations Analyst Associate. Three domains (Microsoft Learn current skills measured, April 2026): (1) Manage a security operations environment 25-30% — Microsoft Defender XDR configuration, unified alert management, security alert settings, RBAC for SOC team, Microsoft Defender for Cloud deployment and multi-cloud connectors (AWS, GCP), data connectors setup in Microsoft Sentinel, Microsoft Security Copilot integration. (2) Configure protections and detections 15-20% — Microsoft Sentinel analytics rules (scheduled, near-real-time/NRT, threat intelligence, machine learning Fusion), custom analytics rule creation with KQL, watchlists and threat intelligence indicators, hunting queries, Microsoft Defender for Endpoint custom detections, Defender for Cloud Apps session/activity policies. (3) Manage incident response 50-55% — THE LARGEST DOMAIN. Incident investigation in M365 Defender and Sentinel, KQL queries for threat hunting (MUST BE FLUENT — half the exam), Sentinel Graph, automated investigation and response (AIR), Logic Apps playbooks for SOAR, incident triage, threat response across Defender for Endpoint/Identity/Office 365/Cloud/Cloud Apps, Microsoft Purview investigation, identity compromise remediation (Entra ID, Defender for Identity). Depth: applied operational. KQL fluency is non-negotiable — the candidate will be shown queries and asked what they do, or given goals and asked to write queries. Understand where, summarize, join, project, extend, evaluate, mv-expand, and Sentinel-specific operators (union, lookup).",
     prerequisites: "No formal prereqs. SC-900 (fundamentals) strongly recommended if no prior Microsoft security context. Realistic skills: comfortable with Microsoft Defender portal UI, can read/interpret KQL queries, basic PowerShell or shell scripting literacy, understanding of identity threats (SC-300 background helps — consider study order), familiarity with Logic Apps or similar automation concepts, exposure to at least one SIEM (even Splunk Free or Elastic SIEM community). For MSP M365-admin holders: background covers Entra ID and Defender for Office 365 fundamentals; the GAP is Sentinel depth and KQL fluency.",
     studyMaterials: "PRIMARY: John Savill's SC-200 YouTube series (FREE). SECONDARY: Pluralsight SC-200 path. LAB: Microsoft Sentinel free tier + Microsoft 365 Developer tenant for Defender XDR. KQL PRACTICE: Microsoft's free 'Pluralsight + Microsoft' KQL course or Rod Trent's KQL blog (FREE). AMBIENT: Pocket Prep. EXAM-READY: MeasureUp SC-200. EXAM: ~£136.",
-    tutorFlag: "LOW-MODERATE TUTORING CASE. KQL is the stumbling block for most SC-200 candidates. If after 3 weeks of study you still can't write a KQL query from scratch to find 'failed logins from non-UK IP addresses in the last 7 days', consider a focused KQL session (£60-80/hr, 3-4 hours) with a Microsoft Sentinel practitioner. Otherwise self-study plus heavy lab time with public KQL rule libraries is sufficient.",
+    tutorFlag: "LOW-MODERATE TUTORING CASE. KQL is the stumbling block for most SC-200 candidates. If after 3 weeks of study the candidate still can't write a KQL query from scratch to find 'failed logins from non-UK IP addresses in the last 7 days', consider a focused KQL session (£60-80/hr, 3-4 hours) with a Microsoft Sentinel practitioner. Otherwise self-study plus heavy lab time with public KQL rule libraries is sufficient.",
     subjects: ["Microsoft Security Operations Analyst","Sentinel SIEM","Defender XDR","KQL intermediate","PowerShell intermediate"],
     tracks: ["A","C"],
     id: "sc-200", name: "Security Operations Analyst", code: "SC-200",
@@ -1125,7 +1125,7 @@ const CERTS = [
     cpe: 0, cpePeriod: 0, difficulty: 7, roi: 8, hours: [60, 80],
     skills: ["Sentinel", "Defender suite", "KQL", "Copilot for Security"],
     examFormat: "Multiple choice + drag-drop + KQL snippets + case studies. ~40-60 Qs, 100 min, passing 700/1000.",
-    projectRec: "Extend your SC-500 Sentinel workspace with end-to-end incident: alert → investigation (KQL hunting query) → automated response via Logic App → after-action runbook.",
+    projectRec: "Extend the SC-500 Sentinel workspace with end-to-end incident: alert → investigation (KQL hunting query) → automated response via Logic App → after-action runbook.",
     note: "Difficulty upgraded: KQL detection engineering and Sentinel hunting queries are genuinely hard, especially under exam conditions. Sentinel + Defender + KQL. Prereq option for SC-100. ⚠ 1-year validity, free renewal via Learn. Excellent fit for SOC/detection-engineering direction.",
     deps: ["security-plus"]
   },
@@ -1143,11 +1143,11 @@ const CERTS = [
     skills: ["Microsoft Purview", "Information protection", "DLP", "Insider risk", "DSPM for AI"],
     examFormat: "Multiple choice + drag-drop + case studies. ~40-60 Qs, 100 min, passing 700/1000.",
     projectRec: "Build a Purview information-protection runbook: sensitivity labels for a mock 3-tier data classification, DLP policies for credit-card / PII detection, DSPM-for-AI controls. Half a day's work, fits the CISSP data-protection domain perfectly.",
-    note: "STRATEGIC FIT: data protection is a CISSP domain (Asset Security, Domain 2). SC-401 gives you concrete Purview/DLP evidence to back the textbook. Replaced SC-400 (retired May 2025). 100-min exam, ~40-60 questions, passing 700/1000. Live blueprint includes AI-data protection. Updates Apr 27 2026 — verify content before booking. ⚠ 1-year validity, free renewal via Learn. Prereq: AZ-104 + Security+ background helpful but not required.",
+    note: "STRATEGIC FIT: data protection is a CISSP domain (Asset Security, Domain 2). SC-401 gives the candidate concrete Purview/DLP evidence to back the textbook. Replaced SC-400 (retired May 2025). 100-min exam, ~40-60 questions, passing 700/1000. Live blueprint includes AI-data protection. Updates Apr 27 2026 — verify content before booking. ⚠ 1-year validity, free renewal via Learn. Prereq: AZ-104 + Security+ background helpful but not required.",
     deps: ["security-plus"]
   },
   {
-    coverage: "Practical Network Penetration Tester — real-world simulation of a full internal network pentest. Eight required skill areas: (1) OSINT — subdomain enumeration, email harvesting, LinkedIn intelligence, document metadata analysis, breach data searching via legitimate sources. (2) External enumeration — Nmap full capabilities, service-specific fingerprinting, understanding attack surface. (3) Internal network attacks — SMB relay, LLMNR/NBT-NS poisoning, IPv6 attacks (mitm6). (4) Active Directory exploitation — Kerberoasting, AS-REP Roasting, Pass-the-Hash, Pass-the-Ticket, DCSync, BloodHound analysis, ACL abuse, GPP exploitation, unconstrained/constrained delegation. (5) Privilege escalation — Windows and Linux local privesc techniques, kernel exploits, service misconfigurations, SUID binaries, scheduled tasks. (6) Lateral movement — PsExec, WMI, PS remoting, SSH hopping, tunnelling/pivoting (SSH, Chisel, Ligolo). (7) Web application attacks — OWASP Top 10 at exploit level, especially SQL injection, command injection, file upload, IDOR. (8) Professional reporting — executive summary, finding writeups (description + impact + evidence + remediation), CVSS scoring, retest methodology. Depth: PROFESSIONAL PRACTICAL. No multiple choice. You must actually compromise the Active Directory domain controller and write a report that a paying client would accept. The 15-minute live debrief tests whether you can explain findings to senior pentesters — this is what no other sub-£1k cert tests.",
+    coverage: "Practical Network Penetration Tester — real-world simulation of a full internal network pentest. Eight required skill areas: (1) OSINT — subdomain enumeration, email harvesting, LinkedIn intelligence, document metadata analysis, breach data searching via legitimate sources. (2) External enumeration — Nmap full capabilities, service-specific fingerprinting, understanding attack surface. (3) Internal network attacks — SMB relay, LLMNR/NBT-NS poisoning, IPv6 attacks (mitm6). (4) Active Directory exploitation — Kerberoasting, AS-REP Roasting, Pass-the-Hash, Pass-the-Ticket, DCSync, BloodHound analysis, ACL abuse, GPP exploitation, unconstrained/constrained delegation. (5) Privilege escalation — Windows and Linux local privesc techniques, kernel exploits, service misconfigurations, SUID binaries, scheduled tasks. (6) Lateral movement — PsExec, WMI, PS remoting, SSH hopping, tunnelling/pivoting (SSH, Chisel, Ligolo). (7) Web application attacks — OWASP Top 10 at exploit level, especially SQL injection, command injection, file upload, IDOR. (8) Professional reporting — executive summary, finding writeups (description + impact + evidence + remediation), CVSS scoring, retest methodology. Depth: PROFESSIONAL PRACTICAL. No multiple choice. the candidate must actually compromise the Active Directory domain controller and write a report that a paying client would accept. The 15-minute live debrief tests whether the candidate can explain findings to senior pentesters — this is what no other sub-£1k cert tests.",
     prerequisites: "TCM Security recommends PJPT first if no pentesting background. Realistic skills: comfortable with Linux CLI (Kali specifically), can read and modify Python/PowerShell scripts, understand TCP/IP at packet level, can use Nmap proficiently (not just -sV), comfortable with Burp Suite Community, have compromised at least 20-30 easy/medium HackTheBox or TryHackMe boxes (especially AD-focused rooms), understand AD basics (domains, trusts, OUs, GPOs), have lab experience with at least one Kerberos attack. Network+ and Security+ knowledge level is the floor. OSCP preparation level is overkill but beneficial.",
     studyMaterials: "VENDOR-NATIVE: TCM Security Academy (academy.tcm-sec.com, ~£40/mo subscription includes PNPT exam attempt). TCM IS the source. Heath Adams is the gold-standard practical pentest instructor. No Pluralsight equivalent at practical depth. Complementary: HackTheBox Active Directory boxes for AD exploitation practice.",
     tutorFlag: "LOW TUTORING CASE. Community resources are strong (TCM Discord, HTB forums, Reddit /r/oscp). TCM's own bootcamp option (£600-900 for 4-day live training) is an alternative to tutoring — better value than 1:1 mentoring for most candidates. Only consider private tutoring if Active Directory attacks remain genuinely opaque after TCM's AD course — a senior pentester consultation (£80-120/hr, 2-3 hours) can unlock the attack chain mental model.",
@@ -1164,10 +1164,10 @@ const CERTS = [
     deps: ["security-plus"]
   },
   {
-    coverage: "PECB ISO/IEC 27001:2022 Lead Implementer. Seven competency domains: (1) Fundamental principles and concepts of an ISMS — what an ISMS is, why it exists, information security management vs IT security. (2) ISMS requirements (Clauses 4-10 of ISO 27001) — context of organisation (4), leadership (5), planning (6 — including risk assessment 6.1.2 and risk treatment 6.1.3), support (7 — competence, awareness, communication, documented information), operation (8), performance evaluation (9 — monitoring, internal audit, management review), improvement (10 — nonconformity and corrective action). (3) Planning of ISMS implementation — gap analysis, scope definition (boundaries!), Statement of Applicability (SoA) preparation, risk assessment methodology selection. (4) Implementation of an ISMS — Annex A controls (93 controls across 4 themes: organisational, people, physical, technological per 2022 revision), policies hierarchy, awareness programmes, implementation of specific controls (access control, cryptography, physical security, incident management, supplier relationships, privacy). (5) Monitoring and measurement — metrics definition, KPI/KRI, internal audit programme (ISO 19011 methodology). (6) Continual improvement — Plan-Do-Check-Act cycle, managing nonconformities, corrective action root cause analysis. (7) Preparation for certification audit — stage 1 (documentation review) vs stage 2 (implementation audit) readiness. Depth: IMPLEMENTATION-LEVEL, not auditor perspective. You are the person RUNNING the ISMS programme, not verifying it. EXAM FORMAT NOTE: PECB transitioning from essay-type to multiple-choice scenario-based, open-book. Current exam still includes essay scenarios asking 'for each clause, provide 2 concrete action plans' — tests applied implementation knowledge.",
+    coverage: "PECB ISO/IEC 27001:2022 Lead Implementer. Seven competency domains: (1) Fundamental principles and concepts of an ISMS — what an ISMS is, why it exists, information security management vs IT security. (2) ISMS requirements (Clauses 4-10 of ISO 27001) — context of organisation (4), leadership (5), planning (6 — including risk assessment 6.1.2 and risk treatment 6.1.3), support (7 — competence, awareness, communication, documented information), operation (8), performance evaluation (9 — monitoring, internal audit, management review), improvement (10 — nonconformity and corrective action). (3) Planning of ISMS implementation — gap analysis, scope definition (boundaries!), Statement of Applicability (SoA) preparation, risk assessment methodology selection. (4) Implementation of an ISMS — Annex A controls (93 controls across 4 themes: organisational, people, physical, technological per 2022 revision), policies hierarchy, awareness programmes, implementation of specific controls (access control, cryptography, physical security, incident management, supplier relationships, privacy). (5) Monitoring and measurement — metrics definition, KPI/KRI, internal audit programme (ISO 19011 methodology). (6) Continual improvement — Plan-Do-Check-Act cycle, managing nonconformities, corrective action root cause analysis. (7) Preparation for certification audit — stage 1 (documentation review) vs stage 2 (implementation audit) readiness. Depth: IMPLEMENTATION-LEVEL, not auditor perspective. the candidate are the person RUNNING the ISMS programme, not verifying it. EXAM FORMAT NOTE: PECB transitioning from essay-type to multiple-choice scenario-based, open-book. Current exam still includes essay scenarios asking 'for each clause, provide 2 concrete action plans' — tests applied implementation knowledge.",
     prerequisites: "Foundation-level ISO 27001 knowledge strongly recommended (PECB Foundation cert, or equivalent study). Realistic skills: can read a standard document fluently, understand risk terminology (likelihood, impact, inherent vs residual), comfortable with policy-document hierarchy, have worked with at least one compliance framework before (UK Cyber Essentials, NIST CSF, or similar). 5+ years of general security or audit experience useful but not required for exam pass; IS required for the credential to be meaningfully defensible. For AZ-104 + SC-300 holders with access control exposure, provides concrete examples for Annex A controls.",
     studyMaterials: "PRIMARY: PECB official ISO 27001 LI 5-day course (employer-funded if a representative organisation pursues). SECONDARY: Udemy 'ISO 27001 Lead Implementer' courses (~£15-30 on sale, less authoritative). FREE: ISO 27001:2022 standard text (purchase ~£170 from BSI, or read summaries free). Pluralsight has limited coverage. EXAM: included with PECB course.",
-    tutorFlag: "MODERATE TUTORING CASE, but in a specific way. Generic exam tutoring less valuable. What IS valuable: a 2-hour consultation with a practising ISMS implementer reviewing a draft Statement of Applicability for your hypothetical a representative organisation client scenario. This is the 'portfolio project' plus prep in one. Codementor GRC/ISO consultants £60-100/hr, 2-3 hours = £120-300. Pays off because a real-feel SoA is also a CV asset, not just exam prep.",
+    tutorFlag: "MODERATE TUTORING CASE, but in a specific way. Generic exam tutoring less valuable. What IS valuable: a 2-hour consultation with a practising ISMS implementer reviewing a draft Statement of Applicability for the hypothetical a representative organisation client scenario. This is the 'portfolio project' plus prep in one. Codementor GRC/ISO consultants £60-100/hr, 2-3 hours = £120-300. Pays off because a real-feel SoA is also a CV asset, not just exam prep.",
     subjects: ["ISO 27001 Lead Implementer","ISMS implementation","Compliance frameworks","No scripting required"],
     tracks: ["C"],
     id: "iso-27001-li", name: "ISO/IEC 27001 Lead Implementer", code: "PECB 27001 LI",
@@ -1210,13 +1210,13 @@ const CERTS = [
     cpe: 0, cpePeriod: 0, difficulty: 9, roi: 7, hours: [200, 300],
     skills: ["Offensive methodology", "AD attacks", "Pentest reporting"],
     examFormat: "Hands-on practical pentest + written report. 10 days lab + 4 days report. No multiple choice. Pass threshold ~85%.",
-    projectRec: "Full pentest report (redacted) — rare junior evidence. Weak cohesion with defensive trajectory; only if Phase 4 redirected you.",
+    projectRec: "Full pentest report (redacted) — rare junior evidence. Weak cohesion with defensive trajectory; only if Phase 4 redirected the candidate.",
     note: "28 modules + 10-day practical + 10-day report. Most affordable OSCP alternative. Do not attempt without THM PT1 first. Weak cohesion with defensive goal.",
     deps: ["thm-pt1"]
   },
   {
     coverage: "CompTIA Pentest+ PT0-003 (current — released June 2024, replaced PT0-002). Five domains: (1) Engagement management 13% — scoping, ROE, contracts, PII handling, communication, reporting structure. (2) Reconnaissance and enumeration 21% — passive recon (OSINT, Maltego, Shodan, theHarvester), active scanning (nmap, masscan, dirb), AD enumeration (BloodHound, ldapsearch). (3) Vulnerability discovery and analysis 17% — vulnerability scanners (Nessus, OpenVAS, Nikto), manual verification, prioritisation (CVSS), false positive analysis. (4) Attacks and exploits 35% — THE LARGEST DOMAIN. Network attacks (MITM, ARP poisoning, VLAN hopping), application attacks (XSS, SQLi, IDOR, SSRF — OWASP Top 10 alignment), wireless (Wi-Fi, Bluetooth), social engineering, AD attacks (Kerberoasting, AS-REP roasting, GPP, NTLM relay), cloud-specific attacks (S3 misconfig, Azure AD enumeration, IAM privilege escalation), post-exploitation (lateral movement, persistence, AI/ML attacks NEW in PT0-003). (5) Post-exploitation and lateral movement 14% — Mimikatz, BloodHound paths, persistence mechanisms, anti-forensics. Depth: applied offensive — heavy PBQ component with simulated terminals. 85 questions max, 165 mins, passing 750/900.",
-    prerequisites: "Network+ (you have ✓), Security+ (Phase 1) recommended. CompTIA suggests 3-4 years hands-on infosec + dedicated pentest study. Realistic skills before sitting: comfortable with nmap fluently, used Burp Suite Community on at least 5 web app challenges, completed 20+ HTB/THM machines, can explain OWASP Top 10 by exploit type, basic Bash and Python for tool customisation.",
+    prerequisites: "Network+ (the candidate have ✓), Security+ (Phase 1) recommended. CompTIA suggests 3-4 years hands-on infosec + dedicated pentest study. Realistic skills before sitting: comfortable with nmap fluently, used Burp Suite Community on at least 5 web app challenges, completed 20+ HTB/THM machines, can explain OWASP Top 10 by exploit type, basic Bash and Python for tool customisation.",
     studyMaterials: "PRIMARY: Jason Dion PT0-003 Udemy (~£12 on sale). SECONDARY: TCM Security Practical Ethical Hacking + Practical Web Application Pentesting (~£25/mo, gold-standard practical content). FREE: HTB Academy modules tagged Pentest+, OverTheWire, PortSwigger Web Security Academy (excellent free content). HANDS-ON: HTB labs subscription if not already (~£15/mo). EXAM-READY: Boson ExSim PT0-003 (~£90). EXAM: ~£320 (~$404 USD).",
     tutorFlag: null,
     subjects: ["Pentest methodology", "Network exploitation", "Web app exploitation", "AD attacks", "Cloud attacks (NEW in PT0-003)"],
@@ -1228,13 +1228,13 @@ const CERTS = [
     skills: ["Pentest methodology", "AD attack chains", "Web app exploitation", "Cloud pentest awareness", "Report writing"],
     examFormat: "Multiple choice + multi-response + Performance-Based Questions (simulated terminals, hands-on tasks). 85 Qs max, 165 min, passing 750/900.",
     projectRec: "10-machine HTB writeup repo with sanitised methodology notes. Pair with one Azure-focused recon project (Azure AD enumeration with ROADtools, documented findings). Each writeup = OWASP/MITRE ATT&CK mapping. The repo IS the artefact for both Track C and CASP+/SecurityX positioning.",
-    note: "🎯 Defender's offensive understanding cert. NEW in PT0-003: cloud attack paths (Azure AD, AWS IAM), AI/ML attack vectors. Feeds directly into SecurityX content. For your defensive trajectory: lower priority than CySA+ but valuable for Track A (cloud security architects benefit from understanding offensive cloud attack paths) and Track C (SOC architects need to understand attacker TTPs). Less relevant for Track B (cyber-physical) — most pentest content is enterprise IT, not OT/physical. Stacks toward CompTIA Network Vulnerability Assessment Professional (CNVP) with Sec+ + (Linux+ or CySA+). Auto-renews under SecurityX cascade if you pursue that. UK demand: senior pentester roles £55-90k, but most listings prefer OSCP/CRTP over Pentest+ alone — Pentest+ is more about CV breadth than specialist pentest career signal.",
+    note: "🎯 Defender's offensive understanding cert. NEW in PT0-003: cloud attack paths (Azure AD, AWS IAM), AI/ML attack vectors. Feeds directly into SecurityX content. For the defensive trajectory: lower priority than CySA+ but valuable for Track A (cloud security architects benefit from understanding offensive cloud attack paths) and Track C (SOC architects need to understand attacker TTPs). Less relevant for Track B (cyber-physical) — most pentest content is enterprise IT, not OT/physical. Stacks toward CompTIA Network Vulnerability Assessment Professional (CNVP) with Sec+ + (Linux+ or CySA+). Auto-renews under SecurityX cascade if the candidate pursue that. UK demand: senior pentester roles £55-90k, but most listings prefer OSCP/CRTP over Pentest+ alone — Pentest+ is more about CV breadth than specialist pentest career signal.",
     deps: ["security-plus"]
   },
   {
     coverage: "CREST Registered Penetration Tester (CRT). UK CREST-certified practical pentest exam. Two-component examination: (1) Multiple Choice — 120 questions, 2 hours, covering CREST CPSA syllabus (Council for Registered Ethical Security Testers Practitioner Security Analyst). Topics: networking fundamentals, OS knowledge, common vulnerabilities, web app testing, infrastructure pentest methodology, reporting standards. (2) Practical — hands-on infrastructure pentest in CREST-controlled lab environment. Demonstrate live exploitation of pre-built scenarios, report findings to CREST examiner standard. Pass both components within 12 months to achieve CRT. CRT is the entry tier of UK CREST pentesting career ladder; CCT INF (Certified Tester Infrastructure) and CCT APP (Certified Tester Application) are senior tiers requiring 2-3 years professional pentest experience post-CRT. CRT IS the qualification that gates UK ITHC (IT Health Check) work and NCSC CHECK scheme contractor authorisation — almost no UK pentest contracting work is open to non-CREST testers.",
     prerequisites: "CompTIA Pentest+ (Phase 4) provides knowledge foundation. CREST recommends CPSA exam first (multiple choice precursor, ~£235) but CRT exam itself includes the CPSA content. Realistic skills before sitting CRT: comfortable using Burp Suite Pro extensively, completed 30+ HTB / TryHackMe machines spanning Active Directory + web app + Linux privilege escalation, fluent with nmap/Metasploit/Mimikatz/BloodHound, written 3+ practice pentest reports. CRT is a UK-specific commitment — only worth pursuing if Track C (Cyber Security) or specialist UK pentest career is the goal.",
-    studyMaterials: "PRIMARY: TryHackMe Pentest+ + Junior Penetration Tester paths (covered in Phase 2-4). SECONDARY: TCM Security Practical Ethical Hacking + Practical Web App Pentesting (~£25/mo). HANDS-ON: HTB labs subscription (~£15/mo) — 50+ machines minimum before booking. CREST Examination Centre prep: CREST publishes CPSA + CRT syllabus PDFs (FREE on crest-approved.org). EXAM-READY: Boson + book CREST mock practical via approved provider (~£300). Note: CREST does not authorise specific training providers — you build readiness independently.",
+    studyMaterials: "PRIMARY: TryHackMe Pentest+ + Junior Penetration Tester paths (covered in Phase 2-4). SECONDARY: TCM Security Practical Ethical Hacking + Practical Web App Pentesting (~£25/mo). HANDS-ON: HTB labs subscription (~£15/mo) — 50+ machines minimum before booking. CREST Examination Centre prep: CREST publishes CPSA + CRT syllabus PDFs (FREE on crest-approved.org). EXAM-READY: Boson + book CREST mock practical via approved provider (~£300). Note: CREST does not authorise specific training providers — the candidate build readiness independently.",
     tutorFlag: "CONSIDER for CRT practical exam. A 2-3 hour Codementor session with a CREST-registered tester (£100-150/hr UK) walking through their methodology for the practical exam is high value. CRT pass rates are notoriously low (anecdotally 30-40% first sit) — methodology matters more than tool fluency.",
     subjects: ["UK pentest qualification", "CREST CRT", "ITHC contractor work", "NCSC CHECK eligibility"],
     tracks: ["C"],
@@ -1245,7 +1245,7 @@ const CERTS = [
     skills: ["UK-recognised pentest", "ITHC eligibility", "CREST methodology", "Hands-on infrastructure pentest"],
     examFormat: "Component 1: 120 multiple-choice, 2 hours. Component 2: Hands-on practical pentest in CREST lab, ~6 hours. Both components must pass within 12 months. Practical includes a written report graded to CREST examiner standard. Pass/fail.",
     projectRec: "CRT itself IS the project — pass evidence is the practical report. Pre-exam: build a private GitHub of 10+ HTB writeups using CREST report structure (Executive Summary, Findings, Risk Rating, Evidence, Remediation). The discipline of CREST report writing is the differentiator from OSCP-style writeups.",
-    note: "🎯 UK PENTEST GOLD STANDARD. The qualification that opens UK contractor pentest work. CRT (entry tier) → CCT INF (mid tier, requires 2 yrs post-CRT experience) → CCT APP (web specialism). UK ITHC scheme requires CREST-registered testers; NCSC CHECK scheme requires CREST. Salaries: £45-65k entry CRT-holder, £65-90k CCT INF, £90-130k senior CREST consultant. UK-SPECIFIC value — outside UK, OSCP carries more weight. Pursue ONLY if Track C is primary direction OR you want UK pentest contracting optionality. NOT applicable to Track B (physical security) trajectory.",
+    note: "🎯 UK PENTEST GOLD STANDARD. The qualification that opens UK contractor pentest work. CRT (entry tier) → CCT INF (mid tier, requires 2 yrs post-CRT experience) → CCT APP (web specialism). UK ITHC scheme requires CREST-registered testers; NCSC CHECK scheme requires CREST. Salaries: £45-65k entry CRT-holder, £65-90k CCT INF, £90-130k senior CREST consultant. UK-SPECIFIC value — outside UK, OSCP carries more weight. Pursue ONLY if Track C is primary direction OR the candidate want UK pentest contracting optionality. NOT applicable to Track B (physical security) trajectory.",
     deps: ["pentest-plus"]
   },
 
@@ -1254,7 +1254,7 @@ const CERTS = [
     coverage: "Four design domains (weights from April 2026 study guide): (1) Design identity, governance, and monitoring solutions 25-30% — Entra ID architecture (tenants, management groups, subscriptions), conditional access design, hybrid identity, RBAC and custom roles at scale, Azure Policy governance frameworks, monitoring/logging strategy across resources. (2) Design data storage solutions 25-30% — choose between Cosmos DB (consistency levels, partitioning), Azure SQL variants, Synapse, Data Lake, caching patterns (Redis), messaging services comparison (Service Bus vs Event Grid vs Event Hubs vs Queue Storage). (3) Design business continuity solutions 10-15% — backup strategies, Site Recovery, multi-region architectures, RTO/RPO trade-offs, disaster recovery patterns. (4) Design infrastructure solutions 30-35% — THE LARGEST DOMAIN. Compute choice (VMs vs App Service vs Functions vs Container Apps vs AKS), network topology (hub-spoke, Virtual WAN), migration patterns (lift-and-shift vs refactor vs rebuild). Depth: ARCHITECTURAL REASONING, not implementation. AZ-104 asks 'what does this service do and how to configure'; AZ-305 asks 'which service to use and why, what trade-offs'. Case studies dominate — long scenarios followed by multi-question decision chains. Open book with Microsoft Learn access.",
     prerequisites: "AZ-104 is a hard prerequisite (Microsoft requires it to earn the Expert credential). Realistic skills before AZ-305: can whiteboard a hub-spoke network topology, understand Azure Well-Architected Framework pillars (Cost, Operations, Performance, Reliability, Security), comfortable with architectural trade-off language (e.g., 'strong consistency vs throughput in Cosmos'), have read 10+ Azure Architecture Center reference architectures, fluency choosing between comparable services (Cosmos vs SQL, Service Bus vs Event Hubs, AKS vs Container Apps).",
     studyMaterials: "PRIMARY: John Savill's AZ-305 YouTube series (FREE, COMPREHENSIVE — Savill's expert-tier content is gold standard). SECONDARY: Pluralsight AZ-305 path. SUPPLEMENT: Microsoft Learn AZ-305 path + Azure Architecture Center (FREE). LAB: existing Azure infrastructure from earlier Azure certs. AMBIENT: Pocket Prep. EXAM-READY: MeasureUp AZ-305. EXAM: ~£136. Prereq: AZ-104.",
-    tutorFlag: "LOW TUTORING CASE. Self-study path is well-trodden with strong free resources. Only tutoring worth considering: a single 2-hour session with an Azure architect reviewing your personal whiteboarded architectures before exam. Codementor senior Azure architect ~£80-120 for the session. Not essential if practice exam scores are strong.",
+    tutorFlag: "LOW TUTORING CASE. Self-study path is well-trodden with strong free resources. Only tutoring worth considering: a single 2-hour session with an Azure architect reviewing the personal whiteboarded architectures before exam. Codementor senior Azure architect ~£80-120 for the session. Not essential if practice exam scores are strong.",
     subjects: ["Azure Solutions Architect Expert","Architecture design","Multi-tier solutions","Cost optimisation","PowerShell + CLI intermediate"],
     tracks: ["A"],
     id: "az-305", name: "Azure Solutions Architect Expert", code: "AZ-305",
@@ -1319,10 +1319,10 @@ const CERTS = [
     deps: ["pentest-plus"]
   },
   {
-    coverage: "Eight domains (ISC2 2024 CBK, in effect through 2027-2028): (1) Security and Risk Management 15% — governance, risk frameworks, threat modelling, BCP, compliance, ethics. (2) Asset Security 10% — data classification, retention, privacy controls, data lifecycle. (3) Security Architecture and Engineering 13% — security models (Bell-LaPadula, Biba), cryptography fundamentals, secure design principles, vulnerability assessment, cloud security. (4) Communication and Network Security 13% — network architecture, secure network components, secure communication channels. (5) Identity and Access Management 13% — access control models, identity lifecycle, federation, authentication mechanisms. (6) Security Assessment and Testing 12% — test strategies, security audit, vulnerability assessment, penetration testing. (7) Security Operations 13% — investigations, logging/monitoring, incident management, disaster recovery, change management. (8) Software Development Security 11% — SDLC security, application security controls, secure coding. Depth: BREADTH NOT DEPTH. The exam tests a manager-level perspective — not 'how do I configure a firewall' but 'what is the organisational impact of this firewall decision'. You WILL encounter topics you've never worked with professionally (SCADA, industrial control systems, maritime law implications). Answer selection requires the 'manager mindset': risk-based reasoning, policy-before-technology, business-alignment-first.",
+    coverage: "Eight domains (ISC2 2024 CBK, in effect through 2027-2028): (1) Security and Risk Management 15% — governance, risk frameworks, threat modelling, BCP, compliance, ethics. (2) Asset Security 10% — data classification, retention, privacy controls, data lifecycle. (3) Security Architecture and Engineering 13% — security models (Bell-LaPadula, Biba), cryptography fundamentals, secure design principles, vulnerability assessment, cloud security. (4) Communication and Network Security 13% — network architecture, secure network components, secure communication channels. (5) Identity and Access Management 13% — access control models, identity lifecycle, federation, authentication mechanisms. (6) Security Assessment and Testing 12% — test strategies, security audit, vulnerability assessment, penetration testing. (7) Security Operations 13% — investigations, logging/monitoring, incident management, disaster recovery, change management. (8) Software Development Security 11% — SDLC security, application security controls, secure coding. Depth: BREADTH NOT DEPTH. The exam tests a manager-level perspective — not 'how do I configure a firewall' but 'what is the organisational impact of this firewall decision'. the candidate WILL encounter topics the candidate has never worked with professionally (SCADA, industrial control systems, maritime law implications). Answer selection requires the 'manager mindset': risk-based reasoning, policy-before-technology, business-alignment-first.",
     prerequisites: "5 years of cumulative paid full-time experience in 2+ of the 8 CBK domains (does NOT meet this at exam time — will become CISSP Associate until experience accrues). A four-year degree OR one additional ISC2/approved cert waives 1 year. Realistic skills: understand risk management terminology fluently, can articulate why controls exist not just what they do, comfortable switching between technical and governance vocabulary. Warning: technical seniority does not translate automatically to CISSP readiness — many senior engineers fail because they answer from a technician's perspective rather than a manager's.",
     studyMaterials: "PRIMARY: Destination Certification Mind Map (FREE, learn.destcert.com) + Master Class (~£500 — BEST-IN-CLASS for CISSP, widely rated above all alternatives). SECONDARY: Pluralsight CISSP path for video complement. AUTHORITATIVE: ISC2 Official Study Guide (Sybex, ~£40) + ISC2 Practice Tests book (~£25). AMBIENT: Pocket Prep CISSP daily — strong CISSP coverage. EXAM-READY: Boson ExSim CISSP (~£90 — closest match to real exam style). FALLBACK: ChatGPT/Claude for risk management nuance, then 2-hour Codementor session if hitting walls. EXAM: ~£595.",
-    tutorFlag: "STRONG TUTORING CASE for the manager-mindset pivot. Most self-study CISSP failures happen because the candidate can't consistently pick the 'manager answer' under pressure. A 4-6 hour session bundle with a CISSP-certified mentor reviewing practice test misses and explaining ISC2's answer reasoning is high-value. Codementor CISSP mentors £60-100/hr; 6 hours = £360-600. Worth doing 2-3 weeks before exam date when Boson scores plateau at 70-75%. Alternative: ISC2 Official Instructor-Led Training 5-day bootcamp (£2,500-3,500) — only worth it if employer funds or you've failed once.",
+    tutorFlag: "STRONG TUTORING CASE for the manager-mindset pivot. Most self-study CISSP failures happen because the candidate can't consistently pick the 'manager answer' under pressure. A 4-6 hour session bundle with a CISSP-certified mentor reviewing practice test misses and explaining ISC2's answer reasoning is high-value. Codementor CISSP mentors £60-100/hr; 6 hours = £360-600. Worth doing 2-3 weeks before exam date when Boson scores plateau at 70-75%. Alternative: ISC2 Official Instructor-Led Training 5-day bootcamp (£2,500-3,500) — only worth it if employer funds or the candidate has failed once.",
     subjects: ["8 domains (CBK)","Managerial mindset","Risk-based decisions","Security architecture","No scripting required"],
     tracks: ["C"],
     id: "cissp", name: "CISSP", code: "CISSP",
@@ -1332,23 +1332,23 @@ const CERTS = [
     cpe: 120, cpePeriod: 36, difficulty: 8, roi: 10, hours: [250, 300],
     skills: ["8 domains", "Managerial mindset", "Risk-based decisions"],
     examFormat: "Computerized Adaptive Test (CAT). 100-150 Qs, 3 hours. Multiple choice + innovative items. Exam ends when 95% confidence reached on pass/fail. No going back to prior Qs.",
-    projectRec: "Threat-model write-up of a sanitised a representative organisation regulated or critical-infrastructure-style scenario, mapped to CISSP domains 1/3/4/7. CNI exposure is rare among CISSP candidates — this is the differentiator that gets you past 200-applicant filters. Doubles as endorsement evidence.",
-    note: "🎓 TIMING: at P5 you will likely have ~3yr direct security experience → sit the exam and hold ASSOCIATE OF ISC2 until the 5yr endorsement clears; pre-check whether MSP years part-qualify under ISC2 domains (many do). 🔑 GATEWAY CERT — biggest single salary step-change. 676 UK listings (Apr 2026, +14% YoY). UK median £80k · UK market benchmark (up +24% YoY) · 90th %ile £119,600 · London £87.5k. RQF Level 7. Associate of ISC2 likely given experience timeline. 40 CPE/yr + ~£100/yr AMF. Suspend ALL conditional work during CISSP prep.",
+    projectRec: "Threat-model write-up of a sanitised a representative organisation regulated or critical-infrastructure-style scenario, mapped to CISSP domains 1/3/4/7. CNI exposure is rare among CISSP candidates — this is the differentiator that gets the candidate past 200-applicant filters. Doubles as endorsement evidence.",
+    note: "🎓 TIMING: at P5 the candidate will likely have ~3yr direct security experience → sit the exam and hold ASSOCIATE OF ISC2 until the 5yr endorsement clears; pre-check whether MSP years part-qualify under ISC2 domains (many do). 🔑 GATEWAY CERT — biggest single salary step-change. 676 UK listings (Apr 2026, +14% YoY). UK median £80k · UK market benchmark (up +24% YoY) · 90th %ile £119,600 · London £87.5k. RQF Level 7. Associate of ISC2 likely given experience timeline. 40 CPE/yr + ~£100/yr AMF. Suspend ALL conditional work during CISSP prep.",
     deps: ["cysa-plus"],
     applicationGuide: {
           "verified": "2026-05-02",
           "verifyAt": "isc2.org/certifications/cissp/cissp-experience-requirements",
-          "route": "ISC2 direct application. Pass CISSP exam first, THEN apply for endorsement within 9 months. Endorsement requires another active ISC2 member in good standing to vouch for your 5-year experience claim across the 8 CISSP domains. If you cannot find an endorser personally, ISC2 itself can endorse you based on documentation (slower route).",
+          "route": "ISC2 direct application. Pass CISSP exam first, THEN apply for endorsement within 9 months. Endorsement requires another active ISC2 member in good standing to vouch for the 5-year experience claim across the 8 CISSP domains. If the candidate cannot find an endorser personally, ISC2 itself can endorse the candidate based on documentation (slower route).",
           "cost": "Exam $749 USD (~£590) + Annual Maintenance Fee $135 USD/yr (~£105) once certified. Apply for ISC2 Candidate status BEFORE the exam to unlock 10% off self-paced training and 50% off practice test books.",
-          "timeline": "Realistic 9-15 months end-to-end: 3-6 months exam prep + 1-3 months post-exam endorsement assembly + 6-8 weeks ISC2 review (random audits possible). 9-month hard deadline post-exam to submit endorsement — miss it and your exam result is voided. Annual CPE maintenance ongoing (40 CPE/yr min, 120 over 3 years).",
+          "timeline": "Realistic 9-15 months end-to-end: 3-6 months exam prep + 1-3 months post-exam endorsement assembly + 6-8 weeks ISC2 review (random audits possible). 9-month hard deadline post-exam to submit endorsement — miss it and the exam result is voided. Annual CPE maintenance ongoing (40 CPE/yr min, 120 over 3 years).",
           "steps": [
                 {
                       "title": "1. Confirm 5-year experience eligibility before booking exam",
-                      "detail": "Five years cumulative paid work in 2 of the 8 CISSP domains (Security & Risk Mgmt, Asset Security, Security Architecture, Comm/Network Security, IAM, Security Assessment & Testing, Security Operations, Software Dev Security). Sec+/CCNA/CASP+ each waive 1 year (one-time, not stackable). 4-year degree also waives 1 year. CRITICAL: ISC2 reduced the approved waiver list April 2026 — CISA, CRISC, CEH, OSCP, most GIAC certs no longer count. Verify your specific cert waiver is still on the list at time of application."
+                      "detail": "Five years cumulative paid work in 2 of the 8 CISSP domains (Security & Risk Mgmt, Asset Security, Security Architecture, Comm/Network Security, IAM, Security Assessment & Testing, Security Operations, Software Dev Security). Sec+/CCNA/CASP+ each waive 1 year (one-time, not stackable). 4-year degree also waives 1 year. CRITICAL: ISC2 reduced the approved waiver list April 2026 — CISA, CRISC, CEH, OSCP, most GIAC certs no longer count. Verify the specific cert waiver is still on the list at time of application."
                 },
                 {
                       "title": "2. Decide: Associate route or full route",
-                      "detail": "If you don't yet have 5 years of cyber-specific experience (likely the case at Phase 5 ~2030-2031), pass exam → become Associate of ISC2 → 6 years to accumulate experience → submit endorsement when ready. Associate AMF $50/yr (cheaper). For the intended career progression: probably Associate route initially, then convert when a representative organisation work + future architect work crosses the 5-year threshold."
+                      "detail": "If the candidate don't yet have 5 years of cyber-specific experience (likely the case at Phase 5 ~2030-2031), pass exam → become Associate of ISC2 → 6 years to accumulate experience → submit endorsement when ready. Associate AMF $50/yr (cheaper). For the intended career progression: probably Associate route initially, then convert when a representative organisation work + future architect work crosses the 5-year threshold."
                 },
                 {
                       "title": "3. Prepare exam: 3-6 months focused study",
@@ -1356,7 +1356,7 @@ const CERTS = [
                 },
                 {
                       "title": "4. Pass exam (Pearson VUE)",
-                      "detail": "Computerized Adaptive Testing (CAT) globally now. Algorithm ends as early as Q100 if confident, max 150. Bring 2 forms of ID. After passing, you receive notification within hours and the 9-month endorsement clock starts."
+                      "detail": "Computerized Adaptive Testing (CAT) globally now. Algorithm ends as early as Q100 if confident, max 150. Bring 2 forms of ID. After passing, the candidate receive notification within hours and the 9-month endorsement clock starts."
                 },
                 {
                       "title": "5. Document experience — STAR format, domain-mapped",
@@ -1364,7 +1364,7 @@ const CERTS = [
                 },
                 {
                       "title": "6. Identify endorser — active ISC2 member in good standing",
-                      "detail": "Endorser vouches for accuracy of relevant experience claims and your professional character. They put their ISC2 reputation on the application. Ideal endorser: someone with CISSP/CCSP/CISM who has worked with you and knows security work first-hand. If you don't know one, ISC2 endorses directly but takes longer. By Phase 5 you should have ISC2-credentialed contacts via the intended career progression — start cultivating those relationships in Phase 3-4."
+                      "detail": "Endorser vouches for accuracy of relevant experience claims and the professional character. They put their ISC2 reputation on the application. Ideal endorser: someone with CISSP/CCSP/CISM who has worked with the candidate and knows security work first-hand. If the candidate don't know one, ISC2 endorses directly but takes longer. By Phase 5 the candidate should have ISC2-credentialed contacts via the intended career progression — start cultivating those relationships in Phase 3-4."
                 },
                 {
                       "title": "7. Submit endorsement application within 9 months",
@@ -1372,11 +1372,11 @@ const CERTS = [
                 },
                 {
                       "title": "8. Maintain via CPE — 40/yr minimum, 120 over 3-year cycle",
-                      "detail": "Track via ISC2 portal. CPEs from: conferences, training, ISC2 webinars (free), volunteer activities, ISC2 chapter participation, mentoring, publishing. Many activities you'll do naturally count. AMF $135/yr. Re-validation cycle ongoing."
+                      "detail": "Track via ISC2 portal. CPEs from: conferences, training, ISC2 webinars (free), volunteer activities, ISC2 chapter participation, mentoring, publishing. Many activities the candidate will do naturally count. AMF $135/yr. Re-validation cycle ongoing."
                 }
           ],
           "evidence": [
-                "🔴 HIGHEST RISK: Cyber-specific experience credibility. By Phase 5 (~2030-2031) you'll need 5 years of qualifying cyber work post-Sec+. a representative organisation + future architect role + Phase 2-4 cyber-specific work should clear this. Document continuously throughout Phases 2-5 — don't try to reconstruct retrospectively.",
+                "🔴 HIGHEST RISK: Cyber-specific experience credibility. By Phase 5 (~2030-2031) the candidate will need 5 years of qualifying cyber work post-Sec+. a representative organisation + future architect role + Phase 2-4 cyber-specific work should clear this. Document continuously throughout Phases 2-5 — don't try to reconstruct retrospectively.",
                 "Domain coverage: target 2+ of 8 CISSP domains explicitly demonstrated. Good combinations for the intended career progression: Domain 3 (Architecture) + Domain 4 (Network Security) + Domain 7 (Operations) — Track A/B convergence territory.",
                 "Detailed role descriptions: each position needs paragraph-length description naming specific security activities, not generic IT-with-security-flavour summaries.",
                 "Quantification: '300-instance environment', 'reduced incident response time by 40%', '5 customer environments hardened' — specific numbers help endorser/audit credibility.",
@@ -1384,7 +1384,7 @@ const CERTS = [
           ],
           "referees": {
                 "guidance": "Referees/endorsers must speak credibly to cyber security architecture and operations work. Best practice: one internal (manager/senior colleague) + one external (peer, customer-side contact, former colleague). Both should have worked with the applicant for ≥1 year and seen the relevant work first-hand.",
-                "outreachTemplate": "LinkedIn / email outreach script: 'Hi [Name], I'm applying for CISSP. The application requires someone familiar with my cyber security architecture and operations work to act as a [referee/endorser]. Would you be willing? It's typically a structured form or short written confirmation, plus possible follow-up if they need to verify details. Happy to walk through what's involved on a quick call. Application takes [N] months — no urgency. I'd really value support.' Approach 3-4 candidates to secure 2 confirmed yeses.",
+                "outreachTemplate": "LinkedIn / email outreach script: 'Hi [Name], I'm applying for CISSP. The application requires someone familiar with my cyber security architecture and operations work to act as a [referee/endorser]. Would the candidate be willing? It's typically a structured form or short written confirmation, plus possible follow-up if they need to verify details. Happy to walk through what's involved on a quick call. Application takes [N] months — no urgency. I'd really value support.' Approach 3-4 candidates to secure 2 confirmed yeses.",
                 "whoToAsk": [
                       "a technical lead or senior engineer who has seen cyber/architecture work",
                       "Former colleague at MSP-side senior level",
@@ -1395,18 +1395,18 @@ const CERTS = [
           },
           "pitfalls": [
                 "🔴 9-month endorsement deadline — miss it and exam result is voided ($749 wasted, must retake)",
-                "Approved credential waiver list changed April 2026 — verify YOUR cert still qualifies at time of application, not at time of plan creation",
+                "Approved credential waiver list changed April 2026 — verify the cert still qualifies at time of application, not at time of plan creation",
                 "Vague duty descriptions — assessors and endorsers can spot 'IT operations that touched security occasionally' vs genuine security work",
                 "Choosing wrong endorser — must be ISC2 member in good standing AND know relevant work; weak endorser is worse than ISC2 endorsement directly",
                 "Inflating claims — ISC2 audits are random, false claims = permanent bar from all ISC2 certs",
-                "Applying too early in Associate route — better to wait until you have genuine domain coverage to argue, otherwise risks rejection on substance"
+                "Applying too early in Associate route — better to wait until the candidate have genuine domain coverage to argue, otherwise risks rejection on substance"
           ],
-          "note": "✓ Verified against ISC2 official documentation (May 2026). CISSP is your Track A/B/C convergence credential — universal Tier S gateway. Plan exam attempt for ~Phase 5 (2030-2031), Associate route initially if 5-year experience not yet accumulated. UK CONTEXT: ISC2 has active UK chapters (London, Edinburgh, Manchester) — chapter participation provides free CPE and endorser network. CISSP is mapped on the NCSC Certified Cyber Professional framework and required/preferred for many UK Government cyber roles (NCSC, MOD, GCHQ, CNI operators). Pearson VUE UK testing centres include London, Manchester, Birmingham, Bristol, Edinburgh, Glasgow, Cardiff. Costs in USD because ISC2 prices globally — pay via GBP credit card at conversion rate. Employer reimbursement: typically claimable as professional subscription (HMRC professional bodies list — check ISC2 UK status). If self-funding, AMF is a deductible professional expense for self-employed."
+          "note": "✓ Verified against ISC2 official documentation (May 2026). CISSP is the Track A/B/C convergence credential — universal Tier S gateway. Plan exam attempt for ~Phase 5 (2030-2031), Associate route initially if 5-year experience not yet accumulated. UK CONTEXT: ISC2 has active UK chapters (London, Edinburgh, Manchester) — chapter participation provides free CPE and endorser network. CISSP is mapped on the NCSC Certified Cyber Professional framework and required/preferred for many UK Government cyber roles (NCSC, MOD, GCHQ, CNI operators). Pearson VUE UK testing centres include London, Manchester, Birmingham, Bristol, Edinburgh, Glasgow, Cardiff. Costs in USD because ISC2 prices globally — pay via GBP credit card at conversion rate. Employer reimbursement: typically claimable as professional subscription (HMRC professional bodies list — check ISC2 UK status). If self-funding, AMF is a deductible professional expense for self-employed."
     }
   },
   {
     coverage: "CompTIA SecurityX CAS-005 (formerly CASP+ — rebranded December 2024, CAS-004 retired 17 June 2025). Part of CompTIA's new Xpert series (highest tier alongside future Network+ Xpert and others). Four domains: (1) Governance, Risk, and Compliance 20% — security frameworks (NIST CSF, ISO 27001, COBIT), risk management (FAIR, OCTAVE), regulatory mapping (UK GDPR, NIS2, DORA, sector-specific), supply chain risk, M&A security due diligence. (2) Security Architecture 27% — Zero Trust design, microsegmentation, SASE/SD-WAN, deperimeterization, hybrid/multi-cloud architecture (CASB, CSPM, container security across providers), data protection at rest/in transit/in use, secure software architecture (DevSecOps integration). (3) Security Engineering 31% — THE LARGEST DOMAIN. PKI/crypto implementation (TLS, mTLS, certificate management, HSM), IAM engineering (federation, SAML, OAuth, OIDC, conditional access design), automation (PowerShell, Bash, Python scripts; SOAR; IaC security; generative AI in security ops — NEW), AI/ML security (model attacks, prompt injection — NEW in CAS-005). (4) Security Operations 22% — threat hunting (TTPs, IoCs, MITRE ATT&CK), incident response coordination, forensics at enterprise scale, vulnerability management programmes, attack surface management. Depth: HANDS-ON ADVANCED PRACTITIONER — only CompTIA cert at this tier with PBQs throughout. CAS-005 is pass/fail (no scaled score published). 90 questions max, 165 minutes. Heavy emphasis on PBQs (simulated environments, scripting tasks, architecture diagram review).",
-    prerequisites: "CompTIA recommends 10+ years general IT, 5+ years hands-on security, plus prior certs equivalent to Network+, Security+, CySA+, Cloud+, PenTest+ (or knowledge equivalents). For the intended career progression: realistically Phase 5 timing (2029-2030) when you'd have ~3-4 years cyber-specific experience post-Sec+ + prior infrastructure/support experience. Realistic skills before sitting: comfortable scripting in PowerShell + Python + Bash, can architect a Zero Trust solution from scratch, deep PKI knowledge, fluent in cloud security across at least 2 providers, threat modelling using STRIDE/PASTA.",
+    prerequisites: "CompTIA recommends 10+ years general IT, 5+ years hands-on security, plus prior certs equivalent to Network+, Security+, CySA+, Cloud+, PenTest+ (or knowledge equivalents). For the intended career progression: realistically Phase 5 timing (2029-2030) when the candidate would have ~3-4 years cyber-specific experience post-Sec+ + prior infrastructure/support experience. Realistic skills before sitting: comfortable scripting in PowerShell + Python + Bash, can architect a Zero Trust solution from scratch, deep PKI knowledge, fluent in cloud security across at least 2 providers, threat modelling using STRIDE/PASTA.",
     studyMaterials: "PRIMARY: Jason Dion CAS-005 Udemy (~£12 on sale, ~£100 full — earns 46 CEUs which renew lower-tier certs). SECONDARY: Pluralsight CompTIA SecurityX/CASP+ CAS-005 path (Brandon DeVault — strong content). FREE: CompTIA SecurityX exam objectives PDF, NIST publications referenced in objectives. HANDS-ON: HTB Academy modules (PKI, threat hunting, AD security tracks). EXAM-READY: Boson ExSim-Max for SecurityX (~£90, the gold standard for CompTIA practice tests). EXAM: ~£400 (~$509 USD).",
     tutorFlag: "CONSIDER for SecurityX. PBQ-heavy exam with hands-on tasks. A 2-3 hour Codementor session with a senior cyber architect (£100-150/hr UK) walking through 5-10 PBQ scenarios can be valuable if practice exam scores are 65-70%. Skip if scores >75% consistently.",
     subjects: ["Advanced security architecture", "Hands-on PBQ engineering", "GRC at scale", "Cloud + AI security advanced", "Cryptography implementation"],
@@ -1417,7 +1417,7 @@ const CERTS = [
     cpe: 75, cpePeriod: 36, difficulty: 8, roi: 7, hours: [100, 150],
     skills: ["Advanced security architecture", "PKI engineering", "IAM at scale", "Threat hunting", "Hands-on cyber engineering"],
     examFormat: "Multiple choice + multi-response + Performance-Based Questions (PBQs are ~30%+ of exam, simulated environments). 90 Qs max, 165 min, pass/fail (no scaled score — CompTIA doesn't publish numeric threshold for SecurityX).",
-    projectRec: "Zero Trust reference architecture for a fictional UK SME — full document covering identity, network segmentation, data classification, monitoring strategy. Pair with one PKI implementation walkthrough (build a CA chain in your lab, document every step). Both committed to GitHub — strong artefacts for senior cyber roles AND ChCSP/PrCSP application portfolios.",
+    projectRec: "Zero Trust reference architecture for a fictional UK SME — full document covering identity, network segmentation, data classification, monitoring strategy. Pair with one PKI implementation walkthrough (build a CA chain in the lab, document every step). Both committed to GitHub — strong artefacts for senior cyber roles AND ChCSP/PrCSP application portfolios.",
     note: "🎯 Technical alternative to CISSP — same tier (advanced cyber), different focus. CISSP = breadth + management mindset; SecurityX = depth + hands-on engineering. Many UK senior cyber roles list 'CISSP or CASP+/SecurityX or equivalent' — having either satisfies the requirement. UK CONTEXT: SecurityX is increasingly recognised by UK CNI/defence employers, and the NCSC career framework references the CompTIA Xpert tier. Less Big 4 / consultancy weight than CISSP (which dominates UK cyber leadership signals) — but stronger signal for technical principal/architect roles. PT0-003 content (Pentest+) provides natural foundation for SecurityX security engineering domain. ⚠ Do NOT pursue both CISSP and SecurityX simultaneously — pick one based on trajectory: management-leaning → CISSP, hands-on architect/engineer → SecurityX. SecurityX renews via 75 CEUs/3yr. Auto-cascades down: passing SecurityX renews Sec+, Linux+, Net+, A+, CySA+, Pentest+, Cloud+ (when held).",
     deps: ["security-plus"]
   },
@@ -1451,11 +1451,11 @@ const CERTS = [
                 },
                 {
                       "title": "2. Upgrade to CIISec Full Member",
-                      "detail": "Chartered tier requires CIISec Full Member status (different from Associate). Upgrade application separate from UKCSC application — apply ~6 months ahead. Membership grade application reviews your professional standing against CIISec Full Member criteria (significant cyber experience, sustained CPD record, profession contribution)."
+                      "detail": "Chartered tier requires CIISec Full Member status (different from Associate). Upgrade application separate from UKCSC application — apply ~6 months ahead. Membership grade application reviews the professional standing against CIISec Full Member criteria (significant cyber experience, sustained CPD record, profession contribution)."
                 },
                 {
                       "title": "3. Demonstrate sustained contribution to the profession",
-                      "detail": "Chartered tier is the recognition that you contribute to the cyber profession's development, not just the relevant organisation's. Evidence: published articles/papers, conference talks, mentoring track record, contribution to professional standards (UKCSC working groups, CIISec committees, ISO/BSI input), university teaching/lecturing, books/chapters authored. Multi-year sustained record, not one-shot achievements."
+                      "detail": "Chartered tier is the recognition that the candidate contribute to the cyber profession's development, not just the relevant organisation's. Evidence: published articles/papers, conference talks, mentoring track record, contribution to professional standards (UKCSC working groups, CIISec committees, ISO/BSI input), university teaching/lecturing, books/chapters authored. Multi-year sustained record, not one-shot achievements."
                 },
                 {
                       "title": "4. Build deep specialism evidence + cross-specialism breadth",
@@ -1463,7 +1463,7 @@ const CERTS = [
                 },
                 {
                       "title": "5. Identify 2 senior referees — Chartered or equivalent",
-                      "detail": "At Chartered tier, referees should themselves be ChCSP holders OR equivalent (CEng with cyber focus, FCIIS, fellow-grade members of professional bodies). Cultivate these relationships from PrCSP onwards — Chartered referees are scarce and your network needs to include them."
+                      "detail": "At Chartered tier, referees should themselves be ChCSP holders OR equivalent (CEng with cyber focus, FCIIS, fellow-grade members of professional bodies). Cultivate these relationships from PrCSP onwards — Chartered referees are scarce and the network needs to include them."
                 },
                 {
                       "title": "6. Submit application + £700 fee via CIISec portal",
@@ -1486,8 +1486,8 @@ const CERTS = [
                 "External recognition: industry awards, fellowships, board appointments, advisory roles — not required but materially strengthens application"
           ],
           "referees": {
-                "guidance": "Referees/endorsers must speak credibly to your expert-level cyber security work and profession contribution work. Best practice: one internal (manager/senior colleague) + one external (peer, customer-side contact, former colleague). Both should have worked with the applicant for ≥1 year and seen the relevant work first-hand.",
-                "outreachTemplate": "LinkedIn / email outreach script: 'Hi [Name], I'm applying for UKCSC Chartered registration. The application requires someone familiar with my expert-level cyber security work and profession contribution work to act as a [referee/endorser]. Would you be willing? It's typically a structured form or short written confirmation, plus possible follow-up if they need to verify details. Happy to walk through what's involved on a quick call. Application takes [N] months — no urgency. I'd really value support.' Approach 3-4 candidates to secure 2 confirmed yeses.",
+                "guidance": "Referees/endorsers must speak credibly to the expert-level cyber security work and profession contribution work. Best practice: one internal (manager/senior colleague) + one external (peer, customer-side contact, former colleague). Both should have worked with the applicant for ≥1 year and seen the relevant work first-hand.",
+                "outreachTemplate": "LinkedIn / email outreach script: 'Hi [Name], I'm applying for UKCSC Chartered registration. The application requires someone familiar with my expert-level cyber security work and profession contribution work to act as a [referee/endorser]. Would the candidate be willing? It's typically a structured form or short written confirmation, plus possible follow-up if they need to verify details. Happy to walk through what's involved on a quick call. Application takes [N] months — no urgency. I'd really value support.' Approach 3-4 candidates to secure 2 confirmed yeses.",
                 "whoToAsk": [
                       "a technical lead or senior engineer who has seen cyber/architecture work",
                       "Former colleague at MSP-side senior level",
@@ -1508,7 +1508,7 @@ const CERTS = [
   },
   {
     coverage: "CSyP (Chartered Security Professional) is the UK Security Institute's chartered status, awarded by the Worshipful Company of Security Professionals via the Security Institute. UK-sovereign chartered credential for senior security professionals across physical, technical, and cyber security disciplines. Three specialism pathways: (1) Physical/Operational Security — security management, physical security architecture, security operations, security risk management. (2) Technical Security — cyber-physical, electronic security systems, integrated security architecture. (3) Information/Cyber Security — overlaps with UKCSC ChCSP. Application-based assessment: written application + structured CV + portfolio of professional development + 2 sponsors + interview by chartering panel. NO formal exam. Annual chartered fee maintains status, plus annual CPD evidence.",
-    prerequisites: "📋 APPLICATION ROUTE (no exam, no course — an experience-gated chartered application): apply to the Register of Chartered Security Professionals via The Security Institute. GATE: ~7-10 yrs senior security experience at strategic/architectural level + a recognised qualification (CISSP, ASIS PSP/CPP or equivalent) + documented leadership/architectural responsibility. ASSESSMENT: competency-based written application mapped to the CSyP competencies, then a professional peer interview. Sponsors must be existing CSyP holders or equivalent senior professionals. Timing: Phase 6, once CISSP + PSP + 5+ yrs senior work are documented — your career portfolio IS the evidence.",
+    prerequisites: "📋 APPLICATION ROUTE (no exam, no course — an experience-gated chartered application): apply to the Register of Chartered Security Professionals via The Security Institute. GATE: ~7-10 yrs senior security experience at strategic/architectural level + a recognised qualification (CISSP, ASIS PSP/CPP or equivalent) + documented leadership/architectural responsibility. ASSESSMENT: competency-based written application mapped to the CSyP competencies, then a professional peer interview. Sponsors must be existing CSyP holders or equivalent senior professionals. Timing: Phase 6, once CISSP + PSP + 5+ yrs senior work are documented — the career portfolio IS the evidence.",
     studyMaterials: "Application/portfolio-based — no formal study materials. Security Institute provides application guidance documentation (FREE on securityinstitute.org). Assessment process: build CV + portfolio of work demonstrating senior contribution to security profession. Security Institute membership ~£200/yr unlocks application route. Networking: Security Institute UK regional chapters host chartered members willing to act as sponsors. Application + assessment fee ~£700 + VAT.",
     tutorFlag: null,
     subjects: ["UK Chartered Security Professional", "UK senior security signal", "Application-based credential"],
@@ -1530,10 +1530,10 @@ const CERTS = [
       timeline: "Realistic 9-15 months end-to-end: 3-6 months portfolio assembly + sponsor recruitment + 2-3 months internal Security Institute review + 4-8 weeks scheduling chartering interview. Plan 12+ months ahead.",
       steps: [
         { title: "1. Confirm senior practitioner status honestly", detail: "CSyP is for SENIOR security professionals — typically 7-10+ years cumulative security experience including 3-5 years at strategic/architectural level with management or principal-level responsibility. By Phase 6 (2030+) and post-PSP/CISSP/ISSAP achievement, this should clear. Don't apply too early — refer-back at chartered tier is significantly more painful than at lower membership tiers." },
-        { title: "2. Become Security Institute Full Member (prerequisite)", detail: "Security Institute membership grades: Affiliate (entry), Member (mid), Fellow (senior). Full Member or Fellow grade required for CSyP application. If you're starting fresh, apply for Member grade first (~£200/yr) — assessed on professional standing. Existing professional body credentials (CISSP, PSP, UKCSC tiers) accelerate the membership grade approval." },
+        { title: "2. Become Security Institute Full Member (prerequisite)", detail: "Security Institute membership grades: Affiliate (entry), Member (mid), Fellow (senior). Full Member or Fellow grade required for CSyP application. If the candidate is starting fresh, apply for Member grade first (~£200/yr) — assessed on professional standing. Existing professional body credentials (CISSP, PSP, UKCSC tiers) accelerate the membership grade approval." },
         { title: "3. Choose specialism pathway deliberately", detail: "Three specialism pathways: Physical/Operational Security, Technical Security (cyber-physical), Information/Cyber Security. For Track B trajectory: Technical Security or Physical/Operational Security pathway. For Track A/C trajectory: Information/Cyber Security pathway (overlaps with ChCSP — possibly redundant). Specialism choice influences interview panel composition." },
         { title: "4. Build application portfolio", detail: "Detailed CV showing progression to senior level. Portfolio of work: customer architecture deliverables (sanitised), published articles or conference talks, mentoring records, contribution to security standards (ASIS, ISO, BSI committees), thought leadership pieces. Multi-year sustained record — single achievements don't satisfy chartered tier." },
-        { title: "5. Identify 2 sponsors", detail: "Sponsors must be existing CSyP holders, Security Institute Fellows, or equivalent senior security professionals (CISSP-ISSAP, ASIS CPP, ChCSP). Network through Security Institute regional chapter events to find sponsors. Two sponsors writing supporting statements about your senior status are critical — sponsor quality is weighted heavily." },
+        { title: "5. Identify 2 sponsors", detail: "Sponsors must be existing CSyP holders, Security Institute Fellows, or equivalent senior security professionals (CISSP-ISSAP, ASIS CPP, ChCSP). Network through Security Institute regional chapter events to find sponsors. Two sponsors writing supporting statements about the senior status are critical — sponsor quality is weighted heavily." },
         { title: "6. Submit application + £700+VAT fee", detail: "Online via Security Institute portal. Application + CV + portfolio + sponsor statements. Internal review 2-3 months. Refer-back possible — respond comprehensively." },
         { title: "7. Attend chartering interview with Worshipful Company panel", detail: "~1 hour interview with Worshipful Company of Security Professionals chartering panel (typically 3-4 senior chartered members). Discussion explores: career narrative, judgement on novel scenarios, contribution to profession's development, leadership philosophy. Senior peer review. Be prepared for panel members with decades of senior security experience." },
         { title: "8. Post-award: maintain via CPD + membership", detail: "Annual CPD evidence (typically aligned with parent professional body — ASIS, ISC2, ISACA). Annual chartered fee. Use 'CSyP' post-nominal. Listed on Security Institute Chartered Register. Carries genuine UK senior security signal — particularly recognised in physical security profession and integrated security industry." }
@@ -1546,10 +1546,10 @@ const CERTS = [
       ],
       referees: {
         guidance: "CSyP requires 2 sponsors who are existing chartered security professionals or equivalent senior tier (Fellows of Security Institute, CISSP-ISSAP holders, ASIS CPP holders). Sponsor quality is weighted heavily — better to have 2 strong CSyP sponsors than 4 mid-tier supporters.",
-        outreachTemplate: "LinkedIn / Security Institute chapter event approach: 'Hi [Name], I'm planning to apply for CSyP through the Security Institute. I'd really value your insights as someone who's gone through the chartering process. Could we have a brief chat about relevant experience? And if it feels right, would you be open to acting as one of my sponsors when I apply?'",
+        outreachTemplate: "LinkedIn / Security Institute chapter event approach: 'Hi [Name], I'm planning to apply for CSyP through the Security Institute. I'd really value the insights as someone who's gone through the chartering process. Could we have a brief chat about relevant experience? And if it feels right, would the candidate be open to acting as one of my sponsors when I apply?'",
         whoToAsk: [
           "Existing CSyP holders met at Security Institute regional chapter events (Manchester, London chapters most active)",
-          "Senior CISSP-ISSAP holders in your professional network — qualify as sponsors",
+          "Senior CISSP-ISSAP holders in the professional network — qualify as sponsors",
           "ASIS CPP holders — qualify as sponsors and bring physical security weight",
           "UKCSC ChCSP holders — qualify as sponsors and align well with cross-discipline framing",
           "Vendor senior architects (Milestone, LenelS2) who may hold CSyP through technical security pathway"
@@ -1570,7 +1570,7 @@ const CERTS = [
     coverage: "Microsoft Cybersecurity Architect Expert. Four domains: (1) Design solutions that align with security best practices and priorities 20-25% — Microsoft Cybersecurity Reference Architectures (MCRA), Microsoft Cloud Security Benchmark, Zero Trust strategy (identity, devices, network, applications, data), ransomware strategy, enterprise security architecture. (2) Design security operations, identity, and compliance capabilities 30-35% — SecOps strategy design (SOC, hunt teams, threat intelligence integration), identity architecture (Entra ID, hybrid, B2B/B2C, PIM design, passwordless strategy), regulatory compliance strategy, data classification/protection strategy. (3) Design security solutions for infrastructure 20-25% — security for hybrid/multicloud, IaaS/PaaS/SaaS security baselines, specialized workloads (AI/ML, OT, IoT, Azure VMware, SAP). (4) Design security solutions for applications and data 20-25% — DevSecOps strategy, API security, data discovery/classification/protection across M365 and Azure, CI/CD security. Depth: EXPERT-LEVEL ARCHITECTURAL REASONING. This is Microsoft's highest-tier security cert. Tests ability to architect end-to-end security programmes, not implement individual controls. Case studies dominate. Pair with CISSP for full expert credibility. 40-60 questions, 120 minutes, passing 700/1000.",
     prerequisites: "To earn the credential, candidate must also hold ONE of: SC-200 (Security Operations), SC-300 (Identity & Access), or SC-500 (replaces AZ-500 retiring 31 Aug 2026; MS-500 was retired 2023 and no longer counts). Plan sequences SC-300 → SC-200 → SC-500 → SC-100, so prerequisite is natural. Realistic skills: 5+ years in hybrid/cloud security, comfortable architecting across identity/network/compute/data/applications, can read and critique MCRA diagrams, fluent in Zero Trust terminology at design level, can weigh trade-offs across security + cost + operations + compliance simultaneously.",
     studyMaterials: "PRIMARY: Pluralsight SC-100 path. SECONDARY: John Savill's SC-100 YouTube series (FREE). SUPPLEMENT: Microsoft Learn SC-100 path + Microsoft Cybersecurity Reference Architectures (MCRA, free). LAB: existing Azure + M365 lab. AMBIENT: Pocket Prep. EXAM-READY: MeasureUp SC-100. EXAM: ~£136. Prereq: 4+ years cybersecurity experience.",
-    tutorFlag: "LOW TUTORING CASE. Self-study path well-trodden. If practice exam scores plateau below 70% at week 10, consider one 2-hour session with a Microsoft Cybersecurity Architect reviewing your whiteboarded architectures — £100-150 for the session via Codementor. Better than tutoring for most candidates: reading MCRA + CAF-Secure + Zero Trust Deployment Guide three times in full.",
+    tutorFlag: "LOW TUTORING CASE. Self-study path well-trodden. If practice exam scores plateau below 70% at week 10, consider one 2-hour session with a Microsoft Cybersecurity Architect reviewing the whiteboarded architectures — £100-150 for the session via Codementor. Better than tutoring for most candidates: reading MCRA + CAF-Secure + Zero Trust Deployment Guide three times in full.",
     subjects: ["Microsoft Cybersecurity Architect Expert","Architecture patterns","Zero Trust design","PowerShell intermediate"],
     tracks: ["A","C"],
     id: "sc-100", name: "Microsoft Cybersecurity Architect Expert", code: "SC-100",
@@ -1596,8 +1596,8 @@ const CERTS = [
     cpe: 0, cpePeriod: 0, difficulty: 2, roi: 4, hours: [20, 30],
     skills: ["AWS concepts", "Cloud basics", "AWS vocabulary"],
     examFormat: "Multiple choice + multi-response. 65 Qs, 90 min, passing 700/1000. No labs.",
-    projectRec: "Spin up a free-tier EC2 + S3 bucket and map each to its Azure equivalent (VM, Blob). The mapping doc warms you up for the SAA-C03 service-by-service comparison.",
-    note: "Stepping stone into SAA-C03 — optional given your Azure depth, but a cheap (~£80) confidence/momentum builder that establishes AWS vocabulary and exam technique. Watch for 50% AWS Training event vouchers. 3-year validity.",
+    projectRec: "Spin up a free-tier EC2 + S3 bucket and map each to its Azure equivalent (VM, Blob). The mapping doc warms the candidate up for the SAA-C03 service-by-service comparison.",
+    note: "Stepping stone into SAA-C03 — optional given the Azure depth, but a cheap (~£80) confidence/momentum builder that establishes AWS vocabulary and exam technique. Watch for 50% AWS Training event vouchers. 3-year validity.",
     deps: []
   },
   {
@@ -1613,7 +1613,7 @@ const CERTS = [
     cpe: 0, cpePeriod: 0, difficulty: 6, roi: 7, hours: [60, 80],
     skills: ["AWS architecture", "VPC", "IAM", "Multi-cloud"],
     examFormat: "Multiple choice + multi-response. 65 Qs, 130 min, passing 720/1000.",
-    projectRec: "Port your Azure hub-and-spoke to AWS (VPC transit gateway). Document every service mapping — the side-by-side doc IS the multi-cloud evidence.",
+    projectRec: "Port the Azure hub-and-spoke to AWS (VPC transit gateway). Document every service mapping — the side-by-side doc IS the multi-cloud evidence.",
     note: "AZ-305 concepts transfer directly — 60–80 hour prep. Activate if ≥20% target roles mention AWS or multi-cloud scope. Watch for 50% AWS Training event vouchers. 3-year validity.",
     deps: ["aws-cloud-practitioner"]
   },
@@ -1631,13 +1631,13 @@ const CERTS = [
     skills: ["Multi-account AWS architecture", "Senior cloud architecture", "AWS Organisations at scale", "Multi-region design"],
     examFormat: "Multiple choice + multi-response. 75 questions, 180 minutes, scaled 100-1000 with 750 to pass. No PBQs. Scenarios are exceptionally long — time management is half the battle.",
     projectRec: "Multi-account AWS reference architecture committed to GitHub: Organizations + Control Tower + 3-account vending pattern (security, shared services, workload account), Transit Gateway hub-and-spoke with VPN+Direct Connect, multi-region failover for one workload. Document with diagrams + Terraform/CDKTF. Pair with one detailed cost-optimisation case study showing Savings Plans + RI strategy.",
-    note: "Senior AWS signal. Pairs with AZ-305 (Azure equivalent expert tier) to make multi-cloud architect positioning credible. Required for principal architect roles at Big 4 cyber practices that have AWS practices (PwC AWS, Deloitte AWS) and at AWS Premier consulting partners. Track A (Cloud Security) primary; Track C (Cyber Security) secondary value if you specialise in cloud-native SOC engineering. Skip if Track B (Physical Security) is primary — vendor-side physical security work doesn't strongly value SAP-C02. SCS-C02 (AWS Security Specialty) + SAP-C02 + AZ-305 = the senior multi-cloud architect trio for Track A.",
+    note: "Senior AWS signal. Pairs with AZ-305 (Azure equivalent expert tier) to make multi-cloud architect positioning credible. Required for principal architect roles at Big 4 cyber practices that have AWS practices (PwC AWS, Deloitte AWS) and at AWS Premier consulting partners. Track A (Cloud Security) primary; Track C (Cyber Security) secondary value if the candidate specialise in cloud-native SOC engineering. Skip if Track B (Physical Security) is primary — vendor-side physical security work doesn't strongly value SAP-C02. SCS-C02 (AWS Security Specialty) + SAP-C02 + AZ-305 = the senior multi-cloud architect trio for Track A.",
     deps: ["aws-saa"]
   },
 
   // ─── PHASE 6 · Post-Plan · 2029+ ──────────────────────────────────────────
   {
-    coverage: "IAPP Artificial Intelligence Governance Professional. BoK v2.1 effective 2 February 2026 — MUST confirm study materials reference v2.1 (major restructure from seven domains to four). Four domains: (1) Understanding the Foundations of AI Governance 16-20% — AI system types (supervised, unsupervised, reinforcement, generative, agentic), responsible AI principles (fairness, accountability, transparency, privacy, robustness, explainability), AI value and risk, stakeholder considerations, AI ethics debates. (2) Understanding How Laws, Standards and Frameworks Apply to AI 19-23% — EU AI Act (risk tiers: unacceptable, high-risk, limited risk, minimal risk; provider vs deployer obligations; General-Purpose AI rules), NIST AI Risk Management Framework, ISO/IEC 42001 (AI Management System), ISO/IEC 23894, GDPR and AI (automated decision-making Article 22), US executive orders, UK AI regulation approach (sector-led), Colorado AI Act, Illinois AI Video Interview Act. (3) Understanding How to Govern AI Development 21-25% — AI lifecycle management, data governance for AI (data quality, provenance, consent, IP considerations), model development controls, testing and evaluation (bias testing, robustness testing), documentation (model cards, datasheets for datasets), third-party risk (supply chain, foundation model providers). (4) Understanding How to Govern AI Deployment and Use 32-40% — THE LARGEST DOMAIN. Deployment controls, human oversight design, transparency and disclosure to users, monitoring and drift detection, incident management, post-market surveillance (EU AI Act requirement), model retirement. Depth: GOVERNANCE, not technical implementation. You won't be asked to implement bias mitigation algorithms; you'll be asked what governance controls ensure bias is documented and communicated.",
+    coverage: "IAPP Artificial Intelligence Governance Professional. BoK v2.1 effective 2 February 2026 — MUST confirm study materials reference v2.1 (major restructure from seven domains to four). Four domains: (1) Understanding the Foundations of AI Governance 16-20% — AI system types (supervised, unsupervised, reinforcement, generative, agentic), responsible AI principles (fairness, accountability, transparency, privacy, robustness, explainability), AI value and risk, stakeholder considerations, AI ethics debates. (2) Understanding How Laws, Standards and Frameworks Apply to AI 19-23% — EU AI Act (risk tiers: unacceptable, high-risk, limited risk, minimal risk; provider vs deployer obligations; General-Purpose AI rules), NIST AI Risk Management Framework, ISO/IEC 42001 (AI Management System), ISO/IEC 23894, GDPR and AI (automated decision-making Article 22), US executive orders, UK AI regulation approach (sector-led), Colorado AI Act, Illinois AI Video Interview Act. (3) Understanding How to Govern AI Development 21-25% — AI lifecycle management, data governance for AI (data quality, provenance, consent, IP considerations), model development controls, testing and evaluation (bias testing, robustness testing), documentation (model cards, datasheets for datasets), third-party risk (supply chain, foundation model providers). (4) Understanding How to Govern AI Deployment and Use 32-40% — THE LARGEST DOMAIN. Deployment controls, human oversight design, transparency and disclosure to users, monitoring and drift detection, incident management, post-market surveillance (EU AI Act requirement), model retirement. Depth: GOVERNANCE, not technical implementation. the candidate won't be asked to implement bias mitigation algorithms; the candidate will be asked what governance controls ensure bias is documented and communicated.",
     prerequisites: "No formal prerequisites. Realistic skills: comfortable reading legal/regulatory documents, understand risk management vocabulary, basic AI/ML literacy (supervised/unsupervised/generative, what a neural network is at conceptual level — no math required), familiarity with GDPR or equivalent privacy framework useful. For CISSP holders: Domain 2 (Asset Security) and Domain 5 (IAM) provide relevant vocabulary; SC-500 AI workload content will overlap. If pursuing CIPP/E alongside AIGP, order matters less — they're complementary.",
     studyMaterials: "PRIMARY: IAPP official AIGP textbook + practice questions (~£60-100). SECONDARY: Udemy AIGP courses (~£15-30 on sale). FREE: EU AI Act text directly (eur-lex.europa.eu), NIST AI RMF (free). Pluralsight has limited dedicated AIGP. EXAM: ~£460 (includes IAPP membership).",
     tutorFlag: null,
@@ -1667,7 +1667,7 @@ const CERTS = [
     skills: ["GDPR", "UK GDPR", "Data subject rights", "International data transfers", "DPIA", "Privacy-by-design"],
     examFormat: "Multiple choice only. 90 Qs, 2.5 hours. Scenario-based application questions.",
     projectRec: "Draft a DPIA (Data Protection Impact Assessment) for the hypothetical a representative organisation cloud-managed VMS service (sanitised). Video surveillance + cloud storage + multi-tenant is a legitimately complex GDPR scenario — makes the CV unambiguously senior on privacy-technical bridge roles.",
-    note: "PRIVACY DEPTH TO PAIR WITH AIGP. Together, CIPP/E + AIGP create the rare 'technical architect + credible privacy/governance' profile that fits technical-DPO or Privacy Engineer roles at £80-100k. CNI clients care deeply about GDPR. Only ~15,000 CIPP/E holders globally. Shares IAPP membership (£100/yr) with AIGP — no additional recurring cost. 2-year validity, 20 CPE. Book when either (a) you're landing interviews where privacy comes up, or (b) a representative organisation starts doing EU client work.",
+    note: "PRIVACY DEPTH TO PAIR WITH AIGP. Together, CIPP/E + AIGP create the rare 'technical architect + credible privacy/governance' profile that fits technical-DPO or Privacy Engineer roles at £80-100k. CNI clients care deeply about GDPR. Only ~15,000 CIPP/E holders globally. Shares IAPP membership (£100/yr) with AIGP — no additional recurring cost. 2-year validity, 20 CPE. Book when either (a) the candidate is landing interviews where privacy comes up, or (b) a representative organisation starts doing EU client work.",
     deps: ["cissp"]
   },
   {
@@ -1690,7 +1690,7 @@ const CERTS = [
     applicationGuide: {
           "verified": "2026-05-02",
           "verifyAt": "isc2.org/certifications/ccsp/ccsp-experience-requirements",
-          "route": "ISC2 direct application. Pass CCSP exam first, THEN apply for endorsement within 9 months. ⭐ KEY ADVANTAGE for this path: If you hold active CISSP at time of CCSP application, the entire CCSP experience requirement is waived. Otherwise: 5 years cumulative IT experience including 3 years in cybersecurity AND 1 year in one or more of the 6 CCSP domains.",
+          "route": "ISC2 direct application. Pass CCSP exam first, THEN apply for endorsement within 9 months. ⭐ KEY ADVANTAGE for this path: If the candidate hold active CISSP at time of CCSP application, the entire CCSP experience requirement is waived. Otherwise: 5 years cumulative IT experience including 3 years in cybersecurity AND 1 year in one or more of the 6 CCSP domains.",
           "cost": "Exam ~$599 USD (~£475) + Annual Maintenance Fee $135 USD/yr (~£105) — SHARED with CISSP if held (one AMF covers all ISC2 certs). NOTE: Effective August 1, 2026, CCSP exam will be based on a NEW exam outline integrating AI security across all 6 domains.",
           "timeline": "Post-CISSP route: 4-6 months exam prep + 1-2 months endorsement = 5-8 months end-to-end. CCSP holders waive entire CCSP experience requirement so endorsement is straightforward documentation. Without CISSP: 6-12 months exam prep + experience accumulation depending on cloud security background.",
           "steps": [
@@ -1700,7 +1700,7 @@ const CERTS = [
                 },
                 {
                       "title": "2. Confirm CCSP version timing",
-                      "detail": "Effective August 1, 2026, CCSP uses a NEW exam outline with AI security integrated across all 6 domains. Verify exam version at time of booking. Materials pre-Aug 2026 cover the older outline and won't fully prepare you for the current exam."
+                      "detail": "Effective August 1, 2026, CCSP uses a NEW exam outline with AI security integrated across all 6 domains. Verify exam version at time of booking. Materials pre-Aug 2026 cover the older outline and won't fully prepare the candidate for the current exam."
                 },
                 {
                       "title": "3. Prepare exam — 6 domains",
@@ -1712,7 +1712,7 @@ const CERTS = [
                 },
                 {
                       "title": "5. Apply for endorsement using CISSP waiver",
-                      "detail": "If CISSP active: indicate this on the application — entire experience requirement waived. Endorsement still requires an ISC2 member in good standing (which YOU will be as a CISSP holder). Otherwise: document 5 years IT incl. 3 years cybersecurity incl. 1 year in CCSP CBK. CCSK certificate from CSA waives 1 year (not the full requirement)."
+                      "detail": "If CISSP active: indicate this on the application — entire experience requirement waived. Endorsement still requires an ISC2 member in good standing (which the candidate will be as a CISSP holder). Otherwise: document 5 years IT incl. 3 years cybersecurity incl. 1 year in CCSP CBK. CCSK certificate from CSA waives 1 year (not the full requirement)."
                 },
                 {
                       "title": "6. Submit application within 9 months",
@@ -1735,7 +1735,7 @@ const CERTS = [
           ],
           "referees": {
                 "guidance": "Referees/endorsers must speak credibly to cloud security architecture and engineering work. Best practice: one internal (manager/senior colleague) + one external (peer, customer-side contact, former colleague). Both should have worked with the applicant for ≥1 year and seen the relevant work first-hand.",
-                "outreachTemplate": "LinkedIn / email outreach script: 'Hi [Name], I'm applying for CCSP. The application requires someone familiar with my cloud security architecture and engineering work to act as a [referee/endorser]. Would you be willing? It's typically a structured form or short written confirmation, plus possible follow-up if they need to verify details. Happy to walk through what's involved on a quick call. Application takes [N] months — no urgency. I'd really value support.' Approach 3-4 candidates to secure 2 confirmed yeses.",
+                "outreachTemplate": "LinkedIn / email outreach script: 'Hi [Name], I'm applying for CCSP. The application requires someone familiar with my cloud security architecture and engineering work to act as a [referee/endorser]. Would the candidate be willing? It's typically a structured form or short written confirmation, plus possible follow-up if they need to verify details. Happy to walk through what's involved on a quick call. Application takes [N] months — no urgency. I'd really value support.' Approach 3-4 candidates to secure 2 confirmed yeses.",
                 "whoToAsk": [
                       "a technical lead or senior engineer who has seen cyber/architecture work",
                       "Former colleague at MSP-side senior level",
@@ -1779,7 +1779,7 @@ const CERTS = [
             "steps": [
                     {
                             "title": "1. Confirm experience eligibility",
-                            "detail": "3 years of cumulative paid work in 2+ of the 5 domains within the preceding 10 years. Verify your specific waiver eligibility (other ISACA certs, related certifications, or degree can reduce by up to 2-3 years)."
+                            "detail": "3 years of cumulative paid work in 2+ of the 5 domains within the preceding 10 years. Verify the specific waiver eligibility (other ISACA certs, related certifications, or degree can reduce by up to 2-3 years)."
                     },
                     {
                             "title": "2. Become ISACA member (recommended)",
@@ -1791,7 +1791,7 @@ const CERTS = [
                     },
                     {
                             "title": "4. Pass exam (PSI/Pearson VUE)",
-                            "detail": "150 questions, 4 hours, scaled 200-800 (pass: 450). Computer-based at PSI/Pearson VUE UK test centres. After passing, you have 5 years to apply for certification."
+                            "detail": "150 questions, 4 hours, scaled 200-800 (pass: 450). Computer-based at PSI/Pearson VUE UK test centres. After passing, the candidate have 5 years to apply for certification."
                     },
                     {
                             "title": "5. Document experience \u2014 domain-mapped",
@@ -1818,8 +1818,8 @@ const CERTS = [
                     "Quantify: 'reduced AI hallucination risk by 30% via guardrails', 'reviewed 12 LLM integrations against MITRE ATLAS'."
             ],
             "referees": {
-                    "guidance": "Referees must speak credibly to your AI security work. Best: one technical (AI/ML engineer or senior security architect) + one governance (privacy, GRC, or compliance lead).",
-                    "outreachTemplate": "LinkedIn / email: 'Hi [Name], I'm applying for AAISM. ISACA needs someone familiar with my AI security work to confirm my experience claims. Would you be willing? Typically a structured form. No urgency \u2014 application takes ~2 months.'",
+                    "guidance": "Referees must speak credibly to the AI security work. Best: one technical (AI/ML engineer or senior security architect) + one governance (privacy, GRC, or compliance lead).",
+                    "outreachTemplate": "LinkedIn / email: 'Hi [Name], I'm applying for AAISM. ISACA needs someone familiar with my AI security work to confirm my experience claims. Would the candidate be willing? Typically a structured form. No urgency \u2014 application takes ~2 months.'",
                     "whoToAsk": [
                             "technical AI/ML colleague",
                             "former AI governance lead",
@@ -1840,7 +1840,7 @@ const CERTS = [
     coverage: "Certified Information Security Manager. ⚠ CONTENT OUTLINE UPDATES 3 NOVEMBER 2026 — plan booking around this. Current four domains (through 3 Nov 2026): (1) Information Security Governance 17% — governance frameworks (COBIT, ISO 27001, NIST CSF), strategy alignment with business objectives, roles and responsibilities, policies/standards/guidelines/procedures hierarchy, organisational culture. (2) Information Security Risk Management 20% — risk identification, risk assessment (qualitative vs quantitative, ALE/ARO/SLE), risk treatment options (accept, transfer, mitigate, avoid), residual risk, risk monitoring, third-party risk. (3) Information Security Program 33% — THE LARGEST DOMAIN. Program design and management, resource management, information security architecture, controls integration, training and awareness, metrics (KPIs and KRIs), vendor management, compliance monitoring. (4) Incident Management 30% — incident response planning, BCP/DR, incident classification and triage, forensics, lessons learned, crisis communication. Depth: MANAGEMENT-LEVEL, not technical. Every question tests strategic/managerial thinking. The 'BEST' and 'FIRST' distinction in answer choices is critical — CISM wants the risk-averse, business-aligned answer, never the technically-coolest answer. Always prefer: risk assessment before control implementation; communicate with stakeholders/senior management; follow established frameworks over improvising; process-oriented over quick-fix.",
     prerequisites: "5 years cumulative paid full-time experience in information security work, with at least 3 years in information security management across 3+ of the 4 CISM domains. Waivers: up to 2 years via specific qualifications (e.g., CISA/CISSP = 2 year waiver; postgraduate InfoSec degree = 1 year). prior infrastructure/support experience counts toward the 5-year general InfoSec requirement but NOT the 3-year management requirement — will need to accrue management experience during Phase 2-5 via a representative organisation role growth, or pursue CISM as a post-Phase-5 cert. Exam can be sat before experience is complete (credential awarded only after experience verified within 5 years of passing). Realistic skills for exam: fluent in risk management vocabulary, understand governance frameworks conceptually, can articulate business impact of security controls, comfortable switching from technical to strategic register.",
     studyMaterials: "PRIMARY: ISACA official CISM Review Manual + Question Bank (~£250, ESSENTIAL). SECONDARY: Pluralsight CISM path. AMBIENT: Pocket Prep CISM daily. EXAM-READY: ISACA official practice + Boson if available. EXAM: ~£760 (member) / ~£950 (non-member). ⚠ Exam outline change Nov 2026 — verify timing.",
-    tutorFlag: "STRONG TUTORING CASE. CISM has the same 'manager mindset' pivot failure mode as CISSP. Candidates with technical backgrounds consistently pick the 'best technical' answer over the 'best managerial' answer and fail. A CISM-certified mentor reviewing your practice test misses and explaining ISACA's answer reasoning is genuinely high-value. Look specifically for mentors who are CISM + CISSP holders (they can articulate the mindset distinction). Codementor/PrivExchange rates £70-100/hr for senior CISM holders. 6-8 hours of mentoring before exam = £420-800. Alternative: ISACA's official 'CISM Online Review Course' (£750-900, self-paced, ISACA's own content) — if employer funds, take it; otherwise mentor hours are cheaper.",
+    tutorFlag: "STRONG TUTORING CASE. CISM has the same 'manager mindset' pivot failure mode as CISSP. Candidates with technical backgrounds consistently pick the 'best technical' answer over the 'best managerial' answer and fail. A CISM-certified mentor reviewing the practice test misses and explaining ISACA's answer reasoning is genuinely high-value. Look specifically for mentors who are CISM + CISSP holders (they can articulate the mindset distinction). Codementor/PrivExchange rates £70-100/hr for senior CISM holders. 6-8 hours of mentoring before exam = £420-800. Alternative: ISACA's official 'CISM Online Review Course' (£750-900, self-paced, ISACA's own content) — if employer funds, take it; otherwise mentor hours are cheaper.",
     subjects: ["Information Security Manager","Governance/risk/incident","Managerial focus","No scripting required"],
     tracks: ["C"],
     id: "cism", name: "ISACA CISM", code: "CISM",
@@ -1851,7 +1851,7 @@ const CERTS = [
     skills: ["Security management", "Governance programme", "Strategy alignment", "Incident command"],
     examFormat: "Multiple choice only. 150 Qs, 4 hours, passing 450/800.",
     projectRec: "Security programme design + first-year roadmap for a mid-size org — strategy, KPIs, risk register, board reporting structure. Pair with CISSP architecture evidence.",
-    note: "MANAGEMENT-TRACK GATEWAY. CISSP proves you can architect; CISM proves you can run the programme. UK CISM ranks #1 alongside CISSP for security manager / head of infosec roles. ISACA membership (~£100/yr). Requires 5 yrs infosec experience including 3 yrs management (within 10-yr window). Pursue when first management opportunity appears — not before. Covers ISO 27001 territory and aligns with NIS2 / DORA governance expectations.",
+    note: "MANAGEMENT-TRACK GATEWAY. CISSP proves the candidate can architect; CISM proves the candidate can run the programme. UK CISM ranks #1 alongside CISSP for security manager / head of infosec roles. ISACA membership (~£100/yr). Requires 5 yrs infosec experience including 3 yrs management (within 10-yr window). Pursue when first management opportunity appears — not before. Covers ISO 27001 territory and aligns with NIS2 / DORA governance expectations.",
     deps: ["cissp"],
     applicationGuide: {
           "verified": "2026-05-02",
@@ -1882,7 +1882,7 @@ const CERTS = [
                 },
                 {
                       "title": "6. Submit application within 5 years of exam pass",
-                      "detail": "Online via MyISACA portal. Pay $50 application fee. Get experience verified by your supervisor/manager (their attestation required). ISACA reviews and validates — process typically 4-8 weeks. Random audits possible."
+                      "detail": "Online via MyISACA portal. Pay $50 application fee. Get experience verified by the supervisor/manager (their attestation required). ISACA reviews and validates — process typically 4-8 weeks. Random audits possible."
                 },
                 {
                       "title": "7. Pay Annual Maintenance Fee + maintain via CPE",
@@ -1890,18 +1890,18 @@ const CERTS = [
                 },
                 {
                       "title": "8. Strategic positioning",
-                      "detail": "CISM signals 'security management track' more strongly than CISSP (which is broader). Most useful if your destination is CISO/security director path (Track A or hybrid). Less differentiating if pure technical architect path. Track A commercial fit: STRONG. Track B hands-on systems architect: MODERATE. Track C SOC architect: STRONG."
+                      "detail": "CISM signals 'security management track' more strongly than CISSP (which is broader). Most useful if the destination is CISO/security director path (Track A or hybrid). Less differentiating if pure technical architect path. Track A commercial fit: STRONG. Track B hands-on systems architect: MODERATE. Track C SOC architect: STRONG."
                 }
           ],
           "evidence": [
                 "🔴 HIGHEST RISK: 3 years SECURITY MANAGEMENT across 3 of 4 domains. Management = decision authority, not just senior IC. By Phase 6 architect role this should clear — but document continuously, don't reconstruct retrospectively.",
                 "Domain coverage: target 3 of 4 CISM domains explicitly. Likely strongest for this path: Domain 1 (Governance), Domain 2 (Risk Mgmt), Domain 4 (Incident Mgmt). Domain 3 (Program Mgmt) may be the gap if pure architect role doesn't include program ownership.",
-                "Supervisor/manager attestation: ISACA requires this directly, not just a referee. Plan early — your eventual architect-role manager needs to be willing to attest. Cultivate this relationship.",
+                "Supervisor/manager attestation: ISACA requires this directly, not just a referee. Plan early — the eventual architect-role manager needs to be willing to attest. Cultivate this relationship.",
                 "Quantification: 'budget of £X', 'team of N', 'reduced incident MTTR by Y%', 'managed risk register containing Z items' — concrete numbers help verification."
           ],
           "referees": {
                 "guidance": "Referees/endorsers must speak credibly to security management and governance work. Best practice: one internal (manager/senior colleague) + one external (peer, customer-side contact, former colleague). Both should have worked with the applicant for ≥1 year and seen the relevant work first-hand.",
-                "outreachTemplate": "LinkedIn / email outreach script: 'Hi [Name], I'm applying for CISM. The application requires someone familiar with my security management and governance work to act as a [referee/endorser]. Would you be willing? It's typically a structured form or short written confirmation, plus possible follow-up if they need to verify details. Happy to walk through what's involved on a quick call. Application takes [N] months — no urgency. I'd really value support.' Approach 3-4 candidates to secure 2 confirmed yeses.",
+                "outreachTemplate": "LinkedIn / email outreach script: 'Hi [Name], I'm applying for CISM. The application requires someone familiar with my security management and governance work to act as a [referee/endorser]. Would the candidate be willing? It's typically a structured form or short written confirmation, plus possible follow-up if they need to verify details. Happy to walk through what's involved on a quick call. Application takes [N] months — no urgency. I'd really value support.' Approach 3-4 candidates to secure 2 confirmed yeses.",
                 "whoToAsk": [
                       "a technical lead or senior engineer who has seen cyber/architecture work",
                       "Former colleague at MSP-side senior level",
@@ -1922,8 +1922,8 @@ const CERTS = [
   },
   {
     coverage: "OffSec Certified Professional (OSCP) + OSCP+ — gold-standard hands-on pentest cert. 24-hour practical exam + 24-hour report window. Tests: enumeration (Nmap fluency, directory/service/DNS enumeration), web app exploitation (SQL injection, LFI/RFI, file upload bypass, command injection, XSS), Linux and Windows privilege escalation, Active Directory attacks (Kerberoasting, AS-REP Roasting, credential harvesting, lateral movement), limited Metasploit use (one target only, locks to that target). Note 2025+: buffer overflow REMOVED from exam; AD component now dominant. Passing 70/100 points. OSCP is lifetime credential; OSCP+ is time-bound 3-year variant (complete 120 CPE credits + £115 annual fee to maintain). Depth: professional practical offensive security. TRADEOFF: PNPT (Tier A) covers similar ground at ~£400 vs OSCP's ~£1,260 — pursue OSCP only if defensive-architect direction pivots toward offensive or if employer specifically requires OSCP.",
-    prerequisites: "Formal: none. Realistic: Linux and Windows command-line fluency, TCP/IP networking at packet level, one scripting language (Python or Bash), 40+ compromised lab machines. Community guideline: if you can root a medium HackTheBox in under 2 hours, you're likely ready.",
-    studyMaterials: "VENDOR-NATIVE: Offensive Security PEN-200 course + lab (~£1,260 for 90-day lab + 1 attempt). OffSec IS the source. Pluralsight has limited OSCP-prep value. Complementary: TJnull's OSCP-like boxes (FREE), HackTheBox active machines. ⚠ Heavy time commitment (~400+ hours). Outside your defensive direction — HTB CPTS is a stronger play if going offensive.",
+    prerequisites: "Formal: none. Realistic: Linux and Windows command-line fluency, TCP/IP networking at packet level, one scripting language (Python or Bash), 40+ compromised lab machines. Community guideline: if the candidate can root a medium HackTheBox in under 2 hours, the candidate is likely ready.",
+    studyMaterials: "VENDOR-NATIVE: Offensive Security PEN-200 course + lab (~£1,260 for 90-day lab + 1 attempt). OffSec IS the source. Pluralsight has limited OSCP-prep value. Complementary: TJnull's OSCP-like boxes (FREE), HackTheBox active machines. ⚠ Heavy time commitment (~400+ hours). Outside the defensive direction — HTB CPTS is a stronger play if going offensive.",
     tutorFlag: "LOW TUTORING CASE. OSCP community resources are massive and the 'Try Harder' culture actively discourages tutoring in favour of independent problem-solving. Better investment than tutoring: Proving Grounds Practice monthly subscription (£19). If genuinely blocked on AD attacks: TCM Security's live bootcamp (£600-900 for 4 days) is the strongest community-validated alternative.",
     subjects: ["Offensive Security Certified Professional","Manual exploitation","Active Directory pentest","Bash/Python intermediate","Report writing"],
     tracks: ["C"],
@@ -1996,15 +1996,15 @@ const CERTS = [
           "verifyAt": "isc2.org/certifications/issap/issap-certification-exam-outline",
           "route": "ISC2 direct application — STANDALONE since October 2023 (no longer requires CISSP first, though CISSP path is faster). Two paths: (a) CISSP holder + 2 years cumulative full-time experience in 1+ of the 4 ISSAP domains; OR (b) 7 years cumulative full-time experience in 2+ ISSAP domains without CISSP (degree/cert waives 1 year).",
           "cost": "Exam ~$599 USD (~£475) + AMF $135 USD/yr — SHARED with CISSP if held. NOTE: ISSAP exam was OVERHAULED August 2025 — pre-Aug 2025 study materials are outdated. Current 6-domain structure: Architect for GRC (17%), Security Architecture Modelling (15%), Infrastructure Security Architecture (21%), IAM Architecture (16%), Architect for Application Security (13%), Security Operations Architecture (18%).",
-          "timeline": "CISSP-holder route: 3-4 months exam prep + 1-2 months endorsement = 4-6 months end-to-end. Without CISSP route: requires 7 years architecture experience + 6+ months exam prep — slower path, less common. By Phase 6 (~2032+) you should hold CISSP, making the 2-year ISSAP path viable.",
+          "timeline": "CISSP-holder route: 3-4 months exam prep + 1-2 months endorsement = 4-6 months end-to-end. Without CISSP route: requires 7 years architecture experience + 6+ months exam prep — slower path, less common. By Phase 6 (~2032+) the candidate should hold CISSP, making the 2-year ISSAP path viable.",
           "steps": [
                 {
                       "title": "1. Plan AFTER CISSP for the intended career progression",
-                      "detail": "CISSP path is significantly faster (2 years experience) vs 7 years standalone. Target Phase 6 — by then you should hold CISSP and have 2+ years architecture work to evidence. Both pathways are equally valued post-2023 (ISC2 changed the listing convention to 'John Smith, ISSAP, CISSP' — ISSAP listed first as the more advanced credential)."
+                      "detail": "CISSP path is significantly faster (2 years experience) vs 7 years standalone. Target Phase 6 — by then the candidate should hold CISSP and have 2+ years architecture work to evidence. Both pathways are equally valued post-2023 (ISC2 changed the listing convention to 'John Smith, ISSAP, CISSP' — ISSAP listed first as the more advanced credential)."
                 },
                 {
                       "title": "2. Confirm exam version (Aug 2025 overhaul)",
-                      "detail": "ISC2 completely overhauled ISSAP in August 2025 — entire domains restructured. Pre-Aug 2025 study materials WILL NOT prepare you adequately. Download current exam outline from ISC2 directly. New domain structure emphasises Infrastructure Security Architecture (21%) and Security Operations Architecture (18%) as the largest sections."
+                      "detail": "ISC2 completely overhauled ISSAP in August 2025 — entire domains restructured. Pre-Aug 2025 study materials WILL NOT prepare the candidate adequately. Download current exam outline from ISC2 directly. New domain structure emphasises Infrastructure Security Architecture (21%) and Security Operations Architecture (18%) as the largest sections."
                 },
                 {
                       "title": "3. Prepare exam — architect mindset",
@@ -2020,11 +2020,11 @@ const CERTS = [
                 },
                 {
                       "title": "6. Submit endorsement within 9 months",
-                      "detail": "Online via ISC2 portal. Endorser is an active ISC2 member (your CISSP endorser may be willing to endorse ISSAP too). Pay AMF — already covered if CISSP held. Review 6-8 weeks."
+                      "detail": "Online via ISC2 portal. Endorser is an active ISC2 member (the CISSP endorser may be willing to endorse ISSAP too). Pay AMF — already covered if CISSP held. Review 6-8 weeks."
                 },
                 {
                       "title": "7. Maintain via CPE — 60 CPE per 3-year cycle (CISSP path)",
-                      "detail": "60 CPE/3yr if held alongside CISSP. CPE shared across ISC2 certs — same activity counted once but applies to all your ISC2 credentials. NOTE: 7-year non-CISSP path requires 140 CPE/3yr (significantly more)."
+                      "detail": "60 CPE/3yr if held alongside CISSP. CPE shared across ISC2 certs — same activity counted once but applies to all the ISC2 credentials. NOTE: 7-year non-CISSP path requires 140 CPE/3yr (significantly more)."
                 },
                 {
                       "title": "8. Strategic value",
@@ -2039,7 +2039,7 @@ const CERTS = [
           ],
           "referees": {
                 "guidance": "Referees/endorsers must speak credibly to security architecture design work. Best practice: one internal (manager/senior colleague) + one external (peer, customer-side contact, former colleague). Both should have worked with the applicant for ≥1 year and seen the relevant work first-hand.",
-                "outreachTemplate": "LinkedIn / email outreach script: 'Hi [Name], I'm applying for ISSAP. The application requires someone familiar with my security architecture design work to act as a [referee/endorser]. Would you be willing? It's typically a structured form or short written confirmation, plus possible follow-up if they need to verify details. Happy to walk through what's involved on a quick call. Application takes [N] months — no urgency. I'd really value support.' Approach 3-4 candidates to secure 2 confirmed yeses.",
+                "outreachTemplate": "LinkedIn / email outreach script: 'Hi [Name], I'm applying for ISSAP. The application requires someone familiar with my security architecture design work to act as a [referee/endorser]. Would the candidate be willing? It's typically a structured form or short written confirmation, plus possible follow-up if they need to verify details. Happy to walk through what's involved on a quick call. Application takes [N] months — no urgency. I'd really value support.' Approach 3-4 candidates to secure 2 confirmed yeses.",
                 "whoToAsk": [
                       "a technical lead or senior engineer who has seen cyber/architecture work",
                       "Former colleague at MSP-side senior level",
@@ -2050,7 +2050,7 @@ const CERTS = [
           },
           "pitfalls": [
                 "🔴 Pre-August 2025 study materials — entire exam restructured, old materials inadequate",
-                "Pursuing 7-year standalone path when CISSP is faster — wait for CISSP unless you have specific reason",
+                "Pursuing 7-year standalone path when CISSP is faster — wait for CISSP unless the candidate have specific reason",
                 "Confusing 'architect' job title with architecture WORK — title alone doesn't satisfy; need deliverables",
                 "Ignoring CPE doubling — 140 CPE/3yr for non-CISSP path is genuinely heavier than CISSP+ISSAP combined (60/3yr)"
           ],
@@ -2059,7 +2059,7 @@ const CERTS = [
   },
   {
     coverage: "ASIS International Physical Security Professional (PSP). The global gold-standard cert for senior physical security professionals — equivalent prestige in physical security to what CISSP is in cyber. Three domain areas: (1) Physical Security Assessment 37% — risk assessment methodologies, threat assessment, vulnerability assessment, business impact analysis, surveys (security, environmental, operational), security audit and metrics. (2) Application of Physical Security 37% — security design principles (CPTED — Crime Prevention Through Environmental Design, defence in depth, deterrence/detection/delay/response), perimeter security, structural and architectural elements, glazing and openings, locks and key control, lighting, access control system design (ID systems, biometrics, multi-factor), CCTV/video surveillance design, intrusion detection design, security force operations. (3) Implementation of Physical Security Measures 26% — project management for physical security, procurement and contract management, integration of physical and electronic systems, system testing and commissioning, transition to operations, maintenance and support. Depth: senior practitioner — strategic application of physical security principles with cyber-physical convergence considerations as a contemporary topic. 140 multiple-choice questions, 2.5 hours, scaled scoring (Pearson VUE).",
-    prerequisites: "🔴 EXPERIENCE GATEKEEPER: ASIS requires 5 years progressive physical security experience (3 years if you have a relevant Bachelor's degree). a representative organisation trajectory clearly accumulates this — by Phase 5 (~2030-2031) you'll have ~5 years post-A+/Net+ physical security experience plus prior MSP work. Application reviewed by ASIS before exam authorisation. Realistic skills before sitting: comfortable with CPTED principles, CCTV design lifecycle, access control architecture standards, basic risk assessment frameworks (US-leaning but globally applied).",
+    prerequisites: "🔴 EXPERIENCE GATEKEEPER: ASIS requires 5 years progressive physical security experience (3 years if the candidate have a relevant Bachelor's degree). a representative organisation trajectory clearly accumulates this — by Phase 5 (~2030-2031) the candidate will have ~5 years post-A+/Net+ physical security experience plus prior MSP work. Application reviewed by ASIS before exam authorisation. Realistic skills before sitting: comfortable with CPTED principles, CCTV design lifecycle, access control architecture standards, basic risk assessment frameworks (US-leaning but globally applied).",
     studyMaterials: "PRIMARY: ASIS Protection of Assets (POA) reference manual — the canonical resource (~£700 for full set, employer-funded ideally). SECONDARY: ASIS PSP Study Guide (~£100). FREE: ASIS website resources, ASIS UK chapter events (UK chapter network). HANDS-ON: relevant hands-on experience IS the experience evidence. EXAM: ~£385 (member, $485 USD) / ~£505 (non-member, $635 USD). ASIS UK chapter membership ~£135/yr — pays for itself via discounted exam + chapter events.",
     tutorFlag: null,
     subjects: ["Physical security senior cert", "ASIS gold standard", "CPTED methodology", "Physical security design"],
@@ -2070,13 +2070,13 @@ const CERTS = [
     cpe: 60, cpePeriod: 36, difficulty: 6, roi: 8, hours: [80, 120],
     skills: ["Physical security design", "CPTED principles", "Risk assessment", "Senior physical security signal"],
     examFormat: "Multiple choice — 140 questions, 2.5 hours. Pearson VUE testing centre or remote-proctored. Scaled scoring; pass threshold not publicly disclosed but ~70% benchmark.",
-    projectRec: "PSP itself is signal — a representative organisation customer engagements during Phase 3-5 ARE the portfolio (sanitised case studies of security designs you contributed to). Build a PSP-themed GitHub repo with redacted CPTED-aligned site security assessments — rare junior evidence for a typically senior cert.",
+    projectRec: "PSP itself is signal — a representative organisation customer engagements during Phase 3-5 ARE the portfolio (sanitised case studies of security designs the candidate contributed to). Build a PSP-themed GitHub repo with redacted CPTED-aligned site security assessments — rare junior evidence for a typically senior cert.",
     note: "🎯 GOLD STANDARD physical security cert — global recognition. ASIS International is the dominant physical security professional body globally. PSP is the senior practitioner cert; ASIS CPP (Certified Protection Professional) is the management-tier sibling. Track B PRIMARY signal — significantly elevates CV for senior physical security architect roles at vendors (Milestone, Genetec, LenelS2/Carrier all value PSP), CNI operators, and physical security consultancies. UK ASIS chapters: London (most active), Manchester, Edinburgh. Stacks with CISSP + ISSAP + UKCSC PrCSP for the strongest possible cyber-physical architect profile in the UK. Pairs with CSyP (UK Chartered Security Professional) for combined ASIS-global + UK-chartered signal. NOT applicable to Track A or C — it's purely physical-security-domain prestige.",
     deps: []
   },
   {
     coverage: "ISC2 Certified Secure Software Lifecycle Professional (CSSLP). The senior cert specifically for software security and product security engineering roles. Eight domains aligned with secure SDLC: (1) Secure Software Concepts 11% — security principles, risk management, governance, regulations affecting software. (2) Secure Software Requirements 14% — defining functional security requirements, abuse cases, misuse cases, requirements traceability. (3) Secure Software Architecture and Design 14% — security design principles, threat modelling (STRIDE, PASTA, attack trees), security architecture documentation, design review. (4) Secure Software Implementation 14% — secure coding standards (CERT, OWASP), code review, defensive programming, common vulnerability patterns (OWASP Top 10, CWE/SANS Top 25). (5) Secure Software Testing 14% — security testing methodologies (SAST, DAST, IAST, fuzzing), penetration testing in SDLC, test data management, regression security testing. (6) Secure Software Lifecycle Management 11% — secure SDLC integration (Waterfall, Agile, DevSecOps), security gates, change management. (7) Secure Software Deployment, Operations, Maintenance 11% — deployment security, secure configuration management, operational security, vulnerability management, EOL planning. (8) Secure Software Supply Chain 11% — supplier risk management, third-party component security (SBOM, SCA tools), open-source license compliance. Depth: SENIOR PRACTITIONER — designed for security engineers operating in product development teams. 125 questions, 3 hours, scaled scoring.",
-    prerequisites: "🔴 EXPERIENCE GATEKEEPER: ISC2 requires 4 years cumulative paid full-time work experience in 1+ of the 8 CSSLP domains (or 3 years with relevant Bachelor's). Realistic timing: Phase 5-6 once you have 3-4 years cyber-engineering work post-Sec+ IF Track C is direction. Associate of ISC2 route available with no experience — pass exam, earn experience post-cert. ISC2 endorsement required (existing CSSLP/CISSP holder vouches).",
+    prerequisites: "🔴 EXPERIENCE GATEKEEPER: ISC2 requires 4 years cumulative paid full-time work experience in 1+ of the 8 CSSLP domains (or 3 years with relevant Bachelor's). Realistic timing: Phase 5-6 once the candidate have 3-4 years cyber-engineering work post-Sec+ IF Track C is direction. Associate of ISC2 route available with no experience — pass exam, earn experience post-cert. ISC2 endorsement required (existing CSSLP/CISSP holder vouches).",
     studyMaterials: "PRIMARY: Official (ISC)2 CSSLP CBK Reference (~£70 standalone, ~£1,400 with official training). SECONDARY: Sari Greene's CSSLP Cert Guide (Pearson, ~£40 — recommended over the official CBK for self-study). FREE: OWASP cheat sheets, NIST SP 800-218 (Secure Software Development Framework), Microsoft SDL documentation. AMBIENT: ISC2 webinars (free for members). EXAM-READY: Boson ExSim CSSLP (~£90), Wentz Wu CSSLP question banks. EXAM: ~£475 ($599 USD) ISC2 member rate.",
     tutorFlag: "CONSIDER for CSSLP if approaching from physical-security background without prior software security experience. A 2-3 hour Codementor session with a senior application security engineer (£100-150/hr UK) walking through threat modelling exercises is high value. Skip if practice scores >75% consistently.",
     subjects: ["Secure SDLC", "Threat modelling", "Application security", "Product security engineering"],
@@ -2089,7 +2089,7 @@ const CERTS = [
     skills: ["Secure SDLC", "Threat modelling", "Product security architecture", "Application security engineering"],
     examFormat: "125 multi-choice questions, 3 hours, scaled scoring (700/1000 to pass typical). ISC2 endorsement required post-pass. Annual Maintenance Fee (AMF) £100/yr, shared with CISSP if held.",
     projectRec: "Threat-model one of existing portfolio projects (Linux+ hardening playbook, Python AI integration, etc.) using STRIDE methodology — produce a documented threat model with mitigations. The artefact serves both CSSLP study and product security portfolio.",
-    note: "🎯 GAP-FILL for Track C Vendor Product Security Engineer niche. CSSLP specifically validates the work product security engineers DO (threat modelling, secure code review, SDLC security integration). Without it, claiming product security engineer positioning relies entirely on CISSP+SecurityX which are broader. WHERE IT MATTERS MOST: Genetec Trust Centre, Milestone Security & Trust team, LenelS2/Carrier Product Security, Axis Cybersecurity team, Bosch CERT — the vendor product security teams I called out as your unique niche all explicitly value CSSLP. Pairs with CISSP (~50% content overlap reducing study time). Track A relevance: secondary, useful for cloud-architect roles requiring DevSecOps depth. AMF shared with CISSP if both held — efficient maintenance. Phase 6 timing — pursue ONLY if Track C product security engineering becomes the active direction.",
+    note: "🎯 GAP-FILL for Track C Vendor Product Security Engineer niche. CSSLP specifically validates the work product security engineers DO (threat modelling, secure code review, SDLC security integration). Without it, claiming product security engineer positioning relies entirely on CISSP+SecurityX which are broader. WHERE IT MATTERS MOST: Genetec Trust Centre, Milestone Security & Trust team, LenelS2/Carrier Product Security, Axis Cybersecurity team, Bosch CERT — the vendor product security teams I called out as the unique niche all explicitly value CSSLP. Pairs with CISSP (~50% content overlap reducing study time). Track A relevance: secondary, useful for cloud-architect roles requiring DevSecOps depth. AMF shared with CISSP if both held — efficient maintenance. Phase 6 timing — pursue ONLY if Track C product security engineering becomes the active direction.",
     deps: ["security-plus"],
     applicationGuide: {
             "route": "ISC2 application after exam pass. 4 years of cumulative paid work in 1+ of 8 CSSLP domains (Secure Software Concepts, Requirements, Design, Implementation, Testing, Lifecycle Mgmt, Deployment/Ops, Supply Chain). Endorsement by active ISC2 member required.",
@@ -2139,13 +2139,13 @@ const CERTS = [
                     "Cross-role experience counts: a DevOps engineer who automated security checks qualifies."
             ],
             "referees": {
-                    "guidance": "Endorser must be active ISC2 member familiar with your software security work. Best: senior engineer, AppSec lead, or CSO who saw your secure development practices.",
-                    "outreachTemplate": "LinkedIn / email: 'Hi [Name], I'm applying for CSSLP. ISC2 endorsement requires another active member to vouch for my secure software lifecycle work. Would you be willing? Structured form, ~30 min. Application takes ~2-3 months end-to-end.'",
+                    "guidance": "Endorser must be active ISC2 member familiar with the software security work. Best: senior engineer, AppSec lead, or CSO who saw the secure development practices.",
+                    "outreachTemplate": "LinkedIn / email: 'Hi [Name], I'm applying for CSSLP. ISC2 endorsement requires another active member to vouch for my secure software lifecycle work. Would the candidate be willing? Structured form, ~30 min. Application takes ~2-3 months end-to-end.'",
                     "whoToAsk": [
-                            "senior engineering colleague who saw your secure dev work",
+                            "senior engineering colleague who saw the secure dev work",
                             "AppSec lead or security architect at past employer",
                             "existing CSSLP/CISSP holder ideally familiar with relevant work",
-                            "ISC2 chapter member you've networked with"
+                            "ISC2 chapter member the candidate has networked with"
                     ]
             },
             "pitfalls": [
@@ -2206,7 +2206,7 @@ const CERTS = [
     cpe: 36, cpePeriod: 48, difficulty: 7, roi: 7, hours: [120, 200],
     skills: ["OT/ICS security", "Purdue model", "IEC 62443", "SCADA defence"],
     examFormat: "Open-book proctored exam. 82 questions, 3 hours, passing 71%. Practical scenario-heavy. Two practice tests included.",
-    projectRec: "Document a fictional UK water utility's IT/OT segmentation in line with IEC 62443. Diagram + threat model + control map. The doc is your CNI-sector entry credential.",
+    projectRec: "Document a fictional UK water utility's IT/OT segmentation in line with IEC 62443. Diagram + threat model + control map. The doc is the CNI-sector entry credential.",
     note: "💰 NEVER SELF-FUND (~£8k): negotiate into a job offer or employer L&D budget — walk-away item, not a savings goal. Activate ONLY if pursuing CNI/utilities/manufacturing/maritime sectors (Track B target). High cost but employer-funded at any serious CNI employer. Self-study path via GIAC exam alone is possible but very hard; SANS course strongly recommended. UK CNI demand growing fast under NIS2/CAF.",
     deps: ["security-plus","ccna"]
   },
@@ -2257,7 +2257,7 @@ const CERTS = [
     cpe: 0, cpePeriod: 0, difficulty: 6, roi: 7, hours: [40, 60],
     skills: ["Architecture practice", "Stakeholder engagement", "Solutions design methodology", "UK industry recognition"],
     examFormat: "50-minute online oral interview. Scenario-based questions. Pass mark 65%. Includes pre-prepared scenario submission.",
-    projectRec: "Pre-exam scenario: document a real architecture decision from your a representative organisation work (or a sanitised version) covering business driver, options, decision rationale, and outcome. The doc IS the exam evidence.",
+    projectRec: "Pre-exam scenario: document a real architecture decision from the a representative organisation work (or a sanitised version) covering business driver, options, decision rationale, and outcome. The doc IS the exam evidence.",
     note: "Lifetime cert. Strong UK signal especially for public sector and large enterprise architect roles. Complements CISSP for senior systems architect positioning (Track B). Less internationally portable than TOGAF but more directly relevant for UK employer recognition.",
     deps: ["az-104"]
   },
@@ -2274,13 +2274,13 @@ const CERTS = [
     cpe: 20, cpePeriod: 36, difficulty: 4, roi: 6, hours: [40, 60],
     skills: ["UK PM methodology", "Project tailoring", "Senior consultancy credibility", "Stakeholder management"],
     examFormat: "Practitioner: 70 multi-choice questions, 2.5 hours, open-book (PRINCE2 manual permitted), passing 55% (38/68 marks). Scenario-based questions with shared scenario booklet. PeopleCert online proctored.",
-    projectRec: "Apply PRINCE2 light-touch to one Phase 2-4 cert study project (e.g., your Python-AI integration project for SecAI+ portfolio). Document business case, stage gates, product breakdown — produces both PRINCE2 readiness AND a portfolio artefact showing methodology application.",
+    projectRec: "Apply PRINCE2 light-touch to one Phase 2-4 cert study project (e.g., the Python-AI integration project for SecAI+ portfolio). Document business case, stage gates, product breakdown — produces both PRINCE2 readiness AND a portfolio artefact showing methodology application.",
     note: "🎯 GAP-FILL: UK-dominant project management methodology (vs PMP which dominates US). Genuinely required for senior UK consultancy roles, large UK enterprise senior architect roles, CNI sector senior projects, and Big 4 consulting tracks. Particularly valued by: Track B Specialist Cyber-Physical Consultancy niche, Track C Customer-facing Cyber Engineering Consultant niche, Track A Cloud Security Architect at Big 4 / FTSE 100 senior tier. Maintenance: 20 PDUs/3yr OR re-sit Practitioner exam. PRINCE2 Agile Practitioner adds £400 + £350 exam if Agile/Scrum context becomes relevant later. Phase 5 timing aligns with senior architect/consultancy career stage when PM methodology becomes a differentiator. Lower priority than core architect certs (CISSP/ISSAP/BCS-ESA) but a genuine signal upgrade for senior consultancy work.",
     deps: []
   },
   {
     coverage: "ISACA Certified in Risk and Information Systems Control (CRISC). Senior IT risk management cert. Four domains: (1) Governance 26% — organisational governance, risk governance frameworks (NIST RMF, ISO 31000, COSO ERM), enterprise risk frameworks. (2) IT Risk Assessment 20% — risk identification methodologies, risk analysis (qualitative + quantitative — FAIR methodology), risk evaluation, risk reporting. (3) Risk Response and Reporting 32% — THE LARGEST DOMAIN. Risk treatment (avoid/mitigate/transfer/accept), control selection and design, risk ownership and accountability, third-party risk management, KRI design and monitoring. (4) Information Technology and Security 22% — emerging technology risks, AI/ML risk, cloud risk, project/programme/change risk, business continuity / disaster recovery from a risk lens. Depth: senior risk practitioner. 150 questions, 4 hours, scaled scoring 800 to pass.",
-    prerequisites: "🔴 EXPERIENCE GATEKEEPER: ISACA requires 3 years cumulative work experience in 2+ of the 4 CRISC domains within the 10 years preceding application or 5 years following pass. Realistic timing: Phase 5 once you have 3+ years cyber/risk-adjacent experience. Associate of CRISC route lets you pass exam first, gain experience after. ISACA endorsement required (existing CRISC/CISA/CISM holder vouches).",
+    prerequisites: "🔴 EXPERIENCE GATEKEEPER: ISACA requires 3 years cumulative work experience in 2+ of the 4 CRISC domains within the 10 years preceding application or 5 years following pass. Realistic timing: Phase 5 once the candidate have 3+ years cyber/risk-adjacent experience. Associate of CRISC route lets the candidate pass exam first, gain experience after. ISACA endorsement required (existing CRISC/CISA/CISM holder vouches).",
     studyMaterials: "PRIMARY: ISACA CRISC Review Manual (~£100 member rate). SECONDARY: Hemang Doshi CRISC YouTube + course content (well-regarded). FREE: ISACA UK chapter resources (London, Birmingham, Manchester, Edinburgh, Belfast). EXAM-READY: ISACA QAE database (~£200) — official question pool. EXAM: ~£475 ($575 USD) ISACA member rate, ~£600 non-member.",
     tutorFlag: null,
     subjects: ["IT risk management", "Risk assessment methodology", "FAIR + NIST RMF", "Senior risk signal"],
@@ -2304,7 +2304,7 @@ const CERTS = [
             "steps": [
                     {
                             "title": "1. Confirm experience eligibility",
-                            "detail": "3 years of cumulative paid work in 2+ of the 4 domains within the preceding 10 years. Verify your specific waiver eligibility (other ISACA certs, related certifications, or degree can reduce by up to 2-3 years)."
+                            "detail": "3 years of cumulative paid work in 2+ of the 4 domains within the preceding 10 years. Verify the specific waiver eligibility (other ISACA certs, related certifications, or degree can reduce by up to 2-3 years)."
                     },
                     {
                             "title": "2. Become ISACA member (recommended)",
@@ -2316,7 +2316,7 @@ const CERTS = [
                     },
                     {
                             "title": "4. Pass exam (PSI/Pearson VUE)",
-                            "detail": "150 questions, 4 hours, scaled 200-800 (pass: 450). Computer-based at PSI/Pearson VUE UK test centres. After passing, you have 5 years to apply for certification."
+                            "detail": "150 questions, 4 hours, scaled 200-800 (pass: 450). Computer-based at PSI/Pearson VUE UK test centres. After passing, the candidate have 5 years to apply for certification."
                     },
                     {
                             "title": "5. Document experience \u2014 domain-mapped",
@@ -2343,8 +2343,8 @@ const CERTS = [
                     "Cross-functional work qualifies: risk discussions with finance, legal, compliance all count."
             ],
             "referees": {
-                    "guidance": "Verifiers must speak credibly to your IT risk management work. Best: risk officer, compliance lead, or senior IT/security manager.",
-                    "outreachTemplate": "LinkedIn / email: 'Hi [Name], I'm applying for CRISC. ISACA needs someone familiar with my IT risk work to confirm experience. Would you be willing? Form-based, ~20 min.'",
+                    "guidance": "Verifiers must speak credibly to the IT risk management work. Best: risk officer, compliance lead, or senior IT/security manager.",
+                    "outreachTemplate": "LinkedIn / email: 'Hi [Name], I'm applying for CRISC. ISACA needs someone familiar with my IT risk work to confirm experience. Would the candidate be willing? Form-based, ~20 min.'",
                     "whoToAsk": [
                             "risk officer or compliance lead",
                             "senior IT/security manager",
@@ -2387,7 +2387,7 @@ const CERTS = [
             "steps": [
                     {
                             "title": "1. Confirm experience eligibility",
-                            "detail": "5 years of cumulative paid work in 2+ of the 6 domains within the preceding 10 years. Verify your specific waiver eligibility (other ISACA certs, related certifications, or degree can reduce by up to 2-3 years)."
+                            "detail": "5 years of cumulative paid work in 2+ of the 6 domains within the preceding 10 years. Verify the specific waiver eligibility (other ISACA certs, related certifications, or degree can reduce by up to 2-3 years)."
                     },
                     {
                             "title": "2. Become ISACA member (recommended)",
@@ -2399,7 +2399,7 @@ const CERTS = [
                     },
                     {
                             "title": "4. Pass exam (PSI/Pearson VUE)",
-                            "detail": "150 questions, 4 hours, scaled 200-800 (pass: 450). Computer-based at PSI/Pearson VUE UK test centres. After passing, you have 5 years to apply for certification."
+                            "detail": "150 questions, 4 hours, scaled 200-800 (pass: 450). Computer-based at PSI/Pearson VUE UK test centres. After passing, the candidate have 5 years to apply for certification."
                     },
                     {
                             "title": "5. Document experience \u2014 domain-mapped",
@@ -2426,12 +2426,12 @@ const CERTS = [
                     "CISA is high-audit cert \u2014 keep working papers, audit reports, project records."
             ],
             "referees": {
-                    "guidance": "Verifiers should be audit committee members, senior auditors, or audit partners who saw your audit work first-hand.",
-                    "outreachTemplate": "LinkedIn / email: 'Hi [Name], I'm applying for CISA. ISACA needs verification of my IS audit experience. Would you be willing? Brief structured form.'",
+                    "guidance": "Verifiers should be audit committee members, senior auditors, or audit partners who saw the audit work first-hand.",
+                    "outreachTemplate": "LinkedIn / email: 'Hi [Name], I'm applying for CISA. ISACA needs verification of my IS audit experience. Would the candidate be willing? Brief structured form.'",
                     "whoToAsk": [
-                            "audit manager or senior auditor you've worked with",
+                            "audit manager or senior auditor the candidate has worked with",
                             "internal audit committee member",
-                            "Big 4 audit partner if you've engaged with them",
+                            "Big 4 audit partner if the candidate has engaged with them",
                             "existing CISA/CISM holder"
                     ]
             },
@@ -2474,7 +2474,7 @@ const CERTS = [
     cpe: 0, cpePeriod: 0, difficulty: 9, roi: 8, hours: [200, 350],
     skills: ["Web app code review", "Exploit development", "Source-level vulnerability discovery", "Custom payload crafting"],
     examFormat: "48-hour practical exam — black-box recon followed by source code review and custom exploit development against 2 web applications. Professional report required within 24 hours of exam end. Renewable via re-exam every 3 years.",
-    projectRec: "Build and exploit a deliberately vulnerable web application (write the app yourself, then write 3 working exploits). Document the vulnerabilities and exploits in OSWE-style report format. Commit to private GitHub with public README explaining methodology.",
+    projectRec: "Build and exploit a deliberately vulnerable web application (write the app the candidate, then write 3 working exploits). Document the vulnerabilities and exploits in OSWE-style report format. Commit to private GitHub with public README explaining methodology.",
     note: "🎯 GAP-FILL for AppSec Senior tier. Plugs the web-application offensive gap (CSSLP/ISSAP cover defensive AppSec architecture; OSCP covers general pen test; OSWE specifically covers code-level offensive web work). Strong fit for Track C AppSec pivot (🔐). UK demand: bug bounty programs, specialist AppSec consultancies (PortSwigger, Bishop Fox, NCC Group), in-house AppSec teams at fintech/SaaS. Steep difficulty, expensive — pursue only if web AppSec is explicit direction. Pairs with OSCP for offensive credibility.",
     deps: ["oscp"]
   },
@@ -2801,7 +2801,7 @@ const CERTS = [
     skills: ["Enterprise ITSM leadership", "Service strategy", "Stakeholder facilitation", "Continual improvement programmes"],
     examFormat: "4 separate exams (CDS, DSV, HVIT, DPI). Each typically 40 questions, 90 minutes, 70% pass. Online proctored via PeopleCert. 3-year renewal (since 2025) via re-exam or PeopleCert Plus (~£100/yr).",
     projectRec: "Run a structured service-design exercise for a fictional or anonymised real ITSM process. Apply CDS practices to map service value chain and DPI principles to identify improvement opportunities. Document as case study with measurable improvements proposed.",
-    note: "🎯 LADDER-COMPLETION for ITIL pathway. Completes the AXELOS chain: ITIL 4 Foundation → ITIL 4 MP. Strong fit for Consultancy/Architect Plus pivot (Track B 📐) Senior tier. UK demand: Big 4 advisory (Deloitte, PwC, EY, KPMG), senior ITSM consultancies, Head of IT Service roles. Premium investment (£1,500-2,500+) but stable senior consultancy signal. PeopleCert mandatory training tightening (2025) means you cannot self-study to MP — accredited training required.",
+    note: "🎯 LADDER-COMPLETION for ITIL pathway. Completes the AXELOS chain: ITIL 4 Foundation → ITIL 4 MP. Strong fit for Consultancy/Architect Plus pivot (Track B 📐) Senior tier. UK demand: Big 4 advisory (Deloitte, PwC, EY, KPMG), senior ITSM consultancies, Head of IT Service roles. Premium investment (£1,500-2,500+) but stable senior consultancy signal. PeopleCert mandatory training tightening (2025) means the candidate cannot self-study to MP — accredited training required.",
     deps: ["itil-4-foundation"]
   },
   {
@@ -2829,7 +2829,7 @@ const CERTS = [
             "steps": [
                     {
                             "title": "1. Confirm experience eligibility",
-                            "detail": "3 years of cumulative paid work in 2+ of the 3 domains within the preceding 10 years. Verify your specific waiver eligibility (other ISACA certs, related certifications, or degree can reduce by up to 2-3 years)."
+                            "detail": "3 years of cumulative paid work in 2+ of the 3 domains within the preceding 10 years. Verify the specific waiver eligibility (other ISACA certs, related certifications, or degree can reduce by up to 2-3 years)."
                     },
                     {
                             "title": "2. Become ISACA member (recommended)",
@@ -2841,7 +2841,7 @@ const CERTS = [
                     },
                     {
                             "title": "4. Pass exam (PSI/Pearson VUE)",
-                            "detail": "150 questions, 4 hours, scaled 200-800 (pass: 450). Computer-based at PSI/Pearson VUE UK test centres. After passing, you have 5 years to apply for certification."
+                            "detail": "150 questions, 4 hours, scaled 200-800 (pass: 450). Computer-based at PSI/Pearson VUE UK test centres. After passing, the candidate have 5 years to apply for certification."
                     },
                     {
                             "title": "5. Document experience \u2014 domain-mapped",
@@ -2868,11 +2868,11 @@ const CERTS = [
                     "CDPSE is the technical complement to CIPP/E (law/governance) \u2014 show implementation, not just policy."
             ],
             "referees": {
-                    "guidance": "Verifiers should be engineers, DPOs, or senior privacy professionals who saw your technical privacy work.",
-                    "outreachTemplate": "LinkedIn / email: 'Hi [Name], I'm applying for CDPSE. ISACA needs verification of my technical privacy engineering experience. Would you be willing?'",
+                    "guidance": "Verifiers should be engineers, DPOs, or senior privacy professionals who saw the technical privacy work.",
+                    "outreachTemplate": "LinkedIn / email: 'Hi [Name], I'm applying for CDPSE. ISACA needs verification of my technical privacy engineering experience. Would the candidate be willing?'",
                     "whoToAsk": [
                             "DPO or senior privacy engineer",
-                            "engineering manager who saw your privacy work",
+                            "engineering manager who saw the privacy work",
                             "former colleague in privacy programme",
                             "existing CDPSE/CIPP holder"
                     ]
@@ -2921,7 +2921,7 @@ const CERTS = [
     deps: ["gcih"]
   },
   {
-    coverage: "MITRE ATT&CK Defender (MAD) — credential path issued by MITRE Engenuity validating practical use of the MITRE ATT&CK framework across detection engineering, threat intelligence, threat hunting, adversary emulation, and purple teaming. Six modular badges/certs (held together as the MAD title): (1) ATT&CK Fundamentals (free badge) — framework concepts, tactics/techniques/sub-techniques, navigator. (2) ATT&CK Cyber Threat Intelligence — operationalise ATT&CK in CTI workflows, map adversary behaviour, build threat-informed prioritisation. (3) ATT&CK Adversary Emulation — design and run emulation plans against your environment using ATT&CK-mapped behaviours. (4) ATT&CK SOC Assessments — measure SOC detection coverage against ATT&CK, identify gaps. (5) ATT&CK Threat Hunting — hypothesis-driven hunting using ATT&CK as the structural backbone. (6) ATT&CK Purple Teaming — coordinate red+blue using shared ATT&CK language. Each cert is online proctored, ~3-4 hours, mix of multi-choice + practical scenarios. Full MAD title awarded after all 6 — most practitioners earn 2-3 as needed rather than the full title.",
+    coverage: "MITRE ATT&CK Defender (MAD) — credential path issued by MITRE Engenuity validating practical use of the MITRE ATT&CK framework across detection engineering, threat intelligence, threat hunting, adversary emulation, and purple teaming. Six modular badges/certs (held together as the MAD title): (1) ATT&CK Fundamentals (free badge) — framework concepts, tactics/techniques/sub-techniques, navigator. (2) ATT&CK Cyber Threat Intelligence — operationalise ATT&CK in CTI workflows, map adversary behaviour, build threat-informed prioritisation. (3) ATT&CK Adversary Emulation — design and run emulation plans against the environment using ATT&CK-mapped behaviours. (4) ATT&CK SOC Assessments — measure SOC detection coverage against ATT&CK, identify gaps. (5) ATT&CK Threat Hunting — hypothesis-driven hunting using ATT&CK as the structural backbone. (6) ATT&CK Purple Teaming — coordinate red+blue using shared ATT&CK language. Each cert is online proctored, ~3-4 hours, mix of multi-choice + practical scenarios. Full MAD title awarded after all 6 — most practitioners earn 2-3 as needed rather than the full title.",
     prerequisites: "No formal cert prerequisite. Foundational defensive cyber knowledge required — Sec+ + CySA+ + BTL1-equivalent practical exposure. Realistic skills: comfortable reading attacker tradecraft writeups, can map a real incident to ATT&CK techniques, has experience with at least one SIEM and one EDR.",
     studyMaterials: "PRIMARY: MAD courseware on attackiq.com / mitre-engenuity.org (free training content, paid certs). Cyber Threat Intelligence cert ~$499, others similarly priced. SECONDARY: MITRE ATT&CK Navigator (free tool — practice mapping). FREE: MITRE ATT&CK framework documentation, ATT&CK Evaluations published results, AttackIQ Academy free courses. EXAM-READY: practice via real-world detection writeups (mapping CTI reports to ATT&CK). Full MAD path budget: ~$2,500 across all 6 certs (~£2,000) — most pursue 2-3 modules.",
     tutorFlag: null,
@@ -2934,7 +2934,7 @@ const CERTS = [
     skills: ["ATT&CK navigator fluency", "Detection coverage mapping", "Threat-informed defence", "Hypothesis hunting"],
     examFormat: "Online proctored per module. Mix of multi-choice + practical scenario questions. Each module ~3-4 hours. Certs valid 2 years, renewable via continuing education or re-examination.",
     projectRec: "Map 10 real-world detection rules (from sanitised customer SIEM) to specific ATT&CK techniques. Publish ATT&CK Navigator JSON to GitHub showing detection coverage gaps. Pairs naturally with BTL2/CDSA/Splunk SCDA portfolio evidence.",
-    note: "🎯 STANDARD MENTAL MODEL FOR DETECTION ENGINEERING. Framework-centric (ATT&CK specifically) — distinct from vendor-centric certs like Splunk SCDA or CrowdStrike CCFA. Increasingly the language used in detection engineering job descriptions and SOC architecture discussions. Strong fit for Track C detection engineer / threat hunter roles. Lower demand at junior tiers; clearer value at Mid → Senior. Modular structure means you can earn 1-2 most-relevant certs (CTI + Threat Hunting most common) rather than full MAD title. Free fundamentals badge worth getting even if rest not pursued — universal language for cyber-defence conversations.",
+    note: "🎯 STANDARD MENTAL MODEL FOR DETECTION ENGINEERING. Framework-centric (ATT&CK specifically) — distinct from vendor-centric certs like Splunk SCDA or CrowdStrike CCFA. Increasingly the language used in detection engineering job descriptions and SOC architecture discussions. Strong fit for Track C detection engineer / threat hunter roles. Lower demand at junior tiers; clearer value at Mid → Senior. Modular structure means the candidate can earn 1-2 most-relevant certs (CTI + Threat Hunting most common) rather than full MAD title. Free fundamentals badge worth getting even if rest not pursued — universal language for cyber-defence conversations.",
     deps: ["btl1"]
   },
   {
@@ -3041,7 +3041,7 @@ const CERTS = [
     deps: ["esri-ent-admin"]
   },
   {
-    coverage: "ArcGIS Enterprise System Design Professional (ESDP 2025, published Nov 2025). **The genuine architect-level ESRI credential** \u2014 validates designing and implementing enterprise GIS systems including architecture patterns, capacity planning, HA/DR, security, and integration with external systems (the exact skill set for designing geospatial layers that integrate with VMS/SIEM/access-control platforms). Far more relevant to the Convergence Solutions Architect direction than operator-level certs. Requires significant ArcGIS Enterprise experience. This is the ESRI cert that maps directly to the architect role you are targeting.",
+    coverage: "ArcGIS Enterprise System Design Professional (ESDP 2025, published Nov 2025). **The genuine architect-level ESRI credential** \u2014 validates designing and implementing enterprise GIS systems including architecture patterns, capacity planning, HA/DR, security, and integration with external systems (the exact skill set for designing geospatial layers that integrate with VMS/SIEM/access-control platforms). Far more relevant to the Convergence Solutions Architect direction than operator-level certs. Requires significant ArcGIS Enterprise experience. This is the ESRI cert that maps directly to the architect role the candidate are targeting.",
     prerequisites: "ArcGIS Enterprise Administration Associate + significant enterprise GIS deployment experience.",
     studyMaterials: "⚠ TIER 2 by topic, but largely architecture/SIZING THEORY — studyable WITHOUT a full deployment. PRIMARY: Esri Academy System Design Learning Plan + Exam Information Guide + the Esri Well-Architected Framework. A small Azure-hosted Enterprise lab helps but isn't essential.",
     tutorFlag: "CONSIDER for capacity-planning + HA-architecture components.",
@@ -3060,7 +3060,7 @@ const CERTS = [
     coverage: "ArcGIS Developer Foundation (EADF). Validates ArcGIS development fundamentals \u2014 ArcGIS API for Python, REST API, JavaScript Maps SDK, and integration patterns. **Directly relevant to the video-analytics–GIS direction** \u2014 the integration of Axis camera data into ArcGIS is fundamentally a development/API task, and this cert validates the literacy to architect and troubleshoot those integrations. Even as an architect (not a full-time developer), understanding how ArcGIS APIs ingest external data (like camera event metadata) is core to designing the convergence layer credibly.",
     prerequisites: "ArcGIS Pro Foundation + basic programming literacy (Python/JavaScript helpful).",
     studyMaterials: "TIER 1 — Personal Use covers it (works against ArcGIS Online + the free developers.arcgis.com). PRIMARY: Esri Academy developer learning paths + ArcGIS Developers docs. SECONDARY: ArcGIS API for Python samples + REST reference.",
-    tutorFlag: "CONSIDER for the API/scripting components if programming is not your strong suit.",
+    tutorFlag: "CONSIDER for the API/scripting components if programming is not the strong suit.",
     subjects: ["ArcGIS developer tools", "REST API + web services", "ArcGIS API for Python", "Maps SDKs", "App integration patterns"],
     tracks: ["B"],
     id: "esri-dev-found", name: "ArcGIS Developer Foundation (EADF)", code: "EADF",
@@ -3073,10 +3073,10 @@ const CERTS = [
     deps: ["arcgis-foundation"]
   },
   {
-    coverage: "ArcGIS API for Python Associate (EPYA). Validates the ArcGIS API for Python specifically \u2014 GIS administration, content management, visualization, and analysis. **The bullseye cert for the camera-analytics COP**: the camera-analytics \u2192 ArcGIS pipeline, and the automation of per-customer hosted feature layers and dashboards, is built and run with the ArcGIS API for Python. Pairs directly with your Python ladder (PCEP/PCAP) and Developer Foundation \u2014 the broad dev grounding, then the specific tool that does the work. Operational exam launches 25 June 2026.",
+    coverage: "ArcGIS API for Python Associate (EPYA). Validates the ArcGIS API for Python specifically \u2014 GIS administration, content management, visualization, and analysis. **The bullseye cert for the camera-analytics COP**: the camera-analytics \u2192 ArcGIS pipeline, and the automation of per-customer hosted feature layers and dashboards, is built and run with the ArcGIS API for Python. Pairs directly with the Python ladder (PCEP/PCAP) and Developer Foundation \u2014 the broad dev grounding, then the specific tool that does the work. Operational exam launches 25 June 2026.",
     prerequisites: "ArcGIS Developer Foundation + working Python (PCAP-level).",
     studyMaterials: "TIER 1 \u2014 Personal Use + free developers.arcgis.com covers it. PRIMARY: Esri Academy ArcGIS API for Python learning plan + the official API documentation and sample notebooks. SECONDARY: build against a personal ArcGIS Online org.",
-    tutorFlag: "Unlikely needed given your Python base \u2014 self-study via the API docs + notebooks.",
+    tutorFlag: "Unlikely needed given the Python base \u2014 self-study via the API docs + notebooks.",
     subjects: ["ArcGIS API for Python", "GIS administration via Python", "Content management automation", "Visualization", "Spatial analysis"],
     tracks: ["B"],
     id: "arcgis-py-api", name: "ArcGIS API for Python Associate", code: "EPYA",
@@ -3089,7 +3089,7 @@ const CERTS = [
     deps: ["esri-dev-found", "pcap"]
   },
   {
-    coverage: "ArcGIS Online Administration Associate (EAOA). Validates administering ArcGIS Online \u2014 the SaaS/cloud-hosted ArcGIS platform. Relevant where customers use cloud-hosted GIS rather than on-premises ArcGIS Enterprise. Completes the deployment-model coverage (Enterprise on-prem + Online cloud) so you can architect convergence solutions regardless of the customer's hosting choice.",
+    coverage: "ArcGIS Online Administration Associate (EAOA). Validates administering ArcGIS Online \u2014 the SaaS/cloud-hosted ArcGIS platform. Relevant where customers use cloud-hosted GIS rather than on-premises ArcGIS Enterprise. Completes the deployment-model coverage (Enterprise on-prem + Online cloud) so the candidate can architect convergence solutions regardless of the customer's hosting choice.",
     prerequisites: "ArcGIS Pro Foundation recommended.",
     studyMaterials: "TIER 1 — covered by ArcGIS for Personal Use (its ArcGIS Online component is exactly what this cert administers). PRIMARY: Esri Academy ArcGIS Online Administration Learning Plan. HANDS-ON: a personal Personal Use ArcGIS Online org.",
     tutorFlag: "SKIP \u2014 Esri Academy paths sufficient.",
@@ -3124,7 +3124,7 @@ const CERTS = [
     coverage: "ESRI ArcGIS Pro Foundation. Entry-level GIS credential \u2014 no prerequisites. Validates core ArcGIS Pro fluency: spatial analysis, mapping, data management, geoprocessing basics. Increasingly relevant for Convergence Solutions Architects because GIS + physical surveillance is already integrated (Milestone XProtect Smart Map, Axis LPR/ANPR with GPS tagging, smart city deployments). UK CNI customers (water, electric, gas, transport) all use ArcGIS as core infrastructure tooling. 3-year validity.",
     prerequisites: "None. Recommended for anyone starting GIS exposure.",
     studyMaterials: "TIER 1 — fully covered by ArcGIS for Personal Use (~£160/yr): ArcGIS Pro + ArcGIS Online + Living Atlas + unlimited free Esri Academy e-learning (courses + Learning Plans). HANDS-ON: ArcGIS Pro (Personal Use or 21-day trial) covers every Foundation scenario. See the full ESRI LEARNING PATH note below.",
-    note: "📚 ESRI LEARNING PATH (applies to all 10 ESRI certs). Access splits in two tiers. ▸ TIER 1 — Pro & Online certs (Pro Foundation/Associate/Professional, Online Admin EAOA, Developer Foundation): ArcGIS for Personal Use (~£160/yr) is all you need — it bundles ArcGIS Pro, ArcGIS Online, Living Atlas and unlimited FREE Esri Academy e-learning (courses + Learning Plans). ⚠ Since June 2025 Personal Use ships BASIC-tier Pro (some advanced geoprocessing disabled): fine for Foundation/Associate, but for the Pro Professional cert's advanced tools use a 21-day full Pro trial near exam time, or employer/project access. ▸ TIER 2 — Enterprise certs (Enterprise Admin Associate/Professional, System Design ESDP, Geodata Mgmt EGMP, Utility Network): Personal Use does NOT include ArcGIS Enterprise — the self-hosted Portal + Server + Data Store stack these certs are entirely about. You still get the Esri Academy Learning Plans (theory/objectives) but no hands-on environment. BRIDGE THE GAP: deploy ArcGIS Enterprise yourself on an Azure VM (you have the Azure skills; Esri supplies Enterprise provisioning/trial authorisation — a single-machine base deployment is the standard study lab). This doubles as portfolio evidence for a video-analytics–GIS convergence architecture. EXCEPTION: ESDP (System Design) is mostly architecture/sizing theory — studyable from the Esri Well-Architected Framework + System Design Learning Plan without a full deployment.",
+    note: "📚 ESRI LEARNING PATH (applies to all 10 ESRI certs). Access splits in two tiers. ▸ TIER 1 — Pro & Online certs (Pro Foundation/Associate/Professional, Online Admin EAOA, Developer Foundation): ArcGIS for Personal Use (~£160/yr) is all the candidate need — it bundles ArcGIS Pro, ArcGIS Online, Living Atlas and unlimited FREE Esri Academy e-learning (courses + Learning Plans). ⚠ Since June 2025 Personal Use ships BASIC-tier Pro (some advanced geoprocessing disabled): fine for Foundation/Associate, but for the Pro Professional cert's advanced tools use a 21-day full Pro trial near exam time, or employer/project access. ▸ TIER 2 — Enterprise certs (Enterprise Admin Associate/Professional, System Design ESDP, Geodata Mgmt EGMP, Utility Network): Personal Use does NOT include ArcGIS Enterprise — the self-hosted Portal + Server + Data Store stack these certs are entirely about. the candidate still get the Esri Academy Learning Plans (theory/objectives) but no hands-on environment. BRIDGE THE GAP: deploy ArcGIS Enterprise the candidate on an Azure VM (the candidate have the Azure skills; Esri supplies Enterprise provisioning/trial authorisation — a single-machine base deployment is the standard study lab). This doubles as portfolio evidence for a video-analytics–GIS convergence architecture. EXCEPTION: ESDP (System Design) is mostly architecture/sizing theory — studyable from the Esri Well-Architected Framework + System Design Learning Plan without a full deployment.",
     tutorFlag: "SKIP \u2014 Esri MOOCs and free resources sufficient.",
     subjects: ["ArcGIS Pro UI + workflows", "Spatial queries + analysis", "Data management", "Cartographic visualisation"],
     tracks: ["B"],
@@ -3215,7 +3215,7 @@ const CERTS = [
     cpe: 0, cpePeriod: 0, difficulty: 4, roi: 8, hours: [25, 40],
     skills: ["SPL queries", "Splunk dashboards", "Field extractions", "Knowledge objects"],
     examFormat: "65 multiple choice questions, 75 minutes, passing 70%.",
-    projectRec: "Splunk Boss of the SOC walkthrough on GitHub — every challenge documented with your SPL queries and findings. Public repo = evidence of practical SOC analyst capability.",
+    projectRec: "Splunk Boss of the SOC walkthrough on GitHub — every challenge documented with the SPL queries and findings. Public repo = evidence of practical SOC analyst capability.",
     note: "Cheap, fast, high-signal Phase 3 credential. Many UK SOCs run Splunk — this credential alone meaningfully unblocks SOC analyst applications. Stack-aligned with Pluralsight Splunk courses. Foundation for SCDA/SCDE Splunk ladder.",
     deps: ["thm-sal1"]
   },
@@ -3587,7 +3587,7 @@ const CERTS = [
     cpe: 0, cpePeriod: 0, difficulty: 5, roi: 8, hours: [40, 60],
     skills: ["Splunk Enterprise Security", "Notable events", "Risk-based alerting", "Correlation searches"],
     examFormat: "66 multiple choice questions, 75 minutes, passing 700/1000.",
-    projectRec: "Document a custom correlation search you built end-to-end: data source identified → field extraction → search logic → notable event → risk score → response playbook hook. Single page = SOC analyst portfolio piece.",
+    projectRec: "Document a custom correlation search the candidate built end-to-end: data source identified → field extraction → search logic → notable event → risk score → response playbook hook. Single page = SOC analyst portfolio piece.",
     note: "Pairs naturally with SC-200 (Microsoft Sentinel equivalent). Track C engineers should hold both — most UK SOCs are multi-vendor with Sentinel + Splunk often coexisting. Splunk SCDA + SC-200 = comprehensive SIEM credibility.",
     deps: ["splunk-power-user"]
   },
@@ -3685,14 +3685,14 @@ const CERTS = [
     hours: [25, 40],
     skills: ["SPL","Splunk search","Dashboards","Log analysis"],
     examFormat: "Multiple choice via Pearson VUE or online proctored, ~60 min. Entry level.",
-    projectRec: "Ingest your home lab / network logs into a free Splunk Cloud trial and build a search + dashboard — instant SIEM-literacy portfolio piece beyond Microsoft Sentinel.",
-    note: "SIEM portability. Your SIEM exposure is otherwise Microsoft Sentinel (SC-200) and CrowdStrike — both vendor-specific. Splunk is the universal SIEM language a consulting architect meets across heterogeneous clients. Core User is the entry rung; Core Power User (data models, knowledge objects) is the natural follow-on if a client engagement demands deeper Splunk.",
+    projectRec: "Ingest the home lab / network logs into a free Splunk Cloud trial and build a search + dashboard — instant SIEM-literacy portfolio piece beyond Microsoft Sentinel.",
+    note: "SIEM portability. the SIEM exposure is otherwise Microsoft Sentinel (SC-200) and CrowdStrike — both vendor-specific. Splunk is the universal SIEM language a consulting architect meets across heterogeneous clients. Core User is the entry rung; Core Power User (data models, knowledge objects) is the natural follow-on if a client engagement demands deeper Splunk.",
     deps: ["security-plus"]
   },
   {
     coverage: "ISA/IEC 62443 Cybersecurity Design Specialist (ISA/CDS, Certificate 3) — course IC34. Covers selecting and implementing cybersecurity countermeasures for new or existing IACS to meet the target security level for each zone/conduit, plus developing and executing test plans to verify the cybersecurity requirements specification. The 'secure design' rung of the 62443 lifecycle. Requires Certificate 1 (Fundamentals) first; exam via Meazure Learning, 75–100 Qs. ISA certificates do not expire.",
     prerequisites: "ISA/IEC 62443 Cybersecurity Fundamentals Specialist (Cert 1) required first. physical-security + network background maps directly onto zone/conduit design.",
-    studyMaterials: "PRIMARY: ISA course IC34 (mandatory, includes the exam) — self-paced modular (IC34M), virtual, or classroom. SECONDARY: 62443-3-3 (system security requirements) + 62443-3-2 (risk/zones). HANDS-ON: model zones & conduits for your OT lab.",
+    studyMaterials: "PRIMARY: ISA course IC34 (mandatory, includes the exam) — self-paced modular (IC34M), virtual, or classroom. SECONDARY: 62443-3-3 (system security requirements) + 62443-3-2 (risk/zones). HANDS-ON: model zones & conduits for the OT lab.",
     tutorFlag: null,
     subjects: ["Secure IACS design","Zones & conduits","Countermeasure selection","Security level targets","Verification testing"],
     tracks: ["B","C"],
@@ -3715,14 +3715,14 @@ const CERTS = [
     hours: [50, 80],
     skills: ["IACS design","Zone/conduit modelling","Security levels","Countermeasures"],
     examFormat: "Multiple choice via Meazure Learning, 75–100 Qs. Course completion required.",
-    projectRec: "Produce a zone/conduit design + countermeasure selection for your OT lab segment, mapped to a target security level — a direct portfolio artefact for the OT-Convergence Architect track.",
-    note: "Third rung of the four-Specialist ISA ladder. Each Specialist banked moves you toward the auto-awarded ISA/IEC 62443 Cybersecurity Expert designation — the rare capstone proving end-to-end OT lifecycle command. With physical-security base, this is a defining credential for the OT-Convergence Architect target. ISA certs never expire, so zero renewal burden.",
+    projectRec: "Produce a zone/conduit design + countermeasure selection for the OT lab segment, mapped to a target security level — a direct portfolio artefact for the OT-Convergence Architect track.",
+    note: "Third rung of the four-Specialist ISA ladder. Each Specialist banked moves the candidate toward the auto-awarded ISA/IEC 62443 Cybersecurity Expert designation — the rare capstone proving end-to-end OT lifecycle command. With physical-security base, this is a defining credential for the OT-Convergence Architect target. ISA certs never expire, so zero renewal burden.",
     deps: ["iec-62443-cfs"]
   },
   {
     coverage: "ISA/IEC 62443 Cybersecurity Maintenance Specialist (ISA/CMS, Certificate 4) — course IC37. Covers ongoing operations and maintenance of IACS cybersecurity: network diagnostics and troubleshooting, security monitoring and incident response, and maintenance of cybersecurity countermeasures. The 'operate & maintain' rung of the 62443 lifecycle. Requires Certificate 1 first. ISA certificates do not expire.",
     prerequisites: "ISA/IEC 62443 Cybersecurity Fundamentals Specialist (Cert 1) required first.",
-    studyMaterials: "PRIMARY: ISA course IC37 (mandatory, includes the exam) — self-paced modular (IC37M), virtual, or classroom. SECONDARY: 62443-2-3 (patch management) + 62443-2-4 (service-provider requirements). HANDS-ON: build a monitoring + IR runbook for your OT lab.",
+    studyMaterials: "PRIMARY: ISA course IC37 (mandatory, includes the exam) — self-paced modular (IC37M), virtual, or classroom. SECONDARY: 62443-2-3 (patch management) + 62443-2-4 (service-provider requirements). HANDS-ON: build a monitoring + IR runbook for the OT lab.",
     tutorFlag: null,
     subjects: ["IACS operations","OT security monitoring","ICS incident response","Patch/countermeasure maintenance","Diagnostics"],
     tracks: ["B","C"],
@@ -3745,12 +3745,12 @@ const CERTS = [
     hours: [50, 80],
     skills: ["OT monitoring","ICS incident response","Maintenance","Diagnostics"],
     examFormat: "Multiple choice via Meazure Learning, 75–100 Qs. Course completion required.",
-    projectRec: "Write an OT monitoring + incident-response runbook for your lab segment — pairs directly with GRID's hands-on ICS DFIR content.",
+    projectRec: "Write an OT monitoring + incident-response runbook for the lab segment — pairs directly with GRID's hands-on ICS DFIR content.",
     note: "Fourth and final Specialist — completing it (with Certs 1–3) auto-awards the ISA/IEC 62443 Cybersecurity Expert designation. Its monitoring + incident-response content reinforces GRID (GIAC active defense): standards-based ops here, hands-on ICS DFIR there. The two compound. ISA certs never expire.",
     deps: ["iec-62443-cfs"]
   },
   {
-    coverage: "ISA/IEC 62443 Cybersecurity Expert — the program capstone, awarded automatically once you hold all four Specialist certificates (Fundamentals + Risk Assessment + Design + Maintenance). No separate exam or fee. Represents demonstrated command of the entire IACS cybersecurity lifecycle (assess → design → operate → maintain) and is the highest tier of the ISA/IEC 62443 program. ISA certificates do not expire.",
+    coverage: "ISA/IEC 62443 Cybersecurity Expert — the program capstone, awarded automatically once the candidate hold all four Specialist certificates (Fundamentals + Risk Assessment + Design + Maintenance). No separate exam or fee. Represents demonstrated command of the entire IACS cybersecurity lifecycle (assess → design → operate → maintain) and is the highest tier of the ISA/IEC 62443 program. ISA certificates do not expire.",
     prerequisites: "All four ISA/IEC 62443 Specialist certificates: Fundamentals, Risk Assessment, Design, Maintenance.",
     studyMaterials: "No additional study — the Expert designation is conferred automatically and listed in the ISA Credential Directory once Certificates 1–4 are recorded.",
     tutorFlag: null,
@@ -3805,9 +3805,9 @@ const CERTS = [
     hours: [60, 100],
     skills: ["LLM security","Adversarial ML","AI threat modelling","Secure MLOps"],
     examFormat: "Browser-delivered lab + exam, 60-day lab access, one attempt.",
-    projectRec: "Harden an LLM app in your lab (guardrails, input validation, supply-chain checks) + document an AI threat model (STRIDE/ATLAS) — a portfolio artefact bridging convergence into AI.",
+    projectRec: "Harden an LLM app in the lab (guardrails, input validation, supply-chain checks) + document an AI threat model (STRIDE/ATLAS) — a portfolio artefact bridging convergence into AI.",
     applicationBased: false,
-    note: "Technical middle rung of your AI-security ladder (SecAI+ → CAISP → GAIPS) — hands-on, not governance, so it fits the technical-IC identity. AI security is among the fastest-growing, highest-paid niches; entering early compounds as AI lands in OT/industrial systems.",
+    note: "Technical middle rung of the AI-security ladder (SecAI+ → CAISP → GAIPS) — hands-on, not governance, so it fits the technical-IC identity. AI security is among the fastest-growing, highest-paid niches; entering early compounds as AI lands in OT/industrial systems.",
     deps: ["secai-plus"]
   },
   {
@@ -3838,7 +3838,7 @@ const CERTS = [
     examFormat: "Proctored web-based with hands-on CyberLive components.",
     projectRec: "Build and secure an end-to-end GenAI/RAG pipeline (data → model → API → deployment) with documented controls — the architect-level AI artefact for the portfolio.",
     applicationBased: false,
-    note: "The architect-level capstone of your AI-security ladder — the higher tier above SecAI+. GIAC = premium, performance-based (CyberLive). GA 28 Jul 2026, available well within the timeline. Positions you toward Lead AI Security Architect-adjacent work and future-proofs the convergence thesis as AI permeates OT.",
+    note: "The architect-level capstone of the AI-security ladder — the higher tier above SecAI+. GIAC = premium, performance-based (CyberLive). GA 28 Jul 2026, available well within the timeline. Positions the candidate toward Lead AI Security Architect-adjacent work and future-proofs the convergence thesis as AI permeates OT.",
     deps: ["caisp"]
   },
 ];
