@@ -1,15 +1,16 @@
-// Cert Tracker v3 — central configuration. No build step required.
+// Cert Tracker v3.1 — central configuration. No build step required.
 (function initConfig(global) {
   'use strict';
 
   const CT = global.CertTrackerV3 = global.CertTrackerV3 || {};
 
   CT.version = Object.freeze({
-    app: '3.0.0',
-    data: 58,
+    app: '3.1.0',
+    data: 59,
     storage: 4,
     backup: 3,
-    sync: 1
+    sync: 1,
+    market: 1
   });
 
   CT.config = Object.freeze({
@@ -52,9 +53,7 @@
     'ArcGIS': 'https://www.esri.com/training/certification/',
     'TryHackMe': 'https://tryhackme.com/paths',
     'Honeywell': 'https://buildings.honeywell.com/us/en/support/training',
-    'Paxton': 'https://www.paxton-access.com/training/',
-    'Claroty': 'https://www.claroty.com/xcel-enablement-and-training',
-    'Nozomi Networks': 'https://www.nozominetworks.com/academy'
+    'Paxton': 'https://www.paxton-access.com/training/'
   });
 
   const listeners = new Map();
