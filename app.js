@@ -77,63 +77,7 @@ function loadState() {
   if (!state.myPath || Object.keys(state.myPath).length === 0 || storedVersion < MYPATH_VERSION) {
     // Default curated convergence-security technical path
     state.myPath = state.myPath || {};
-    const defaults = [
-      'issap','caisp','gaips','pan-apprentice','wiz-cse', // AI ladder (SecAI+ → CAISP → GAIPS) + ISSAP architect specialism
-      'pcep','pcap','cmss','aws-cloud-practitioner',// ═══ JUNIOR TIER (Years 1-3, £30-55k) — 25 certs (P1-2) ═══
-      // Physical security foundation
-      'mcit','lca','lcp','lce','lcda','acp',
-      // Cyber foundation (vendor-neutral)
-      'a-plus','security-plus','cysa-plus','network-plus','az-900','az-104','sc-900','gcp-ace','gicsp','iec-62443-cds','iec-62443-cms','iec-62443-expert','grid','linux-plus','splunk-core-user',
-      // Vendor entry
-      'pan-practitioner','crowdstrike-ccf',
-      // UK + methodology foundation
-      'cismp','itil-4-foundation',
-      // 🤖 AI multiplier (Junior)
-      'ai-901','secai-plus',
-      // 🏭 OT convergence — CompTIA SecOT+ (vendor-neutral IT/OT bridge)
-      
-      // 🛰️ Geospatial specialist layer (Axis ACAP-ESRI convergence bet — entry)
-      
-      
-      // ═══ SENIOR TIER (Years 4-7, £60-135k) — 27 certs (P3-4) ═══
-      // Microsoft late-Junior carry + senior architect
-      'sc-200','sc-300','sc-401','sc-100','az-305',
-      // Network foundation (CCNA 200-301 — foundational tier post-Feb-2026 update)
-      'ccna',
-      // Architect credibility (CISSP first, then ISSAP after 2yrs experience)
-      'cissp',
-      // Cloud architect breadth
-      'ccsp','ccsk','aws-saa',// Physical depth (Milestone-focused)
-      'mcie','mcde',
-      'arcules-csp','iec-62443-cfs',
-      // CrowdStrike architect-relevant (Hunter + Identity + Cloud — drop SIEM Analyst/Eng)
-      'crowdstrike-ccfh','crowdstrike-ccis','crowdstrike-cccs',
-      // Palo Alto architect-relevant (Network + Cloud — drop SecOps Pro, XSIAM/XSOAR Eng)
-      'pan-netsec-pro','pan-ngfw-eng','pan-cloudsec-pro',
-      // Service management
-      'bcs-esa',
-      // UK chartered mid
-      'ukcsc-princ',
-      // 🤖 AI multiplier (Senior)
-      'sc-500',
-      // 🛰️ Geospatial specialist layer (site mapping + camera-analytics pipeline + web common-operating-picture delivery)
-      
-      
-      // ═══ PRINCIPAL / ARCHITECT TIER (Years 8+, £120-400k+) — 20 certs (P5-6) ═══
-      // Senior vendor architects (capstone)
-      'pan-netsec-arch',
-      // Risk + security management (drop CISA - audit-focused)
-      'crisc',
-      // Industrial + advisory senior
-      'iec-62443-cra','asis-psp',
-      // UK Chartered top tier
-      'ukcsc-chart','csyp',
-      // Standards + privacy management
-      'iso-27001-li',
-      // Enterprise security architecture
-      'sabsa-found',
-      
-      'claroty-cert-eng','nozomi-cert-eng', 'google-cyber', 'cczt','cdcdp'];
+    const defaults = window.CERT_TRACKER_DEFAULT_PATH || [];
     defaults.forEach(id => { state.myPath[id] = true; });
     localStorage.setItem(SK.myPath, JSON.stringify(state.myPath));
     localStorage.setItem('cert.myPathVersion', String(MYPATH_VERSION));
