@@ -13,6 +13,8 @@ const icon=read('icon.svg');
 const hud=read('cyberpunk-hud.css');
 const manifest=read('manifest.json');
 const worker=read('sw.js');
+const config=read('src/config.js');
+const pkg=JSON.parse(read('package.json'));
 
 function require(condition,message){if(!condition)errors.push(message);}
 
@@ -45,6 +47,7 @@ require(worker.includes("'./cyberpunk-hud.css'"),'Service worker does not cache 
 require(worker.includes('cert-tracker-assets-v4.3.0'),'Service-worker cache was not advanced for the HUD release.');
 require(manifest.includes('"background_color":"#030811"')&&manifest.includes('"theme_color":"#08131f"'),'Manifest does not carry the HUD application colours.');
 require(icon.includes('cybernetic five-tier progression core'),'Application icon does not identify the cybernetic progression system.');
+require(config.includes(`app: '${pkg.version}'`),'Visible application version must match package.json.');
 
 if(errors.length){console.error(`Formatting gate failed (${errors.length}):`);errors.forEach(e=>console.error(`- ${e}`));process.exit(1);}
 console.log('Mechanical HUD theme, typography, spacing, tier/icon coverage, touch states and asset-loading checks passed.');
