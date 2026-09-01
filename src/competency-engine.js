@@ -5,37 +5,49 @@
   if (!CT?.store) throw new Error('state-core.js must load before competency-engine.js');
 
   const SKILLS = Object.freeze({
-    networking:'Networking fundamentals', routing:'Routing & switching', firewall:'Firewalling & network security', wireless:'Wireless',
-    linux:'Linux', windows:'Windows / endpoint administration', cloud:'Cloud fundamentals', azure:'Microsoft Azure', aws:'AWS',
-    iam:'Identity & access management', zeroTrust:'Zero Trust', soc:'SOC operations', siem:'SIEM & telemetry', incident:'Incident response',
-    threat:'Threat detection', vulnerability:'Vulnerability management', pentest:'Offensive security', crypto:'Cryptography', governance:'Governance & risk',
-    architecture:'Security architecture', ot:'OT / ICS security', vms:'Video management systems', physical:'Physical security', access:'Access control',
-    automation:'Automation', python:'Python', iac:'Infrastructure as code', containers:'Containers / Kubernetes', aiSecurity:'AI security',
-    data:'Data / analytics', gis:'GIS / spatial systems', leadership:'Security leadership', privacy:'Privacy'
+    networking:'Networking fundamentals', routing:'Routing & switching', firewall:'Firewalling & network security', wireless:'Wireless', hybridNetwork:'Hybrid / cloud networking',
+    linux:'Linux', windows:'Windows / endpoint administration', enterpriseInfra:'Enterprise infrastructure', storage:'Storage / capacity', database:'Database fundamentals', pki:'PKI / certificates', resilience:'HA / backup / disaster recovery',
+    cloud:'Cloud fundamentals', azure:'Microsoft Azure', aws:'AWS', iam:'Identity & access management', zeroTrust:'Zero Trust',
+    soc:'SOC operations', siem:'SIEM & telemetry', incident:'Incident response', threat:'Threat detection', vulnerability:'Vulnerability management', pentest:'Offensive security', offensive:'Attack-path understanding', crypto:'Cryptography', governance:'Governance & risk',
+    architecture:'Security architecture', commercial:'Commercial / delivery architecture', ot:'OT / ICS security', otEngineering:'OT / control engineering', industrialProtocols:'Industrial protocols',
+    vms:'Video management systems', physical:'Physical security', access:'Access control', accessIdentity:'Physical identity / access lifecycle',
+    automation:'Automation', python:'Python', apiIntegration:'APIs / systems integration', iac:'Infrastructure as code', containers:'Containers / Kubernetes',
+    aiSecurity:'AI security', aiSystems:'AI / analytics systems', data:'Data / analytics', gis:'GIS / spatial systems', leadership:'Security leadership', privacy:'Privacy'
   });
 
   const RULES = Object.freeze([
-    ['networking',['network','tcp','ip','subnet','ethernet'],1], ['routing',['routing','switching','ccna','ccnp'],1],
-    ['firewall',['firewall','palo alto','fortinet','ngfw','network security'],1], ['wireless',['wireless','wi-fi','wifi'],.8],
-    ['linux',['linux','red hat','rhce','bash'],1], ['windows',['windows','endpoint','active directory'],.8],
+    ['networking',['network','tcp','ip','subnet','ethernet'],1], ['routing',['routing','switching','ccna','ccnp','bgp','ospf','vrf'],1],
+    ['firewall',['firewall','palo alto','fortinet','ngfw','network security','segmentation','vpn'],1], ['wireless',['wireless','wi-fi','wifi'],.8],
+    ['hybridNetwork',['hybrid network','vnet','expressroute','private link','vpn gateway','cloud networking'],1],
+    ['linux',['linux','red hat','rhce','bash'],1], ['windows',['windows','endpoint','active directory','ad ds'],.9],
+    ['enterpriseInfra',['windows server','active directory','hyper-v','virtualization','server administration','enterprise infrastructure'],1],
+    ['storage',['storage','raid','san','nas','iops','retention'],.9], ['database',['sql','database','database recovery'],.8], ['pki',['pki','certificate','tls','certificate authority'],1],
+    ['resilience',['high availability','disaster recovery','backup','rpo','rto','clustering','ha/dr'],1],
     ['cloud',['cloud','azure','aws','gcp'],.7], ['azure',['azure','az-','sc-'],1], ['aws',['aws','amazon web services'],1],
-    ['iam',['identity','iam','entra','sc-300','pam','access management'],1], ['zeroTrust',['zero trust'],1],
+    ['iam',['identity','iam','entra','sc-300','pam','access management','oauth','oidc'],1], ['zeroTrust',['zero trust'],1],
     ['soc',['soc','security operations'],1], ['siem',['siem','splunk','sentinel','telemetry'],1], ['incident',['incident','forensic','response'],1],
     ['threat',['threat','detection','hunting','crowdstrike'],1], ['vulnerability',['vulnerability','cysa','scanner'],.9], ['pentest',['pentest','penetration','offensive','oscp'],1],
-    ['crypto',['cryptography','encryption','pki'],.9], ['governance',['governance','risk','compliance','iso 27001','crisc','cism'],1],
-    ['architecture',['architect','architecture','design','sabsa','issap'],1], ['ot',['ot security','ot/ics','ics security','industrial','scada','62443','gicsp','claroty','nozomi'],1],
+    ['offensive',['attack path','lateral movement','privilege escalation','credential theft','reconnaissance','ad attack','web vulnerability','api vulnerability'],1],
+    ['crypto',['cryptography','encryption','pki'],.9], ['governance',['governance','risk','compliance','iso 27001','crisc','cism','nist','caf'],1],
+    ['architecture',['architect','architecture','design','sabsa','issap','hld','lld'],1], ['commercial',['bill of materials','bom','tco','rfp','rfq','tender','capex','opex','statement of work','sow','acceptance criteria'],1],
+    ['ot',['ot security','ot/ics','ics security','industrial','scada','62443','gicsp','claroty','nozomi'],1],
+    ['otEngineering',['plc','scada','hmi','rtu','dcs','sis','ladder logic','function block','structured text','iec 61131','process control'],1],
+    ['industrialProtocols',['modbus','opc ua','mqtt','bacnet','dnp3','profinet','ethernet/ip','industrial protocol'],1],
     ['vms',['milestone','vms','video management','surveillance'],1], ['physical',['physical security','axis','camera','video surveillance','asis'],.9],
-    ['access',['access control','lenel','paxton','badge'],1], ['automation',['automation','powershell','devops','scripting'],.8], ['python',['python','pcap','pcep'],1],
-    ['iac',['terraform','infrastructure as code','iac'],1], ['containers',['kubernetes','container','cka','docker'],1], ['aiSecurity',['ai security','artificial intelligence','secai'],1],
-    ['data',['data','analytics','sql'],.6], ['gis',['arcgis','esri','gis','spatial'],1], ['leadership',['leadership','management','ciso'],.8], ['privacy',['privacy','cipp','gdpr'],1]
+    ['access',['access control','lenel','paxton','badge','osdp','wiegand'],1], ['accessIdentity',['cardholder','credential lifecycle','physical identity','anti-passback','visitor management'],1],
+    ['automation',['automation','powershell','devops','scripting','ansible'],.8], ['python',['python','pcap','pcep'],1],
+    ['apiIntegration',['rest api','api','json','yaml','oauth','oidc','vapiX','integration'],.9], ['iac',['terraform','infrastructure as code','iac'],1],
+    ['containers',['kubernetes','container','cka','docker'],1], ['aiSecurity',['ai security','artificial intelligence security','secai','model security'],1],
+    ['aiSystems',['computer vision','object detection','classification','inference','model drift','analytics','briefcam'],1],
+    ['data',['data','analytics','sql','metadata'],.6], ['gis',['arcgis','esri','gis','spatial'],1], ['leadership',['leadership','management','ciso','principal'],.8], ['privacy',['privacy','cipp','gdpr'],1]
   ]);
 
   const GOALS = Object.freeze({
-    convergence:Object.freeze({ label:'Convergence / OT Security Architect', weights:{ architecture:1,ot:1,networking:.85,firewall:.8,physical:.75,vms:.65,access:.55,cloud:.55,iam:.5,automation:.45,incident:.4,governance:.4 } }),
-    cyber:Object.freeze({ label:'Cyber Security Engineer', weights:{ networking:.7,firewall:.7,soc:1,siem:.9,incident:.9,threat:.9,vulnerability:.75,iam:.65,linux:.6,automation:.5,cloud:.5 } }),
-    network:Object.freeze({ label:'Network / Security Engineer', weights:{ networking:1,routing:1,firewall:1,wireless:.55,linux:.4,cloud:.35,automation:.35,architecture:.35 } }),
-    physical:Object.freeze({ label:'Physical Security Architect', weights:{ physical:1,vms:1,access:.9,networking:.7,architecture:.8,cloud:.45,iam:.4,ot:.35,automation:.3 } }),
-    cloud:Object.freeze({ label:'Cloud Security Architect', weights:{ cloud:1,azure:.8,aws:.8,iam:1,zeroTrust:.85,architecture:1,networking:.6,automation:.75,iac:.7,containers:.55,governance:.45 } })
+    convergence:Object.freeze({ label:'Convergence / OT Security Architect', weights:{ architecture:1,commercial:.7,ot:1,otEngineering:.85,industrialProtocols:.7,networking:.9,routing:.7,firewall:.85,enterpriseInfra:.65,pki:.5,resilience:.5,physical:.8,vms:.7,access:.65,accessIdentity:.5,cloud:.65,hybridNetwork:.6,iam:.6,automation:.55,apiIntegration:.55,aiSystems:.4,offensive:.35,incident:.4,governance:.55 } }),
+    cyber:Object.freeze({ label:'Cyber Security Engineer', weights:{ networking:.7,firewall:.7,soc:1,siem:.9,incident:.9,threat:.9,vulnerability:.75,offensive:.65,iam:.65,linux:.6,automation:.5,cloud:.5 } }),
+    network:Object.freeze({ label:'Network / Security Engineer', weights:{ networking:1,routing:1,firewall:1,hybridNetwork:.55,wireless:.55,linux:.4,enterpriseInfra:.35,cloud:.35,automation:.4,architecture:.35 } }),
+    physical:Object.freeze({ label:'Physical Security Architect', weights:{ physical:1,vms:1,access:.95,accessIdentity:.7,networking:.75,enterpriseInfra:.55,architecture:.85,commercial:.5,cloud:.45,iam:.4,ot:.35,automation:.3,apiIntegration:.45,aiSystems:.45 } }),
+    cloud:Object.freeze({ label:'Cloud Security Architect', weights:{ cloud:1,azure:.8,aws:.8,hybridNetwork:.85,iam:1,zeroTrust:.85,architecture:1,networking:.6,automation:.75,apiIntegration:.55,iac:.7,containers:.55,governance:.45 } })
   });
 
   const cache = new Map();
