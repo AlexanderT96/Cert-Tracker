@@ -18,6 +18,12 @@
     if (!localStorage.getItem(C.myPathKey) && migratedPath) localStorage.setItem(C.myPathKey, migratedPath);
     SK.myPath = C.myPathKey;
     if (state.myPath && !localStorage.getItem(C.myPathKey)) localStorage.setItem(C.myPathKey, JSON.stringify(state.myPath));
+
+    // The new key is authoritative after migration. Reload it into memory so a
+    // stale historical `undefined` value cannot override a newer ct2 value.
+    const authoritativePath = safeParse(localStorage.getItem(C.myPathKey), null);
+    if (CT.util.isPlainObject(authoritativePath)) state.myPath = authoritativePath;
+
     localStorage.setItem(C.storageSchemaKey, String(CT.version.storage));
 
     // Preserve dormant fields referenced by older backups.
@@ -102,7 +108,7 @@
     return { ok: errors.length === 0, errors };
   }
 
-  function persistAll() {
+  function persistAll(options = {}) {
     localStorage.setItem(SK.passes, JSON.stringify(state.passes || {}));
     localStorage.setItem(SK.exams, JSON.stringify(state.exams || {}));
     localStorage.setItem(SK.notes, JSON.stringify(state.notes || {}));
@@ -118,10 +124,12 @@
     localStorage.setItem('ct2-partners', JSON.stringify(state.partners || {}));
     localStorage.setItem('ct2-order', JSON.stringify(state.certOrder || {}));
     localStorage.setItem('ct2-phase-ovr', JSON.stringify(state.phaseOverrides || {}));
-    save.cpe();
-    save.gates();
+    localStorage.setItem(SK.cpe, JSON.stringify(state.activities || []));
+    localStorage.setItem(SK.gates, JSON.stringify(state.gates || {}));
     localStorage.setItem(C.storageSchemaKey, String(CT.version.storage));
-    localStorage.setItem(C.lastChangeKey, new Date().toISOString());
+    if (options.changedAt !== false) {
+      localStorage.setItem(C.lastChangeKey, options.changedAt || new Date().toISOString());
+    }
   }
 
   function applyBackup(data, options = {}) {
@@ -154,7 +162,10 @@
         if (cert && Number(ph) >= 1 && Number(ph) <= 6) cert.phase = Number(ph);
       });
 
-      persistAll();
+      // Preserve the originating change timestamp. This is critical to clean
+      // multi-device conflict detection: pulling remote data must not fabricate
+      // a brand-new local edit timestamp.
+      persistAll({ changedAt: data.changedAt || data.exportedAt || new Date().toISOString() });
       if (!options.silent) {
         CT.events.emit('state-restored', { source: options.source || 'backup' });
         if (typeof renderApp === 'function') renderApp();
@@ -169,7 +180,7 @@
         state.expLog = rollback.expLog; state.eventsDismissed = rollback.eventsDismissed; state.artifacts = rollback.artifacts;
         state.partners = rollback.partners; state.certOrder = rollback.certOrder; state.phaseOverrides = rollback.phaseOverrides;
         state.activities = rollback.activities; state.gates = rollback.gates;
-        persistAll();
+        persistAll({ changedAt: rollback.changedAt || rollback.exportedAt || new Date().toISOString() });
       } catch {}
       throw error;
     }
@@ -252,9 +263,10 @@
       const wrapped = function (...args) {
         captureUndoPoint(key);
         const result = original.apply(this, args);
-        localStorage.setItem(C.lastChangeKey, new Date().toISOString());
+        const changedAt = new Date().toISOString();
+        localStorage.setItem(C.lastChangeKey, changedAt);
         recordRecoveryPoint();
-        CT.events.emit('state-saved', { key, at: new Date().toISOString() });
+        CT.events.emit('state-saved', { key, at: changedAt });
         return result;
       };
       wrapped.__ct3Wrapped = true;
