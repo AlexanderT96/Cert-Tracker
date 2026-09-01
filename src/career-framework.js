@@ -1,0 +1,131 @@
+// Cert Tracker — generic role-aware career and knowledge ROI framework.
+// Privacy boundary: this module contains reusable scoring logic and generic role
+// profiles only. It must never contain a named user's employer, history, salary,
+// weaknesses, private priorities or personalised score overrides.
+(function initCareerFramework(global) {
+  'use strict';
+  const CT = global.CertTrackerV3;
+  if (!CT?.competency) throw new Error('competency-engine.js must load before career-framework.js');
+
+  const STORAGE = Object.freeze({
+    currentRole:'ct4-career-current-role',
+    nextRole:'ct4-career-next-role',
+    targetRole:'ct4-career-target-role'
+  });
+
+  const ROLE_PROFILES = Object.freeze({
+    generalIT:Object.freeze({label:'General IT / Systems Support',weights:{windows:1,networking:.9,linux:.55,cloud:.55,iam:.45,firewall:.4,automation:.35,vms:.2,physical:.15}}),
+    physicalSupport:Object.freeze({label:'Physical Security Systems Support',weights:{vms:1,physical:1,networking:.9,windows:.75,access:.65,firewall:.5,cloud:.4,automation:.3}}),
+    network:Object.freeze({label:'Network Engineer',weights:{networking:1,routing:1,firewall:.65,wireless:.55,automation:.45,linux:.35,architecture:.3}}),
+    networkSecurity:Object.freeze({label:'Network Security Engineer',weights:{networking:1,routing:.85,firewall:1,linux:.55,cloud:.5,iam:.45,automation:.5,incident:.4,architecture:.35}}),
+    cyber:Object.freeze({label:'Cyber Security Engineer',weights:{networking:.7,firewall:.75,soc:1,siem:.9,incident:.9,threat:.9,vulnerability:.75,iam:.65,linux:.6,automation:.55,cloud:.5}}),
+    otSecurity:Object.freeze({label:'OT / ICS Security Engineer',weights:{ot:1,networking:.9,firewall:.85,architecture:.7,incident:.6,governance:.6,automation:.45,physical:.35}}),
+    convergence:Object.freeze({label:'OT / Physical-Cyber Convergence Architect',weights:{architecture:1,ot:1,networking:.9,routing:.7,firewall:.85,physical:.8,vms:.7,access:.6,cloud:.6,iam:.55,automation:.5,governance:.5}}),
+    securityArchitect:Object.freeze({label:'Security Architect',weights:{architecture:1,networking:.75,firewall:.8,cloud:.75,iam:.75,zeroTrust:.65,governance:.7,ot:.45,automation:.4}}),
+    cloudArchitect:Object.freeze({label:'Cloud Security Architect',weights:{architecture:1,cloud:1,azure:.85,aws:.75,iam:1,zeroTrust:.8,networking:.65,automation:.8,iac:.75,containers:.55,governance:.45}})
+  });
+
+  const VALUE_OVERRIDES = Object.freeze({
+    'a-plus':{market:5,knowledge:6}, 'network-plus':{market:7,knowledge:7.5}, 'ccna':{market:8,knowledge:9.5},
+    'ccnp-enterprise':{market:8.5,knowledge:9.5}, 'ccie-enterprise':{market:9.5,knowledge:10},
+    'security-plus':{market:8,knowledge:7}, 'cysa-plus':{market:7,knowledge:8}, 'linux-plus':{market:6.5,knowledge:8.5},
+    'google-cyber':{market:4,knowledge:6}, 'pcep':{market:3.5,knowledge:7}, 'pcap':{market:4.5,knowledge:8.5},
+    'pcpp1':{market:5,knowledge:9}, 'pcpp2':{market:5.5,knowledge:9.5},
+    'az-900':{market:5,knowledge:5.5}, 'az-104':{market:8,knowledge:8.5}, 'az-305':{market:8.5,knowledge:9},
+    'az-802':{market:7.5,knowledge:9}, 'sc-900':{market:5,knowledge:6}, 'sc-200':{market:7.5,knowledge:8},
+    'sc-300':{market:7.5,knowledge:8}, 'sc-500':{market:8,knowledge:8.5}, 'sc-100':{market:8.5,knowledge:9},
+    'acp':{market:6.5,knowledge:9}, 'mcit':{market:5.5,knowledge:8}, 'mcde':{market:6,knowledge:8.5}, 'mcie':{market:6,knowledge:9},
+    'briefcam-tech':{market:5.5,knowledge:8}, 'arcules-csp':{market:4,knowledge:5},
+    'pan-apprentice':{market:4.5,knowledge:6.5}, 'pan-practitioner':{market:6,knowledge:7.5}, 'pan-netsec-pro':{market:7.5,knowledge:8.5},
+    'pan-ngfw-eng':{market:9,knowledge:9.5}, 'pan-cloudsec-pro':{market:8,knowledge:8.5}, 'pan-netsec-arch':{market:9,knowledge:9.5},
+    'iec-62443-cfs':{market:8,knowledge:9}, 'iec-62443-cra':{market:8.5,knowledge:9.5}, 'iec-62443-cds':{market:8.5,knowledge:9.5},
+    'iec-62443-cms':{market:8.5,knowledge:9.5}, 'iec-62443-expert':{market:9,knowledge:10}, 'isa95-fund':{market:8,knowledge:9.5},
+    'gicsp':{market:9,knowledge:9}, 'grid':{market:8.5,knowledge:9}, 'ccsk':{market:7,knowledge:8}, 'ccsp':{market:9,knowledge:8.5},
+    'cissp':{market:10,knowledge:8}, 'issap':{market:8,knowledge:9.5}, 'crisc':{market:8,knowledge:8}, 'sabsa-found':{market:7.5,knowledge:9},
+    'bcs-arch-found':{market:5,knowledge:7.5}, 'bcs-esa':{market:7,knowledge:9}, 'asis-psp':{market:8,knowledge:8.5}
+  });
+
+  const EXPERIENCE_GATED = new Set(['ccie-enterprise','cissp','issap','asis-psp','ukcsc-princ','ukcsc-chart','csyp','pan-netsec-arch']);
+
+  function selected(key, fallback) {
+    const value = localStorage.getItem(STORAGE[key]);
+    return value && ROLE_PROFILES[value] ? value : fallback;
+  }
+  function context() {
+    return Object.freeze({
+      current:selected('currentRole','generalIT'),
+      next:selected('nextRole','cyber'),
+      target:selected('targetRole','convergence')
+    });
+  }
+  function setContext(update={}) {
+    for (const [field,value] of Object.entries(update)) {
+      const storageKey = STORAGE[field];
+      if (!storageKey) continue;
+      if (!ROLE_PROFILES[value]) throw new Error(`Unknown role profile: ${value}`);
+      localStorage.setItem(storageKey,value);
+    }
+    CT.events.emit('career-context-changed', context());
+    return context();
+  }
+
+  function profileFit(cert, roleKey) {
+    const role = ROLE_PROFILES[roleKey] || ROLE_PROFILES.generalIT;
+    const comp = CT.competency.competencies(cert); let weighted=0,total=0;
+    Object.entries(role.weights).forEach(([skill,w]) => { total += w; weighted += w * Number(comp[skill] || 0); });
+    return total ? Math.round(weighted / total * 100) : 0;
+  }
+  function relevance10(cert, roleKey) { return Number((profileFit(cert,roleKey)/10).toFixed(1)); }
+
+  function values(cert) {
+    const override = VALUE_OVERRIDES[cert.id] || {};
+    const market = CT.util.clamp(Number(override.market ?? cert.marketRoi ?? cert.roi ?? 5),0,10);
+    let knowledge = override.knowledge ?? cert.knowledgeRoi;
+    if (knowledge == null) {
+      const practicalBoost = /lab|troubleshoot|configure|implement|design|hands-on|routing|firewall|server|incident/i.test([cert.coverage,cert.note,cert.projectRec].filter(Boolean).join(' ')) ? 1 : 0;
+      knowledge = CT.util.clamp(Number(cert.roi ?? 5) + practicalBoost,0,10);
+    }
+    return Object.freeze({market:Number(market.toFixed(1)),knowledge:Number(Number(knowledge).toFixed(1))});
+  }
+
+  function timing(cert, ctx=context()) {
+    if (state?.passes?.[cert.id]) return 'DONE';
+    if (EXPERIENCE_GATED.has(cert.id) || cert.track === 'POST-PLAN') return 'T3';
+    const c = relevance10(cert,ctx.current), n = relevance10(cert,ctx.next), e = relevance10(cert,ctx.target);
+    const depsDone = (cert.deps||[]).every(id => state?.passes?.[id]);
+    if (depsDone && c >= 5.5) return 'T0';
+    if (depsDone && (n >= 5.5 || c >= 4)) return 'T1';
+    if (e >= 5) return 'T2';
+    return 'T2';
+  }
+
+  function scoreCard(cert, suppliedContext=context()) {
+    const v = values(cert);
+    const marketValue = CT.marketValue?.marginalContribution ? CT.marketValue.marginalContribution(cert) : null;
+    return Object.freeze({
+      M:v.market,
+      K:v.knowledge,
+      C:relevance10(cert,suppliedContext.current),
+      N:relevance10(cert,suppliedContext.next),
+      E:relevance10(cert,suppliedContext.target),
+      T:timing(cert,suppliedContext),
+      currentRole:ROLE_PROFILES[suppliedContext.current]?.label,
+      nextRole:ROLE_PROFILES[suppliedContext.next]?.label,
+      targetRole:ROLE_PROFILES[suppliedContext.target]?.label,
+      opportunity:marketValue?.contributionLabel || null
+    });
+  }
+
+  function dimensions() {
+    return Object.freeze({
+      M:'Market ROI / credential value to HR and recruiters',
+      K:'Knowledge ROI / real deployment, troubleshooting and design value',
+      C:'Relevance to the selected current role',
+      N:'Leverage toward the selected next role',
+      E:'Alignment to the selected long-term target role',
+      T:'Timing: T0 now, T1 next, T2 build toward, T3 experience-gated'
+    });
+  }
+
+  CT.careerFramework = Object.freeze({STORAGE,ROLE_PROFILES,VALUE_OVERRIDES,context,setContext,profileFit,relevance10,values,timing,scoreCard,dimensions});
+})(window);
