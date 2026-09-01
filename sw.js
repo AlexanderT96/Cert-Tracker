@@ -19,6 +19,7 @@ const CORE_ASSETS = [
   './src/notifications.js',
   './src/sync.js',
   './src/ux.js',
+  './src/market-value-ui.js',
   './src/bootstrap.js',
   './manifest.json',
   './icon.svg',
