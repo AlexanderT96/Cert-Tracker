@@ -7,12 +7,12 @@
   const GOALS = Object.freeze({
     convergence: Object.freeze({
       label: 'Convergence / OT Security Architect',
-      keywords: ['axis','milestone','lenel','access control','video','vms','network','security','cloud','architecture','integration','ot','ics','palo alto','crowdstrike','arcgis','esri'],
+      keywords: ['axis','milestone','lenel','access control','video','vms','network','security','cloud','architecture','integration','ot','ics','palo alto','crowdstrike','arcgis','esri','claroty','nozomi'],
       roleTrackBonus: 14
     }),
     cyber: Object.freeze({
       label: 'Cyber Security Engineer',
-      keywords: ['security','soc','siem','incident','threat','detection','iam','zero trust','pentest','linux','python','crowdstrike','palo alto','isc2','comptia'],
+      keywords: ['security','soc','siem','incident','threat','detection','iam','identity','zero trust','pentest','linux','python','crowdstrike','palo alto','isc2','comptia'],
       roleTrackBonus: 7
     }),
     network: Object.freeze({
@@ -36,6 +36,8 @@
     CORE: 30,
     FOUNDATION: 18,
     'ROLE-DRIVEN': 25,
+    ARCHITECT: 28,
+    'IDENTITY-SEC': 18,
     CONDITIONAL: 12,
     OPTIONAL: 4,
     'POST-PLAN': -4
@@ -64,9 +66,10 @@
     const text = [cert?.name, cert?.vendor, cert?.coverage, cert?.note, ...(cert?.skills || []), ...(cert?.subjects || [])]
       .filter(Boolean).join(' ').toLowerCase();
     const matches = profile.keywords.filter(keyword => text.includes(keyword.toLowerCase()));
+    const specialistTrack = ['ROLE-DRIVEN', 'ARCHITECT', 'IDENTITY-SEC'].includes(cert?.track);
     return {
       matches,
-      score: Math.min(30, matches.length * 4 + (cert?.track === 'ROLE-DRIVEN' ? profile.roleTrackBonus : 0))
+      score: Math.min(30, matches.length * 4 + (specialistTrack ? profile.roleTrackBonus : 0))
     };
   }
 
@@ -163,7 +166,6 @@
     };
   }
 
-  // Preserve legacy priority API while fixing FOUNDATION handling.
   if (typeof priorityScore === 'function') {
     const original = priorityScore;
     priorityScore = cert => cert?.track === 'FOUNDATION' ? 4 : original(cert);
