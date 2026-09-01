@@ -12,6 +12,7 @@ const CORE_ASSETS = [
   './src/storage.js',
   './src/validation.js',
   './src/phase-engine.js',
+  './src/source-registry.js',
   './src/data-health.js',
   './src/market-value.js',
   './src/recommendation-engine.js',
@@ -67,17 +68,14 @@ self.addEventListener('fetch', event => {
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
-
   if (request.mode === 'navigate') {
     event.respondWith(networkFirst(request, './index.html'));
     return;
   }
-
   if (request.destination === 'script' || request.destination === 'style') {
     event.respondWith(networkFirst(request));
     return;
   }
-
   event.respondWith(staleWhileRevalidate(request));
 });
 
@@ -86,10 +84,6 @@ self.addEventListener('message', event => {
   const { title, body, tag } = event.data;
   const iconUrl = new URL('./icon.svg', self.registration.scope).href;
   event.waitUntil(self.registration.showNotification(title, {
-    body,
-    tag,
-    icon: iconUrl,
-    badge: iconUrl,
-    requireInteraction: false
+    body, tag, icon: iconUrl, badge: iconUrl, requireInteraction: false
   }));
 });
