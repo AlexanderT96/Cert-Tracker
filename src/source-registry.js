@@ -1,4 +1,4 @@
-// Cert Tracker v3.1 — audited official-source registry for the core pathway.
+// Cert Tracker v3.1 — audited official-source registry for the critical pathway.
 // This layer is intentionally separate from certs.js so provenance can be reviewed
 // and refreshed without rewriting the career catalogue itself.
 (function initSourceRegistry(global) {
@@ -23,7 +23,8 @@
     'sc-500': { level: 'CERT', verifiedAt: VERIFIED, url: 'https://learn.microsoft.com/en-us/credentials/certifications/cloud-and-ai-security-engineer-associate/', note: 'Official Microsoft Cloud and AI Security Engineer Associate certification page.' },
     'cka': { level: 'CERT', verifiedAt: VERIFIED, url: 'https://www.cncf.io/training/certification/cka/', note: 'Official CNCF Certified Kubernetes Administrator page.' },
     'az-305': { level: 'CERT', verifiedAt: VERIFIED, url: 'https://learn.microsoft.com/en-us/credentials/certifications/exams/az-305/', note: 'Official Microsoft AZ-305 exam page.' },
-    'cissp': { level: 'CERT', verifiedAt: VERIFIED, url: 'https://www.isc2.org/certifications/cissp', note: 'Official ISC2 CISSP certification page.' }
+    'cissp': { level: 'CERT', verifiedAt: VERIFIED, url: 'https://www.isc2.org/certifications/cissp', note: 'Official ISC2 CISSP certification page.' },
+    'iec-62443-expert': { level: 'CERT', verifiedAt: VERIFIED, url: 'https://www.isa.org/certification/certificate-programs/isa-iec-62443-cybersecurity-certificate-program', note: 'Official ISA/IEC 62443 Cybersecurity Certificate Program page; confirms automatic Expert designation after all four specialist certificates.' }
   };
 
   CT.sourceRegistry = Object.freeze(Object.fromEntries(
