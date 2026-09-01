@@ -1,14 +1,14 @@
 // Cert Tracker — professional workspace shell.
-// Adds dedicated Learning Path / Customize workspaces without putting personal data in public code.
+// Adds dedicated Learning Path / Roadmap Map / Customize workspaces without putting personal data in public code.
 (function initWorkspaceShell(global){
   'use strict';
   const CT=global.CertTrackerV3;
-  if(!CT?.personalization||!CT?.learningPath||!CT?.personalizationUI||!CT?.topicEngine||!CT?.recommendations)return;
+  if(!CT?.personalization||!CT?.learningPath||!CT?.roadmapMap||!CT?.personalizationUI||!CT?.topicEngine||!CT?.recommendations)return;
   const esc=CT.util.escapeHtml;
   const originalRenderApp=global.renderApp;
   if(typeof originalRenderApp!=='function')return;
 
-  const FALLBACK_TABS=['dashboard','learning','certifications','strategy','customize'];
+  const FALLBACK_TABS=['dashboard','learning','roadmap','certifications','strategy','customize'];
   function availableTabs(){const order=CT.personalization.tabOrder?.()||FALLBACK_TABS;return order.length?order:FALLBACK_TABS;}
   function ensureActiveTab(){const tabs=availableTabs();if(!tabs.includes(state.currentTab))state.currentTab=tabs.includes('dashboard')?'dashboard':tabs[0];}
   function tabButton(tab){const active=state.currentTab===tab?' active':'';return `<button class="tab${active}" data-workspace-tab="${esc(tab)}">${esc(CT.personalization.tabLabel(tab))}</button>`;}
@@ -25,6 +25,7 @@
   function renderWorkspaceContent(){
     const content=document.getElementById('tab-content');if(!content)return;
     if(state.currentTab==='learning'){content.innerHTML=CT.learningPath.render();return;}
+    if(state.currentTab==='roadmap'){content.innerHTML=CT.roadmapMap.render();CT.roadmapMap.bind(content);return;}
     if(state.currentTab==='customize'){content.innerHTML=CT.personalizationUI.render();CT.personalizationUI.bind(content);return;}
     if(state.currentTab==='dashboard'){
       const focus=focusHtml();if(focus&&!content.querySelector('.ct-dashboard-learning-focus'))content.insertAdjacentHTML('afterbegin',focus);
