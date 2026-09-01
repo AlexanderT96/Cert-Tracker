@@ -1,0 +1,13 @@
+{
+  "name": "cert-tracker",
+  "version": "3.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node tools/quality-check.mjs",
+    "test:freshness": "node tools/quality-check.mjs --freshness"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
