@@ -77,7 +77,7 @@
   });
 
   const CERT_GATE_OVERRIDES=Object.freeze({
-    'ccie-enterprise':'networkSecurityEngineer','gicsp':'otSecurityEngineer','bcs-esa':'convergenceEngineer','pan-netsec-arch':'solutionsArchitect',
+    'ccie-enterprise':'networkSecurityEngineer','gicsp':'otSecurityEngineer','bcs-esa':'convergenceEngineer','pan-netsec-arch':'solutionsArchitect','isa-cap':'principalConvergenceArchitect',
     'cissp':'convergenceEngineer','issap':'solutionsArchitect','asis-psp':'solutionsArchitect','ukcsc-princ':'solutionsArchitect','ukcsc-chart':'principalConvergenceArchitect','csyp':'principalConvergenceArchitect'
   });
 
@@ -111,6 +111,8 @@
     const c=card||CT.careerFramework?.scoreCard?.(cert);if(!c)return 'SUPPORTING';
     if(c.T==='T3'||cert.track==='POST-PLAN')return 'CAPSTONE';
     if(c.K>=8&&(c.C>=6||c.N>=7))return 'CORE CAPABILITY';
+    const unlocks=CERTS.filter(item=>(item.deps||[]).includes(cert.id));
+    if(c.K>=6&&unlocks.length)return 'CURRICULUM RUNG';
     if(c.K>=8&&c.E>=8)return 'PRIMARY SPECIALISATION';
     return 'SUPPORTING';
   }
