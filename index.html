@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Cert Tracker</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#171130">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CertTracker">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="boot-veil"><img src="icon-192.png" alt=""></div>
+<script>try{if(sessionStorage.getItem('booted')){document.getElementById('boot-veil').style.display='none';}else{sessionStorage.setItem('booted','1');}}catch(e){}</script>
+<div id="app"></div>
+
+<!-- Canonical catalogue + frozen legacy renderer. Product logic lives in src/. -->
+<script src="certs.js"></script>
+<script src="src/path-defaults.js"></script>
+<script src="app.js"></script>
+<script src="src/config.js"></script>
+<script src="src/dates.js"></script>
+<script src="src/storage.js"></script>
+<script src="src/validation.js"></script>
+<script src="src/phase-engine.js"></script>
+<script src="src/source-registry.js"></script>
+<script src="src/data-health.js"></script>
+<script src="src/market-value.js"></script>
+<script src="src/recommendation-engine.js"></script>
+<script src="src/exports.js"></script>
+<script src="src/notifications.js"></script>
+<script src="src/sync.js"></script>
+<script src="src/ux.js"></script>
+<script src="src/market-value-ui.js"></script>
+<script src="src/bootstrap.js"></script>
+</body>
+</html>
