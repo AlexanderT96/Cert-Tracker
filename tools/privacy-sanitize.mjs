@@ -100,6 +100,15 @@ const replacements = [
 
 function sanitize(text) {
   for (const [pattern, replacement] of replacements) text = text.replace(pattern, replacement);
+  text = text
+    .replace(/\byou're\b/gi, 'the candidate is')
+    .replace(/\byou've\b/gi, 'the candidate has')
+    .replace(/\byou'll\b/gi, 'the candidate will')
+    .replace(/\byou'd\b/gi, 'the candidate would')
+    .replace(/\byourself\b/gi, 'the candidate')
+    .replace(/\byours\b/gi, "the candidate's")
+    .replace(/\byour\b/gi, 'the')
+    .replace(/\byou\b/gi, 'the candidate');
   return text.replace(/\s*[·|]\s*(?:UK-wide|North(?:-| )West)\s+(?:median|salary)[^·\n"]*/gi, '');
 }
 
