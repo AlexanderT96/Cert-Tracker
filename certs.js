@@ -111,7 +111,7 @@ const CERTS = [
     skills: ["XProtect VMS", "Windows Server", "Event rules"],
     examFormat: "Milestone Learning online exam. Multiple choice + scenario. Access through the relevant organisation's partner portal.",
     projectRec: "Single-server XProtect lab write-up: cameras + recording server + rules, with network diagram. Forms baseline for MCIE.",
-    note: "Employer funded. Study via Milestone Learning Portal (free with partner login). Book via Pearson VUE. Results immediate. 3-year validity. Prereq for MCIE. Real work in your relevant hands-on experience is the best prep.",
+    note: "Employer funded. Study via Milestone Learning Portal (free with partner login). Book via Pearson VUE. Results immediate. 3-year validity. Prereq for MCIE. Real work in relevant hands-on experience is the best prep.",
     deps: []
   },
   {
@@ -180,7 +180,7 @@ const CERTS = [
     skills: ["Meraki Dashboard", "SD-WAN", "Cloud-managed networking"],
     examFormat: "Multiple choice. 55-65 Qs, 90 min, passing ~80%. Meraki dashboard focus.",
     projectRec: "Meraki Dashboard config portfolio — SSIDs, VLANs, security policies, SD-WAN rules. Screenshots + explanation in a single GitHub repo.",
-    note: "⚠ VERIFY FIRST: in the first 30 days in your relevant hands-on experience, confirm Meraki is actually deployed across client base. If absent → DROP. CMSS without role hook is 30-50 hours and £240 with no payoff. $300 USD list. Dashboard UI proficiency is load-bearing — no CLI. Prioritise over CCNA if employer IS a Meraki shop. 3-year validity, renewed by retake or qualifying Cisco exam.",
+    note: "⚠ VERIFY FIRST: in the first 30 days in relevant hands-on experience, confirm Meraki is actually deployed across client base. If absent → DROP. CMSS without role hook is 30-50 hours and £240 with no payoff. $300 USD list. Dashboard UI proficiency is load-bearing — no CLI. Prioritise over CCNA if employer IS a Meraki shop. 3-year validity, renewed by retake or qualifying Cisco exam.",
     deps: ["network-plus"]
   },
   {
@@ -279,25 +279,25 @@ const CERTS = [
         { title: "2. Join CIISec first if not already", detail: "Visit ciisec.org/membership. Apply for the appropriate grade (likely Affiliate or Associate Member based on Sec+ + experience). This is the gateway requirement before UKCSC application can proceed via CIISec route." },
         { title: "3. Read UKCSC SPCC v4.2 thoroughly", detail: "Download from ukcybersecuritycouncil.org.uk. Read the 5 core competency areas: (a) Knowledge & application, (b) Communication, (c) Management & supervision, (d) Ethics & integrity, (e) Continuing development. Note the Associate-specific competence statements in detail." },
         { title: "4. Build the evidence portfolio using STAR", detail: "Recommended structure: Situation → Task → Action → Result for each piece of evidence. Section A3 of the application accounts for 60% of available marks — invest disproportionately here. Map each piece of evidence to specific SPCC statements." },
-        { title: "5. Identify and approach two referees", detail: "Referees must be 'familiar with the applicant’s technical knowledge and work-based experience' per Cyber Scheme guidance. Best fits: a technical lead, senior colleague who's seen cyber work, an external contact who's worked with you on incidents. Referees must show willingness — they are subject to random verification by UKCSC." },
+        { title: "5. Identify and approach two referees", detail: "Referees must be 'familiar with the applicant’s technical knowledge and work-based experience' per Cyber Scheme guidance. Best fits: a technical lead, senior colleague who's seen cyber work, an external contact who's worked with the applicant on relevant incidents or projects. Referees must show willingness — they are subject to random verification by UKCSC." },
         { title: "6. Submit application + CV via CIISec portal", detail: "Form + CV + evidence + referee details. Pay £362.40. CIISec internal review (4-6 weeks) checks completeness. They can refer back if insufficient evidence — respond promptly with additional information." },
-        { title: "7. Attend professional discussion", detail: "~1 hour, conducted remotely by TWO CIISec Council-approved assessors (at least one in your specialism area for Practitioner+ — broader for Associate). Assessors base discussion on the evidence but may probe further. Treat as an interview." },
+        { title: "7. Attend professional discussion", detail: "~1 hour, conducted remotely by TWO CIISec Council-approved assessors (at least one in the relevant specialism area for Practitioner+ — broader for Associate). Assessors base discussion on the evidence but may probe further. Treat as an interview." },
         { title: "8. Post-award: maintain registration", detail: "25 CPD hours/year minimum, 75 CPD hours per 3-year cycle. Track via CIISec portal. Re-validation cycle ongoing — unlike a fixed-validity exam cert." }
       ],
       evidence: [
-        "Knowledge & application (the make-or-break area for this path): Sec+ as the technical anchor. Beyond Sec+, a representative organisation cyber-relevant artefacts: Milestone XProtect / Axis camera firmware update + security hardening procedures; access control system (LenelS2/Paxton) security configuration baselines; network segmentation work for OT/IoT physical security devices; vendor security advisory reviews (CVE assessments, firmware patch decisions); M365 security configuration from prior infrastructure/support experience (conditional access, Defender baseline, identity protection). Each piece of evidence should be STAR-formatted with the SECURITY decision and SECURITY outcome called out explicitly — not just the IT/configuration work. Frame work as 'I made a security decision because X' not 'I configured Y'.",
+        "Knowledge & application (the make-or-break area for this path): Sec+ as the technical anchor. Beyond Sec+, cyber-relevant workplace or lab artefacts: Milestone XProtect / Axis camera firmware update + security hardening procedures; access control system (LenelS2/Paxton) security configuration baselines; network segmentation work for OT/IoT physical security devices; vendor security advisory reviews (CVE assessments, firmware patch decisions); M365 security configuration from prior infrastructure/support experience (conditional access, Defender baseline, identity protection). Each piece of evidence should be STAR-formatted with the SECURITY decision and SECURITY outcome called out explicitly — not just the IT/configuration work. Frame work as 'I made a security decision because X' not 'I configured Y'.",
         "Communication: written reports, customer-facing emails, technical documentation, presentations, training delivered to others",
         "Management & supervision: any work where you've directed activities (even informally), mentored junior staff, led a project workstream",
         "Ethics & integrity: examples of professional judgement calls, handling sensitive data appropriately, raising concerns through proper channels",
         "Continuing development: cert achievements with dates, conferences attended, books/courses completed, learning plan documented"
       ],
       referees: {
-        guidance: "Two referees required, both familiar with your technical and work-based experience. Best practice: one internal (manager/senior colleague) + one external (peer, customer contact, former colleague). Both should have worked with you for ≥6 months and seen cyber work first-hand.",
+        guidance: "Two referees required, both familiar with the applicant's technical and work-based experience. Best practice: one internal (manager/senior colleague) + one external (peer, customer contact, former colleague). Both should have worked with the applicant for ≥6 months and seen cyber work first-hand.",
         outreachTemplate: "LinkedIn / email outreach script: 'Hi [Name], I'm applying for UKCSC Associate Cyber Security Professional registration via CIISec — it's the new UK national registration scheme for cyber professionals. I need two referees who can speak to my cyber security work. Would you be willing to act as a referee? It involves a brief written confirmation of my experience and competence. The application form is shared with referees, and CIISec runs random verification checks. Happy to walk through what's involved on a quick call if helpful. No urgency — application takes 3-4 months end-to-end.' Approach 3-4 candidates to ensure 2 confirmed yeses.",
         whoToAsk: [
           "a technical lead or senior engineer",
           "Former colleague at MSP-side senior level",
-          "Customer-side contact who has seen relevant work directly (e.g. IT manager at one of a representative organisation's larger accounts)",
+          "Customer-side contact who has seen relevant work directly (e.g. IT manager at a larger enterprise environment)",
           "Anyone with existing UKCSC registration (their endorsement carries extra weight)"
         ]
       },
@@ -327,7 +327,7 @@ const CERTS = [
     cpe: 50, cpePeriod: 36, difficulty: 6, roi: 9, hours: [100, 150],
     skills: ["Threat modeling", "Cryptography", "IAM", "Risk"],
     examFormat: "Multiple choice + multi-response + PBQs (simulated scenarios). Max 90 Qs, 90 min, passing 750/900.",
-    projectRec: "Threat-model one a representative organisation client scenario (sanitised) using STRIDE. Document mitigations. Post to GitHub as an .md file with diagrams.",
+    projectRec: "Threat-model a sanitised client scenario (sanitised) using STRIDE. Document mitigations. Post to GitHub as an .md file with diagrams.",
     note: "🔑 GATEWAY CERT. Buy from comptia.org (~£280 via resellers, £164 via CompTIA UK academic store if accessible; $425 US list) or Jason Dion Udemy (10% off). Results immediate. Credly within 1–3 days. Auto-renews Network+ and SecAI+. 3-year validity. Renewal via 50 CEUs/3yr OR cascade-renew by passing CySA+/Pentest+/SecurityX. ⚠ SY0-701 estimated retirement May 2027 — sit before then or study the SY0-801 successor (CompTIA typically gives 6-month grace period where both versions are valid). Study: Professor Messer free YouTube + Jason Dion. ⏳ UPCOMING: SY0-801 (adds dedicated AI/LLM security content) previews ~Oct 2026, GA late 2026/early 2027; SY0-701 likely retires ~mid-2027. Take SY0-701 NOW — mature materials, and your cert stays valid 3 yrs from pass date regardless of version.",
     deps: ["network-plus"]
   },
@@ -344,7 +344,7 @@ const CERTS = [
     cpe: 30, cpePeriod: 36, difficulty: 4, roi: 7, hours: [25, 40],
     skills: ["OWASP LLM Top 10", "MITRE ATLAS", "NIST AI RMF", "Prompt injection"],
     examFormat: "Multiple choice + scenario-based. New cert (launched 2025) — format still stabilising. Expect similar CompTIA pattern: ~90 Qs, 90 min, PBQs likely.",
-    projectRec: "PyRIT basic probe against an Azure OpenAI endpoint in your sandbox. Document 3 findings + mitigations. This is rare evidence at Phase 2.",
+    projectRec: "PyRIT basic probe against an Azure OpenAI endpoint in a lab sandbox. Document 3 findings + mitigations. This is rare evidence at Phase 2.",
     note: "Sit immediately after Security+. Zero UK employer recognition yet (March 2026) — value is knowledge + forward-looking CV signal. Auto-renews within Security+ CE cascade. Study: OWASP LLM Top 10 + MITRE ATLAS + NIST AI RMF (all free).",
     deps: ["security-plus"]
   },
@@ -376,7 +376,7 @@ const CERTS = [
     skills: ["Omnicast video", "Single-server deployment", "Troubleshooting"],
     examFormat: "Certification exam at the end of the 2-day SC-OTC-001 course.",
     projectRec: "None — course lab is the evidence.",
-    note: "Rung 1 of the Genetec ladder. Adds the #2 VMS to your Milestone stack — multi-vendor credibility is the consultancy differentiator. Partner access required — NW Security is not currently a route; treat as negotiation/next-employer item.",
+    note: "Rung 1 of the Genetec ladder. Adds the #2 VMS to a Milestone-focused stack — multi-vendor credibility is the consultancy differentiator. Partner access required — a representative security integrator is not currently a route; treat as negotiation/next-employer item.",
     deps: []
   },
   {
@@ -406,8 +406,8 @@ const CERTS = [
     vendor: "Genetec", tracks: ["B"], subjects: ["VMS", "Access control", "Physical security"],
     skills: ["Genetec Security Center", "Multi-site federation", "High availability / failover", "Unified VMS + access control", "System design"],
     examFormat: "Open-book practical exam at the end of a 2-day instructor-led course (SC-ETC-001, Advanced). Prerequisite: Omnicast SC-OTC-001 (video) or Synergis SC-STC-001 (access control).",
-    projectRec: "Build a multi-server Security Center lab: configure a two-site Federation, Archiver encryption, and Directory failover; document a unified video + access design as competitor-platform parity with your LenelS2/Milestone work.",
-    note: "Competitor-platform literacy (not your daily stack). Genetec Security Center is a top-tier unified VMS + access-control platform; the Enterprise cert (SC-ETC-001) sits atop the Omnicast (video, SC-OTC-001) and Synergis (access, SC-STC-001) foundational courses and is the design/architect tier. Useful breadth for a convergence architect — promote into My Path only if a customer or employer runs Genetec.",
+    projectRec: "Build a multi-server Security Center lab: configure a two-site Federation, Archiver encryption, and Directory failover; document a unified video + access design as competitor-platform parity with LenelS2/Milestone lab or project work.",
+    note: "Competitor-platform literacy (outside the primary production stack). Genetec Security Center is a top-tier unified VMS + access-control platform; the Enterprise cert (SC-ETC-001) sits atop the Omnicast (video, SC-OTC-001) and Synergis (access, SC-STC-001) foundational courses and is the design/architect tier. Useful breadth for a convergence architect — promote into My Path only if a customer or employer runs Genetec.",
     deps: ["genetec-omnicast-tech","genetec-synergis-tech"]
   },
   {
@@ -474,7 +474,7 @@ const CERTS = [
     cpe: 0, cpePeriod: 0, difficulty: 5, roi: 6, hours: [50, 80],
     skills: ["Server hardware", "Windows Server admin", "Disaster recovery planning", "Hardware troubleshooting", "RAID configuration"],
     examFormat: "Multiple choice + multi-response + Performance-Based Questions (PBQs). 90 Qs max, 90 min, passing 750/900 scaled.",
-    projectRec: "Document a small-business DR plan for a fictional 50-user UK SME: server inventory, RAID strategy, backup schedule (3-2-1 rule), RPO/RTO targets, DR runbook with stepwise recovery procedure. The deliverable IS the project — committed to GitHub as a sanitised template thin your relevant hands-on experience customers could use.",
+    projectRec: "Document a small-business DR plan for a fictional 50-user UK SME: server inventory, RAID strategy, backup schedule (3-2-1 rule), RPO/RTO targets, DR runbook with stepwise recovery procedure. The deliverable IS the project — committed to GitHub as a sanitised template thin relevant hands-on experience customers could use.",
     note: "⚠ GOOD-FOR-LIFE — does NOT expire (one of CompTIA's few remaining lifetime certs as of 2026). No CPE/CEU obligation, no renewal fee. Lower priority than Linux+ for the intended career progression: prior infrastructure/support experience already covers most Server+ knowledge — value here is CV signal + the CompTIA stackable (A+ + Net+ + Server+ = CompTIA Server Infrastructure Specialist CSIS post-nominal). Activate if (a) employer reimburses, (b) Track B becomes primary direction, (c) you want CSIS post-nominal on LinkedIn alongside CIOS, or (d) gap to fill before AZ-104 deep dive. Combined with Linux+ + Cloud+ creates a strong systems-architect CompTIA stack. Hours estimate (50-80) is lower than other Sec+/Net+-tier certs because of prior infrastructure/support experience overlap.",
     deps: ["a-plus", "network-plus"]
   },
@@ -491,7 +491,7 @@ const CERTS = [
     cpe: 30, cpePeriod: 36, difficulty: 7, roi: 6, hours: [100, 200],
     skills: ["Enterprise networking", "Routing & switching", "Network troubleshooting", "Cloud + automation basics"],
     examFormat: "Multiple choice + multi-response + drag-drop + simlets (simulated router/switch CLI) + testlets. ~100 Qs, 120 min, passing ~825/1000. Cannot return to prior Qs.",
-    projectRec: "Troubleshooting runbook — document 5 real issues resolved in your relevant hands-on experience (sanitised), one diagram each. Plus Packet Tracer OSPF/VLAN/ACL lab if time allows. Shows networking literacy without signalling a specialism.",
+    projectRec: "Troubleshooting runbook — document 5 real issues resolved in relevant hands-on experience (sanitised), one diagram each. Plus Packet Tracer OSPF/VLAN/ACL lab if time allows. Shows networking literacy without signalling a specialism.",
     note: "⚖ DECIDE BY ~DEC 2026: v1.1 before 10 Feb 2027 = mature materials (Jeremy/Bombal/Boson all aligned) but pre-baby-window study; v2.0 mid-2027 = fresh blueprint, early-cohort materials. Certificate is identical either way — the calendar is the decision, not the content. ⚠ PURPOSE HERE IS KNOWLEDGE BASE, NOT CAREER FOCUS. If not pursuing a networking specialism — this cert is for depth in network fundamentals that feeds security troubleshooting, incident response, and cloud architecture conversations. Treat as a depth-building elective, not a role-filter. ⚠ v1.1 blueprint current since 20 Aug 2024 (code still 200-301) — ensure study materials are v1.1-aligned (Terraform IaC included, Puppet/Chef removed, added AI/ML/cloud networking topics). Most 2024+ courses are correct by default. Exam fee $330 USD. First-attempt pass rate ~25–30%. ITJobsWatch Apr 2026 context (for information only, not the driver): 511 postings (+7% YoY), rank 259→307, median salary £50k (−4.76% YoY). Study: Jeremy's IT Lab (free) + Neil Anderson Udemy (v1.1-aligned).",
     deps: ["network-plus"]
   },
@@ -800,7 +800,7 @@ const CERTS = [
                 "CPD evidence forward-looking: 25 CPD/yr ongoing post-award required. Show a plan, not just history"
           ],
           "referees": {
-                "guidance": "Referees/endorsers must speak credibly to cyber security practitioner-level work in [your specialism] work. Best practice: one internal (manager/senior colleague) + one external (peer, customer-side contact, former colleague). Both should have worked with you for ≥1 year and seen the relevant work first-hand.",
+                "guidance": "Referees/endorsers must speak credibly to cyber security practitioner-level work in [your specialism] work. Best practice: one internal (manager/senior colleague) + one external (peer, customer-side contact, former colleague). Both should have worked with the applicant for ≥1 year and seen the relevant work first-hand.",
                 "outreachTemplate": "LinkedIn / email outreach script: 'Hi [Name], I'm applying for UKCSC Practitioner registration. The application requires someone familiar with my cyber security practitioner-level work in [your specialism] work to act as a [referee/endorser]. Would you be willing? It's typically a structured form or short written confirmation, plus possible follow-up if they need to verify details. Happy to walk through what's involved on a quick call. Application takes [N] months — no urgency. I'd really value support.' Approach 3-4 candidates to secure 2 confirmed yeses.",
                 "whoToAsk": [
                       "a technical lead or senior engineer who has seen cyber/architecture work",
@@ -928,7 +928,7 @@ const CERTS = [
     coverage: "Seven domains (English exam content UPDATED 24 April 2026 — confirm study materials reflect new blueprint before booking): (1) Design and implement processes and communications 10-15% — Agile, GitHub Projects/Azure Boards, work item tracking, team structures. (2) Design and implement source control strategy 10-15% — Git branching strategies (GitFlow, trunk-based, GitHub Flow), monorepo vs polyrepo, pull request workflows, code review gates. (3) Design and implement build and release pipelines 50-55% — THE LARGEST DOMAIN. YAML pipelines in both Azure Pipelines AND GitHub Actions, multi-stage pipelines, templates/task groups/variables/variable groups, self-hosted runners/agents, deployment patterns (blue-green, canary, ring, progressive exposure, feature flags, A/B testing), checks and approvals, artifact management, dependency ordering. (4) Develop a security and compliance plan 10-15% — DevSecOps, secret management (Azure Key Vault, GitHub secrets, managed identities), code/dependency/secret scanning (GHAS, Dependabot, Defender for Cloud DevOps Security), gate releases on security findings, policy-as-code. (5) Implement an instrumentation strategy 5-10% — Azure Monitor, Application Insights, SLIs/SLOs, KQL basics, DORA metrics (lead time, failure rate, MTTR, deployment frequency). Depth: expert-level, case-study heavy. Expect hands-on Azure lab task within the exam.",
     prerequisites: "AZ-104 OR AZ-204 is a hard prerequisite for the credential. Realistic skills before study: can write YAML pipelines from scratch (both Azure Pipelines and GitHub Actions), understand Git branching strategies, have deployed at least one end-to-end CI/CD to Azure, comfortable with containers (Docker + basic Kubernetes), can write KQL queries. Terraform literacy strongly recommended (IaC is near-mandatory). The 50-55% weight on build/release pipelines means if you have never written a production pipeline, you are not ready. prior infrastructure/support experience helps: you already understand 'something must be deployed reliably' — but now you must automate it.",
     studyMaterials: "PRIMARY: John Savill's AZ-400 YouTube series (FREE, COMPREHENSIVE — Savill again is above paid alternatives). SECONDARY: Pluralsight AZ-400 path. SUPPLEMENT: Microsoft Learn AZ-400 path. LAB: Azure DevOps free tier + GitHub free tier + your AZ-104 sandbox infrastructure. AMBIENT: Pocket Prep. EXAM-READY: MeasureUp AZ-400. ⚠ Hardest AZ exam at expert tier — budget tutoring fallback for Terraform integration patterns. EXAM: ~£136.",
-    tutorFlag: "MODERATE TUTORING CASE. Only if YAML pipelines and IaC are genuinely new. A Codementor session (£50-80/hr) with an Azure DevOps practitioner could save 40+ hours of trial-and-error on pipeline syntax and deployment patterns. If has already built working pipelines in your relevant hands-on experience (likely via the upcoming cloud pivot), tutoring is not needed.",
+    tutorFlag: "MODERATE TUTORING CASE. Only if YAML pipelines and IaC are genuinely new. A Codementor session (£50-80/hr) with an Azure DevOps practitioner could save 40+ hours of trial-and-error on pipeline syntax and deployment patterns. If has already built working pipelines in relevant hands-on experience (likely via the upcoming cloud pivot), tutoring is not needed.",
     subjects: ["DevOps engineering","Azure Pipelines","GitHub Actions","Bicep/Terraform integration","PowerShell intermediate","Bash basics","YAML"],
     tracks: ["A"],
     id: "az-400", name: "Azure DevOps Engineer Expert", code: "AZ-400",
@@ -1005,7 +1005,7 @@ const CERTS = [
                 "Continuing development plan: forward-looking, showing how you'll contribute to specialism development over the next 3 years"
           ],
           "referees": {
-                "guidance": "Referees/endorsers must speak credibly to your expert-level work in [your specialism] and adjacent specialisms work. Best practice: one internal (manager/senior colleague) + one external (peer, customer-side contact, former colleague). Both should have worked with you for ≥1 year and seen the relevant work first-hand.",
+                "guidance": "Referees/endorsers must speak credibly to your expert-level work in [your specialism] and adjacent specialisms work. Best practice: one internal (manager/senior colleague) + one external (peer, customer-side contact, former colleague). Both should have worked with the applicant for ≥1 year and seen the relevant work first-hand.",
                 "outreachTemplate": "LinkedIn / email outreach script: 'Hi [Name], I'm applying for UKCSC Principal registration. The application requires someone familiar with my expert-level work in [your specialism] and adjacent specialisms work to act as a [referee/endorser]. Would you be willing? It's typically a structured form or short written confirmation, plus possible follow-up if they need to verify details. Happy to walk through what's involved on a quick call. Application takes [N] months — no urgency. I'd really value support.' Approach 3-4 candidates to secure 2 confirmed yeses.",
                 "whoToAsk": [
                       "a technical lead or senior engineer who has seen cyber/architecture work",
@@ -1383,7 +1383,7 @@ const CERTS = [
                 "Audit-ready documentation: pay stubs, employment letters on company letterhead, project records. ISC2 may request these during random audit (~5%). Keep originals."
           ],
           "referees": {
-                "guidance": "Referees/endorsers must speak credibly to cyber security architecture and operations work. Best practice: one internal (manager/senior colleague) + one external (peer, customer-side contact, former colleague). Both should have worked with you for ≥1 year and seen the relevant work first-hand.",
+                "guidance": "Referees/endorsers must speak credibly to cyber security architecture and operations work. Best practice: one internal (manager/senior colleague) + one external (peer, customer-side contact, former colleague). Both should have worked with the applicant for ≥1 year and seen the relevant work first-hand.",
                 "outreachTemplate": "LinkedIn / email outreach script: 'Hi [Name], I'm applying for CISSP. The application requires someone familiar with my cyber security architecture and operations work to act as a [referee/endorser]. Would you be willing? It's typically a structured form or short written confirmation, plus possible follow-up if they need to verify details. Happy to walk through what's involved on a quick call. Application takes [N] months — no urgency. I'd really value support.' Approach 3-4 candidates to secure 2 confirmed yeses.",
                 "whoToAsk": [
                       "a technical lead or senior engineer who has seen cyber/architecture work",
@@ -1486,7 +1486,7 @@ const CERTS = [
                 "External recognition: industry awards, fellowships, board appointments, advisory roles — not required but materially strengthens application"
           ],
           "referees": {
-                "guidance": "Referees/endorsers must speak credibly to your expert-level cyber security work and profession contribution work. Best practice: one internal (manager/senior colleague) + one external (peer, customer-side contact, former colleague). Both should have worked with you for ≥1 year and seen the relevant work first-hand.",
+                "guidance": "Referees/endorsers must speak credibly to your expert-level cyber security work and profession contribution work. Best practice: one internal (manager/senior colleague) + one external (peer, customer-side contact, former colleague). Both should have worked with the applicant for ≥1 year and seen the relevant work first-hand.",
                 "outreachTemplate": "LinkedIn / email outreach script: 'Hi [Name], I'm applying for UKCSC Chartered registration. The application requires someone familiar with my expert-level cyber security work and profession contribution work to act as a [referee/endorser]. Would you be willing? It's typically a structured form or short written confirmation, plus possible follow-up if they need to verify details. Happy to walk through what's involved on a quick call. Application takes [N] months — no urgency. I'd really value support.' Approach 3-4 candidates to secure 2 confirmed yeses.",
                 "whoToAsk": [
                       "a technical lead or senior engineer who has seen cyber/architecture work",
@@ -1734,7 +1734,7 @@ const CERTS = [
                 "CCSK certificate from CSA — recognised waiver for 1 year of CCSP-specific experience (not full requirement)"
           ],
           "referees": {
-                "guidance": "Referees/endorsers must speak credibly to cloud security architecture and engineering work. Best practice: one internal (manager/senior colleague) + one external (peer, customer-side contact, former colleague). Both should have worked with you for ≥1 year and seen the relevant work first-hand.",
+                "guidance": "Referees/endorsers must speak credibly to cloud security architecture and engineering work. Best practice: one internal (manager/senior colleague) + one external (peer, customer-side contact, former colleague). Both should have worked with the applicant for ≥1 year and seen the relevant work first-hand.",
                 "outreachTemplate": "LinkedIn / email outreach script: 'Hi [Name], I'm applying for CCSP. The application requires someone familiar with my cloud security architecture and engineering work to act as a [referee/endorser]. Would you be willing? It's typically a structured form or short written confirmation, plus possible follow-up if they need to verify details. Happy to walk through what's involved on a quick call. Application takes [N] months — no urgency. I'd really value support.' Approach 3-4 candidates to secure 2 confirmed yeses.",
                 "whoToAsk": [
                       "a technical lead or senior engineer who has seen cyber/architecture work",
@@ -1900,7 +1900,7 @@ const CERTS = [
                 "Quantification: 'budget of £X', 'team of N', 'reduced incident MTTR by Y%', 'managed risk register containing Z items' — concrete numbers help verification."
           ],
           "referees": {
-                "guidance": "Referees/endorsers must speak credibly to security management and governance work. Best practice: one internal (manager/senior colleague) + one external (peer, customer-side contact, former colleague). Both should have worked with you for ≥1 year and seen the relevant work first-hand.",
+                "guidance": "Referees/endorsers must speak credibly to security management and governance work. Best practice: one internal (manager/senior colleague) + one external (peer, customer-side contact, former colleague). Both should have worked with the applicant for ≥1 year and seen the relevant work first-hand.",
                 "outreachTemplate": "LinkedIn / email outreach script: 'Hi [Name], I'm applying for CISM. The application requires someone familiar with my security management and governance work to act as a [referee/endorser]. Would you be willing? It's typically a structured form or short written confirmation, plus possible follow-up if they need to verify details. Happy to walk through what's involved on a quick call. Application takes [N] months — no urgency. I'd really value support.' Approach 3-4 candidates to secure 2 confirmed yeses.",
                 "whoToAsk": [
                       "a technical lead or senior engineer who has seen cyber/architecture work",
@@ -2038,7 +2038,7 @@ const CERTS = [
                 "Threat modelling artefacts: STRIDE walkthrough, CVSS scoring, threat intelligence integration into architecture decisions"
           ],
           "referees": {
-                "guidance": "Referees/endorsers must speak credibly to security architecture design work. Best practice: one internal (manager/senior colleague) + one external (peer, customer-side contact, former colleague). Both should have worked with you for ≥1 year and seen the relevant work first-hand.",
+                "guidance": "Referees/endorsers must speak credibly to security architecture design work. Best practice: one internal (manager/senior colleague) + one external (peer, customer-side contact, former colleague). Both should have worked with the applicant for ≥1 year and seen the relevant work first-hand.",
                 "outreachTemplate": "LinkedIn / email outreach script: 'Hi [Name], I'm applying for ISSAP. The application requires someone familiar with my security architecture design work to act as a [referee/endorser]. Would you be willing? It's typically a structured form or short written confirmation, plus possible follow-up if they need to verify details. Happy to walk through what's involved on a quick call. Application takes [N] months — no urgency. I'd really value support.' Approach 3-4 candidates to secure 2 confirmed yeses.",
                 "whoToAsk": [
                       "a technical lead or senior engineer who has seen cyber/architecture work",
@@ -2060,7 +2060,7 @@ const CERTS = [
   {
     coverage: "ASIS International Physical Security Professional (PSP). The global gold-standard cert for senior physical security professionals — equivalent prestige in physical security to what CISSP is in cyber. Three domain areas: (1) Physical Security Assessment 37% — risk assessment methodologies, threat assessment, vulnerability assessment, business impact analysis, surveys (security, environmental, operational), security audit and metrics. (2) Application of Physical Security 37% — security design principles (CPTED — Crime Prevention Through Environmental Design, defence in depth, deterrence/detection/delay/response), perimeter security, structural and architectural elements, glazing and openings, locks and key control, lighting, access control system design (ID systems, biometrics, multi-factor), CCTV/video surveillance design, intrusion detection design, security force operations. (3) Implementation of Physical Security Measures 26% — project management for physical security, procurement and contract management, integration of physical and electronic systems, system testing and commissioning, transition to operations, maintenance and support. Depth: senior practitioner — strategic application of physical security principles with cyber-physical convergence considerations as a contemporary topic. 140 multiple-choice questions, 2.5 hours, scaled scoring (Pearson VUE).",
     prerequisites: "🔴 EXPERIENCE GATEKEEPER: ASIS requires 5 years progressive physical security experience (3 years if you have a relevant Bachelor's degree). a representative organisation trajectory clearly accumulates this — by Phase 5 (~2030-2031) you'll have ~5 years post-A+/Net+ physical security experience plus prior MSP work. Application reviewed by ASIS before exam authorisation. Realistic skills before sitting: comfortable with CPTED principles, CCTV design lifecycle, access control architecture standards, basic risk assessment frameworks (US-leaning but globally applied).",
-    studyMaterials: "PRIMARY: ASIS Protection of Assets (POA) reference manual — the canonical resource (~£700 for full set, employer-funded ideally). SECONDARY: ASIS PSP Study Guide (~£100). FREE: ASIS website resources, ASIS UK chapter events (UK chapter network). HANDS-ON: Your relevant hands-on experience IS the experience evidence. EXAM: ~£385 (member, $485 USD) / ~£505 (non-member, $635 USD). ASIS UK chapter membership ~£135/yr — pays for itself via discounted exam + chapter events.",
+    studyMaterials: "PRIMARY: ASIS Protection of Assets (POA) reference manual — the canonical resource (~£700 for full set, employer-funded ideally). SECONDARY: ASIS PSP Study Guide (~£100). FREE: ASIS website resources, ASIS UK chapter events (UK chapter network). HANDS-ON: relevant hands-on experience IS the experience evidence. EXAM: ~£385 (member, $485 USD) / ~£505 (non-member, $635 USD). ASIS UK chapter membership ~£135/yr — pays for itself via discounted exam + chapter events.",
     tutorFlag: null,
     subjects: ["Physical security senior cert", "ASIS gold standard", "CPTED methodology", "Physical security design"],
     tracks: ["B"],

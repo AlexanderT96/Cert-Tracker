@@ -246,7 +246,7 @@ function weeklyActions(cert) {
     'sc-500':         ['Spin up Sentinel free trial and connect Defender for Cloud as a data source.', 'Write one custom KQL detection rule — start simple (failed sign-ins from impossible-travel pattern).'],
     'az-305':         ['Watch John Savill AZ-305 Study Cram (~6 hrs, free) — comes right before exam, not at study start.', 'Read 3 Azure Architecture Center reference architectures in detail this week.'],
     'cissp':          ['Listen to one Pete Zerger CISSP Cram episode on commute (free YouTube, ~1 hr each).', 'Drill CISSP MCQs daily — Boson or Wannapractice. Aim for 100/day in final 2 weeks.'],
-    'terraform':['Write one Terraform module for an Azure resource you use in your relevant hands-on experience.', 'Read HashiCorp Terraform Associate study guide section by section, hands-on after each.'],
+    'terraform':['Write one Terraform module for an Azure resource you use in relevant hands-on experience.', 'Read HashiCorp Terraform Associate study guide section by section, hands-on after each.'],
     'cka':            ['Set up local Kubernetes via kind or minikube. Practise kubectl until muscle memory.', 'Run through Killer.sh CKA simulator — 2 sessions included with exam booking.'],
     'cks':            ['Deploy Falco in your kind cluster. Write one custom rule that catches a privileged container.', 'Read CIS Kubernetes Benchmark — 80% of CKS gotchas come from there.'],
     'sc-200':         ['Build a hunting query in Sentinel that finds first-time sign-ins from a country.', 'Wire a Logic App to auto-isolate a device based on a Defender alert.'],
@@ -1655,7 +1655,7 @@ function renderStrategy() {
     <details class="strategy-section track-section track-top-section">
       <summary><span class="strategy-marker">🚀</span> Highest-Earning Evolution Paths · Top 10 (ranked by transition ease)</summary>
       <div class="strategy-body">
-        <p class="strat-note">Ten roles with £150k+ ceilings, ranked by transition ease from your relevant hands-on experience that evolve naturally from current Systems Support Engineer position. Not covered in the standard track pivots because they cross domains and lean vendor-agnostic. Each leverages skills you're already developing.</p>
+        <p class="strat-note">Ten roles with £150k+ ceilings, ranked by transition ease from relevant hands-on experience that evolve naturally from current Systems Support Engineer position. Not covered in the standard track pivots because they cross domains and lean vendor-agnostic. Each leverages skills you're already developing.</p>
         <ul class="pivot-roles-list">
           <li data-rank="#1">
             <span class="role-rung-tag rung-pivot">🤝</span><span class="rank-badge">#1</span>
@@ -1688,7 +1688,7 @@ function renderStrategy() {
           </ul>
           <p style="margin: 6px 0 0; color: #d4d1e8;"><strong style="color: #a5e9ff;">Scope discipline:</strong> both vendors are carried at <em>architect</em> level (design + recommend), not deep SOC-engineering level. The Palo Alto SecOps/XDR/XSIAM chain and CrowdStrike SIEM Analyst/Engineer certs stay <em>optional</em> — add them only if the consultancy develops a SOC-build / MSSP specialism, which is a different business from convergence architecture. Architect-grade fluency in both is the consultancy core; operator-grade engineering depth in both would be over-investment.</p>
         </div>
-        <div class="why-natural"><strong>💡 Why natural for this path:</strong> You ALREADY do TAM-like work in your relevant hands-on experience — supporting customer deployments, troubleshooting configs, managing the vendor relationship. Pivoting to vendor-side TAM is the same job, different employer. Lower friction than SE (less sales pressure, similar pay).</div>
+        <div class="why-natural"><strong>💡 Why natural for this path:</strong> You ALREADY do TAM-like work in relevant hands-on experience — supporting customer deployments, troubleshooting configs, managing the vendor relationship. Pivoting to vendor-side TAM is the same job, different employer. Lower friction than SE (less sales pressure, similar pay).</div>
             <div class="gateway-project"><span class="gp-icon">🎯</span><strong>Gateway Project:</strong> Author a customer-success playbook for one platform you know deeply (CrowdStrike Falcon, Sentinel, or Milestone XProtect). Cover: onboarding sequence (week 1-12), 10 most common misconfigurations + how to spot them, health-check template, QBR slide template, escalation matrix. 15-20 page document. Public GitHub.</div>
           </li>
           <li data-rank="#2">
