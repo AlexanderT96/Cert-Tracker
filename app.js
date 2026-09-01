@@ -38,7 +38,7 @@ const state = {
   showStudyForm: false,
   lastBackup: null,
   dismissedBackup: false,
-  currentSalary: 30000, // editable baseline; real value stored only in this browser
+  currentSalary: 0, // optional baseline; any entered value stays only in this browser
   pace2: 6,             // h/wk after the Sep 2026 pace drop (editable, browser-only)
   simMode: false,       // what-if simulator (session-only)
   simPasses: {},        // hypothetical passes (session-only)
@@ -75,12 +75,12 @@ function loadState() {
   } catch { state.myPath = null; }
   const storedVersion = parseInt(localStorage.getItem('cert.myPathVersion') || '0', 10);
   if (!state.myPath || Object.keys(state.myPath).length === 0 || storedVersion < MYPATH_VERSION) {
-    // Default curated OT-Convergence technical-apex path
+    // Default curated convergence-security technical path
     state.myPath = state.myPath || {};
     const defaults = [
       'issap','caisp','gaips','pan-apprentice','wiz-cse', // AI ladder (SecAI+ → CAISP → GAIPS) + ISSAP architect specialism
       'pcep','pcap','cmss','aws-cloud-practitioner',// ═══ JUNIOR TIER (Years 1-3, £30-55k) — 25 certs (P1-2) ═══
-      // Physical foundation (current strength)
+      // Physical security foundation
       'mcit','lca','lcp','lce','lcda','acp',
       // Cyber foundation (vendor-neutral)
       'a-plus','security-plus','cysa-plus','network-plus','az-900','az-104','sc-900','gcp-ace','gicsp','iec-62443-cds','iec-62443-cms','iec-62443-expert','grid','linux-plus','splunk-core-user',
@@ -116,7 +116,7 @@ function loadState() {
       'ukcsc-princ',
       // 🤖 AI multiplier (Senior)
       'sc-500',
-      // 🛰️ Geospatial specialist layer (site mapping + build the camera-analytics pipeline + deliver per-customer web COP)
+      // 🛰️ Geospatial specialist layer (site mapping + camera-analytics pipeline + web common-operating-picture delivery)
       
       
       // ═══ PRINCIPAL / ARCHITECT TIER (Years 8+, £120-400k+) — 20 certs (P5-6) ═══
@@ -302,7 +302,7 @@ function weeklyActions(cert) {
     'sc-500':         ['Spin up Sentinel free trial and connect Defender for Cloud as a data source.', 'Write one custom KQL detection rule — start simple (failed sign-ins from impossible-travel pattern).'],
     'az-305':         ['Watch John Savill AZ-305 Study Cram (~6 hrs, free) — comes right before exam, not at study start.', 'Read 3 Azure Architecture Center reference architectures in detail this week.'],
     'cissp':          ['Listen to one Pete Zerger CISSP Cram episode on commute (free YouTube, ~1 hr each).', 'Drill CISSP MCQs daily — Boson or Wannapractice. Aim for 100/day in final 2 weeks.'],
-    'terraform':['Write one Terraform module for an Azure resource you use in your current role.', 'Read HashiCorp Terraform Associate study guide section by section, hands-on after each.'],
+    'terraform':['Write one Terraform module for an Azure resource you use in your relevant hands-on experience.', 'Read HashiCorp Terraform Associate study guide section by section, hands-on after each.'],
     'cka':            ['Set up local Kubernetes via kind or minikube. Practise kubectl until muscle memory.', 'Run through Killer.sh CKA simulator — 2 sessions included with exam booking.'],
     'cks':            ['Deploy Falco in your kind cluster. Write one custom rule that catches a privileged container.', 'Read CIS Kubernetes Benchmark — 80% of CKS gotchas come from there.'],
     'sc-200':         ['Build a hunting query in Sentinel that finds first-time sign-ins from a country.', 'Wire a Logic App to auto-isolate a device based on a Defender alert.'],
@@ -322,7 +322,7 @@ function weeklyActions(cert) {
     'thm-sec1':       ['Complete TryHackMe Cyber Security 101 modules — 30 min/day.'],
     'thm-sal1':       ['Run through TryHackMe SOC Analyst Level 1 simulator under timed conditions.'],
     'htb-cdsa':       ['Complete the 15 prerequisite HTB Academy modules — track progress weekly.', 'Practise SOC Analyst-style investigation reports — they are the exam deliverable.'],
-    'ukcsc-assoc':    ['Pull together your evidence portfolio — A+, Network+, current employer role mapped to 5 competency areas.', 'Benched — direct entry at higher levels verified; kept for reference.'],
+    'ukcsc-assoc':    ['Pull together the evidence portfolio — A+, Network+, a representative organisation role mapped to 5 competency areas.', 'Benched — direct entry at higher levels verified; kept for reference.'],
   };
 
   const specific = studyMap[id] || [];
@@ -505,7 +505,7 @@ function bandMid(band) {
   return Math.round(avg * 1000);
 }
 function editSalary() {
-  const v = prompt('Your current annual salary (£) — stored only in this browser:', state.currentSalary);
+  const v = prompt('current annual salary (£) — stored only in this browser:', state.currentSalary);
   if (v === null) return;
   const n = parseInt(String(v).replace(/[^0-9]/g, ''), 10);
   if (!isNaN(n) && n >= 0) {
@@ -778,7 +778,7 @@ function renderDashboard() {
   const partnerCard = `
       <div class="card">
         <div class="card-title"><span class="dot" style="background:var(--ph1)"></span>Partner Status <span style="font-weight:500;color:var(--dim);text-transform:none;letter-spacing:0">· gate check</span></div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:8px">Partner-gated certs stall without these. Verify each with your employer — front-load asks while goodwill is high.</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px">Partner-gated certs stall without these. Verify each with the relevant organisation — front-load asks while goodwill is high.</div>
         ${PARTNER_VENDORS.map(v => `<label style="display:flex;gap:8px;align-items:center;font-size:12px;padding:4px 0;cursor:pointer"><input type="checkbox" ${state.partners[v] ? 'checked' : ''} onchange="togglePartner('${v}')" style="accent-color:var(--green)"><span style="${state.partners[v] ? 'color:var(--green-text)' : ''}">${v}${state.partners[v] ? ' ✓ verified' : ''}</span></label>`).join('')}
       </div>`;
 
@@ -1093,7 +1093,7 @@ function renderDashboard() {
   }).join('');
   const roleCard = `
     <div class="card role-card">
-      <div class="card-title" style="display:flex;align-items:center;gap:8px"><span class="dot" style="background:var(--purple)"></span><span style="flex:1">Role Match — by what you've completed</span><button class="sim-btn${state.simMode ? ' on' : ''}" onclick="toggleSimMode()" title="What-if simulator: preview how hypothetical passes change your role match and gap">🧪 What-if${state.simMode ? ' ON' : ''}</button></div>
+      <div class="card-title" style="display:flex;align-items:center;gap:8px"><span class="dot" style="background:var(--purple)"></span><span style="flex:1">Role Match — by what you've completed</span><button class="sim-btn${state.simMode ? ' on' : ''}" onclick="toggleSimMode()" title="What-if simulator: preview how hypothetical passes change the role match and gap">🧪 What-if${state.simMode ? ' ON' : ''}</button></div>
       ${state.simMode ? `<div class="sim-banner">Simulation active — ${Object.keys(state.simPasses).length} hypothetical pass${Object.keys(state.simPasses).length === 1 ? '' : 'es'}. Open any cert on the Certifications tab and tap “Simulate pass”. Nothing is saved. <button class="sim-link" onclick="clearSim()">Clear</button> <button class="sim-link" onclick="toggleSimMode()">Exit</button></div>` : ''}
       <div class="roi-lede">Live ranking of which roles your passed certs point to — by share of each role's credentials earned (value-weighted). Re-ranks as you mark certs complete. Tap a role to optimise the card above for it. Credential coverage, not a job guarantee.</div>
       ${roleRows || '<div class="roi-empty">Mark some certs complete to see your closest roles.</div>'}
@@ -1148,11 +1148,11 @@ function renderStrategy() {
           <span class="explog-tag${e.g ? ' t' + e.g : ''}">${e.g || '·'}</span>
           <div class="explog-main"><div class="explog-title">${escape(e.t)}</div><div class="explog-date">${escape(e.d)}</div></div>
           <button class="explog-del" onclick="delExp(${i})" aria-label="Remove entry">×</button>
-        </div>`).join('') : '<div class="roi-empty">No entries yet — tap + Add after your next lab or deployment.</div>'}
+        </div>`).join('') : '<div class="roi-empty">No entries yet — tap + Add after the next lab or deployment.</div>'}
     </div>
     <div class="strategy-intro">
       <h2>📋 Career Strategy</h2>
-      <p class="strategy-lede">A structured certification plan organised in 6 phases. Certs are tagged across three career destination tracks — <strong>Physical Security Architect</strong> (B), <strong>Cyber Security Engineer/Architect</strong> (C), and <strong>Cloud Security Architect</strong> (A) — so you can filter by relevance to your current direction. Foundation certs (A·B·C) serve all three tracks.</p>
+      <p class="strategy-lede">A structured certification plan organised in 6 phases. Certs are tagged across three career destination tracks — <strong>Physical Security Architect</strong> (B), <strong>Cyber Security Engineer/Architect</strong> (C), and <strong>Cloud Security Architect</strong> (A) — so you can filter by relevance to current direction. Foundation certs (A·B·C) serve all three tracks.</p>
       <p class="strategy-lede" style="font-size:12px;opacity:.85">Your <strong>saved plan</strong> sits at the top. Everything below is the framework that shaped it: <strong>where to start</strong>, the <strong>three career tracks</strong> (role ladders &amp; gateway projects), the <strong>highest-earning paths</strong>, and <strong>reference</strong> (credentials, study stack, costs).</p>
       <div class="strategy-stats">
         <div class="strategy-stat"><strong>${total}</strong><span>total certs</span></div>
@@ -1178,7 +1178,7 @@ function renderStrategy() {
 
           <p style="margin: 8px 0 3px; color: #8ef5c9;"><strong>② Front-load the quick wins (highest efficiency — do Year 1-2):</strong></p>
           <ul style="margin: 2px 0 6px 16px; padding: 0; color: #d4d1e8;">
-            <li><strong>Employer-funded (£0 to you):</strong> LCA · LCP · LCDA · MCIT · MCIE · MCDE · ACP · IEC 62443-CFS — your employer pays for these as an Axis/Milestone/LenelS2 partner. Pure ROI: career value at zero personal cost. Knock these out first.</li>
+            <li><strong>Employer-funded (£0 to you):</strong> LCA · LCP · LCDA · MCIT · MCIE · MCDE · ACP · IEC 62443-CFS — the relevant organisation pays for these as an Axis/Milestone/LenelS2 partner. Pure ROI: career value at zero personal cost. Knock these out first.</li>
             <li><strong>Cheap + high-value (£89-130, free study):</strong> AZ-900 · AI-900 · Security+ (Professor Messer) · Palo Alto Practitioner (free Beacon) · ISA/IEC 62443 Fundamentals.</li>
           </ul>
 
@@ -1297,9 +1297,9 @@ function renderStrategy() {
         <div class="gateway-project">
           <span class="gp-icon">🎯</span><strong>Gateway Project per tier:</strong>
           <ul style="margin:6px 0 0 0;padding-left:18px;font-size:11px;line-height:1.5">
-            <li><strong>Junior:</strong> Multi-vendor home lab — Milestone XProtect VMS + Axis cameras + a 62443-style OT segment + Sentinel SIEM + Palo Alto/CrowdStrike trials + Azure OpenAI. Document the physical-to-cyber data flow and a basic OT network zoning model as your first ADRs.</li>
+            <li><strong>Junior:</strong> Multi-vendor home lab — Milestone XProtect VMS + Axis cameras + a 62443-style OT segment + Sentinel SIEM + Palo Alto/CrowdStrike trials + Azure OpenAI. Document the physical-to-cyber data flow and a basic OT network zoning model as the first ADRs.</li>
             <li><strong>Senior (the differentiator):</strong> Build a converged physical + OT + cyber reference architecture for a fictional CNI site — VMS/access-control on the IT side, a 62443-zoned OT network, and the secured boundary between them. Document it as a full ADR (mapping to NCSC CAF + ISO 27001 + IEC 62443 + NIST AI RMF + SABSA attributes) and publish it. THIS is the portfolio piece that proves convergence design depth. <strong>If you pursue the geospatial track,</strong> extend it with a camera-analytics → ArcGIS <strong>common operating picture</strong> — a site map with live camera analytics plotted spatially, delivered as a customer-style web dashboard. That’s a differentiator almost no one else can demonstrate.</li>
-            <li><strong>Director:</strong> Become a recognised technical authority on OT-physical-cyber convergence through writing — reference designs, in-depth articles, and open-source tooling on GitHub. Publish a convergence architecture methodology. Passive visibility only: your published body of work speaks for you, no speaking circuit required.</li>
+            <li><strong>Director:</strong> Become a recognised technical authority on OT-physical-cyber convergence through writing — reference designs, in-depth articles, and open-source tooling on GitHub. Publish a convergence architecture methodology. Passive visibility only: your published body of work speaks for this path, no speaking circuit required.</li>
           </ul>
         </div>
         
@@ -1340,7 +1340,7 @@ function renderStrategy() {
         <p><strong>P1–2 · Foundation — build the public surface</strong></p>
         <ul>
           <li><strong>GitHub portfolio repo</strong> — lab configs + PowerShell/Python automation scripts. Doubles as your scripting-gap closer (the one portfolio weakness flagged in earlier reviews).</li>
-          <li><strong>Home convergence lab v1, documented</strong> — document your existing home network / DNS-filtering lab as a clean reference README. The lab already exists; the documentation is the visibility.</li>
+          <li><strong>Home convergence lab v1, documented</strong> — document existing home network / DNS-filtering lab as a clean reference README. The lab already exists; the documentation is the visibility.</li>
         </ul>
         <p><strong>P3–4 · Build — produce reference designs</strong></p>
         <ul>
@@ -1529,7 +1529,7 @@ function renderStrategy() {
                 <span class="pivot-rung">📈 Mid:</span> PenTest+ · OSCP (cyber crossover) · proprietary physical training (Red Team Alliance PPTP)<br>
                 <span class="pivot-rung">🏆 Senior:</span> PSP · ChCSP · CISSP
               </div>
-              <div class="gateway-project"><span class="gp-icon">🎯</span><strong>Gateway Project:</strong> Conduct a sanctioned physical recon exercise (with explicit permission) on your own building/property. Document entry points, social engineering scenarios, RFID exposure, and remediation. Build a 15-page report.</div>
+              <div class="gateway-project"><span class="gp-icon">🎯</span><strong>Gateway Project:</strong> Conduct a sanctioned physical recon exercise (with explicit permission) on a personal building/property. Document entry points, social engineering scenarios, RFID exposure, and remediation. Build a 15-page report.</div>
             </li>
             <li>
               <span class="role-rung-tag rung-pivot">🕵️</span>
@@ -1711,7 +1711,7 @@ function renderStrategy() {
     <details class="strategy-section track-section track-top-section">
       <summary><span class="strategy-marker">🚀</span> Highest-Earning Evolution Paths · Top 10 (ranked by transition ease)</summary>
       <div class="strategy-body">
-        <p class="strat-note">Ten roles with £150k+ ceilings, ranked by transition ease from your current role that evolve naturally from your current Systems Support Engineer position. Not covered in the standard track pivots because they cross domains and lean vendor-agnostic. Each leverages skills you're already developing.</p>
+        <p class="strat-note">Ten roles with £150k+ ceilings, ranked by transition ease from your relevant hands-on experience that evolve naturally from current Systems Support Engineer position. Not covered in the standard track pivots because they cross domains and lean vendor-agnostic. Each leverages skills you're already developing.</p>
         <ul class="pivot-roles-list">
           <li data-rank="#1">
             <span class="role-rung-tag rung-pivot">🤝</span><span class="rank-badge">#1</span>
@@ -1744,7 +1744,7 @@ function renderStrategy() {
           </ul>
           <p style="margin: 6px 0 0; color: #d4d1e8;"><strong style="color: #a5e9ff;">Scope discipline:</strong> both vendors are carried at <em>architect</em> level (design + recommend), not deep SOC-engineering level. The Palo Alto SecOps/XDR/XSIAM chain and CrowdStrike SIEM Analyst/Engineer certs stay <em>optional</em> — add them only if the consultancy develops a SOC-build / MSSP specialism, which is a different business from convergence architecture. Architect-grade fluency in both is the consultancy core; operator-grade engineering depth in both would be over-investment.</p>
         </div>
-        <div class="why-natural"><strong>💡 Why natural for you:</strong> You ALREADY do TAM-like work in your current role — supporting customer deployments, troubleshooting configs, managing the vendor relationship. Pivoting to vendor-side TAM is the same job, different employer. Lower friction than SE (less sales pressure, similar pay).</div>
+        <div class="why-natural"><strong>💡 Why natural for this path:</strong> You ALREADY do TAM-like work in your relevant hands-on experience — supporting customer deployments, troubleshooting configs, managing the vendor relationship. Pivoting to vendor-side TAM is the same job, different employer. Lower friction than SE (less sales pressure, similar pay).</div>
             <div class="gateway-project"><span class="gp-icon">🎯</span><strong>Gateway Project:</strong> Author a customer-success playbook for one platform you know deeply (CrowdStrike Falcon, Sentinel, or Milestone XProtect). Cover: onboarding sequence (week 1-12), 10 most common misconfigurations + how to spot them, health-check template, QBR slide template, escalation matrix. 15-20 page document. Public GitHub.</div>
           </li>
           <li data-rank="#2">
@@ -1766,7 +1766,7 @@ function renderStrategy() {
               <span class="pivot-rung">📈 Mid:</span> SC-200 · Terraform Associate · AZ-400 · CKA<br>
               <span class="pivot-rung">🏆 Senior:</span> AZ-305 · SC-100 · CISSP · vendor architects (XSIAM Eng · NGFW Eng)
             </div>
-            <div class="why-natural"><strong>💡 Why natural for you:</strong> Systems Support at an integrator IS platform engineering — Milestone server admin, LenelS2 system administration, integration troubleshooting. Moving from physical security platforms to cyber security platforms (Sentinel/Falcon/Splunk) is incremental, not a career restart. Same muscle, different platforms.</div>
+            <div class="why-natural"><strong>💡 Why natural for this path:</strong> Systems Support at an integrator IS platform engineering — Milestone server admin, LenelS2 system administration, integration troubleshooting. Moving from physical security platforms to cyber security platforms (Sentinel/Falcon/Splunk) is incremental, not a career restart. Same muscle, different platforms.</div>
             <div class="gateway-project"><span class="gp-icon">🎯</span><strong>Gateway Project:</strong> Build an IaC-managed security platform deployment in Azure. Deploy Sentinel via Bicep, configure 5 data connectors, write 10 KQL detection rules, document SLOs (data ingestion latency, alert MTTR, query performance), build a runbook for platform incidents. Public GitHub.</div>
           </li>
           <li data-rank="#3">
@@ -1788,7 +1788,7 @@ function renderStrategy() {
               <span class="pivot-rung">📈 Mid:</span> CISSP · CCSP · GICSP · GCIH · GCFA · ISO 27001 LI<br>
               <span class="pivot-rung">🏆 Senior:</span> ISSAP · CISM · UKCSC ChCSP · CSyP
             </div>
-            <div class="why-natural"><strong>💡 Why natural for you:</strong> Your background is uniquely well-positioned for clearance: UK national, employed in an established UK physical security firm (no foreign-entity complications), already work with surveillance + access control systems (concepts that translate directly to classified environments). your employer may have SC-cleared client work — worth asking. The clearance is achievable (6-12 months), and once held, opens 40-80% premium on baseline cyber pay. DV is rarer and pays 80-120% premium.</div>
+            <div class="why-natural"><strong>💡 Why natural for this path:</strong> prior experience is uniquely well-positioned for clearance: UK national, employed in an established UK physical security firm (no foreign-entity complications), already work with surveillance + access control systems (concepts that translate directly to classified environments). the relevant organisation may have SC-cleared client work — worth asking. The clearance is achievable (6-12 months), and once held, opens 40-80% premium on baseline cyber pay. DV is rarer and pays 80-120% premium.</div>
             <div class="gateway-project"><span class="gp-icon">🎯</span><strong>Gateway Project:</strong> Map a fictional UK government department's security posture against NCSC Cyber Assessment Framework (CAF). Cover all 4 objectives (Managing risk, Protecting against attack, Detecting events, Minimising impact). Identify 10 gaps + remediation plan. Position as if briefing a SIRO (Senior Information Risk Owner). 20-page report.</div>
           </li>
           
@@ -1813,7 +1813,7 @@ function renderStrategy() {
               <span class="pivot-rung">📈 Mid:</span> AZ-305 · AWS SAP · SC-100 · SC-200<br>
               <span class="pivot-rung">🏆 Senior:</span> CISSP · ISSAP · TOGAF · vendor specialisations
             </div>
-            <div class="why-natural"><strong>💡 Why natural for you:</strong> You already do integration architecture — different scale, same skill class. Hyperscaler CSAs are typically pulled from sysadmin or solutions-engineer roles, not from pure cyber. Your "I can design and explain systems to customers" muscle is exactly what they hire for. The pay ceiling at AWS/Azure/GCP for senior CSAs significantly exceeds independent SE roles.</div>
+            <div class="why-natural"><strong>💡 Why natural for this path:</strong> You already do integration architecture — different scale, same skill class. Hyperscaler CSAs are typically pulled from sysadmin or solutions-engineer roles, not from pure cyber. Your "I can design and explain systems to customers" muscle is exactly what they hire for. The pay ceiling at AWS/Azure/GCP for senior CSAs significantly exceeds independent SE roles.</div>
             <div class="gateway-project"><span class="gp-icon">🎯</span><strong>Gateway Project:</strong> Build a multi-region Azure landing zone for a fictional 1,000-employee SaaS company. Cover identity (Entra ID + PIM), network (hub-spoke + Azure Firewall), data (encryption + Key Vault), monitoring (Defender for Cloud + Sentinel). Document as an Architecture Decision Record + present-ready slide deck.</div>
           </li>
           
@@ -1821,7 +1821,7 @@ function renderStrategy() {
             <span class="role-rung-tag rung-pivot">🔌</span>
             <span class="rank-badge">#5</span>
             <strong>Embedded Systems Security Engineer (vendor product side)</strong> <span class="rung-roles">— Product Sec Eng · Senior Product Sec Eng · Principal Sec Eng</span>
-            <div class="rank-meta">Leverages your existing product knowledge</div>
+            <div class="rank-meta">Leverages existing product knowledge</div>
             <div class="role-progression">
               <div class="prog-step prog-junior"><strong>📍 Junior:</strong> Review firmware update workflows for security gaps, run vulnerability assessments on company products, document product security postures, support customer security questionnaires.</div>
               <div class="prog-step prog-mid"><strong>📈 Mid:</strong> Lead security design reviews for new product features, integrate SAST/DAST into firmware build pipelines, respond to coordinated vulnerability disclosures, advise hardware/firmware engineering teams.</div>
@@ -1838,8 +1838,8 @@ function renderStrategy() {
               <span class="pivot-rung">📈 Mid:</span> CISSP · CSSLP · CEH · GREM<br>
               <span class="pivot-rung">🏆 Senior:</span> ISSAP · CISM · IEC 62443-CFS · UKCSC ChCSP
             </div>
-            <div class="why-natural"><strong>💡 Why natural for you:</strong> You already know the products vendors make better than most of their internal engineers do — you deploy and troubleshoot them at scale. Vendors specifically hire integrator engineers for product security roles because they understand real-world deployment failures. Axis, Milestone, and LenelS2 all have product security teams; your background is direct entry credibility.</div>
-            <div class="gateway-project"><span class="gp-icon">🎯</span><strong>Gateway Project:</strong> Pick one physical security product you know intimately (e.g., Axis camera, LenelS2 controller, Milestone server). Conduct your own product security review: document threat model, identify 5 attack surfaces (network ports, default credentials, firmware update mechanism, API auth, storage), propose hardening recommendations. 12-page report formatted as a product security review for the vendor.</div>
+            <div class="why-natural"><strong>💡 Why natural for this path:</strong> You already know the products vendors make better than most of their internal engineers do — you deploy and troubleshoot them at scale. Vendors specifically hire integrator engineers for product security roles because they understand real-world deployment failures. Axis, Milestone, and LenelS2 all have product security teams; prior experience is direct entry credibility.</div>
+            <div class="gateway-project"><span class="gp-icon">🎯</span><strong>Gateway Project:</strong> Pick one physical security product you know intimately (e.g., Axis camera, LenelS2 controller, Milestone server). Conduct a personal product security review: document threat model, identify 5 attack surfaces (network ports, default credentials, firmware update mechanism, API auth, storage), propose hardening recommendations. 12-page report formatted as a product security review for the vendor.</div>
           </li>
           <li data-rank="#6">
             <span class="role-rung-tag rung-pivot">🏦</span><span class="rank-badge">#6</span>
@@ -1860,7 +1860,7 @@ function renderStrategy() {
               <span class="pivot-rung">📈 Mid:</span> CISSP · CCSP · SC-200 · SC-100 · Splunk SCDA · GCFA<br>
               <span class="pivot-rung">🏆 Senior:</span> ISSAP · CISA · CISM · CRISC · UKCSC ChCSP
             </div>
-            <div class="why-natural"><strong>💡 Why natural for you:</strong> Trading floors have heavy physical security overlay (clean rooms, badge access, surveillance recording for compliance) that mirrors your daily work. Your Milestone XProtect server admin experience translates directly to managing surveillance recording compliance for regulated environments. Banks hire engineers who can credibly work with both physical and cyber controls — your dual fluency is the differentiator.</div>
+            <div class="why-natural"><strong>💡 Why natural for this path:</strong> Trading floors have heavy physical security overlay (clean rooms, badge access, surveillance recording for compliance) that mirrors your daily work. Your Milestone XProtect server admin experience translates directly to managing surveillance recording compliance for regulated environments. Banks hire engineers who can credibly work with both physical and cyber controls — your dual fluency is the differentiator.</div>
             <div class="gateway-project"><span class="gp-icon">🎯</span><strong>Gateway Project:</strong> Author a fictional security architecture for a fictional FCA-regulated trading desk: SIEM coverage (Sentinel/Splunk), EDR strategy (Defender+CrowdStrike hybrid for crown-jewel endpoints), IAM model (Entra ID + PIM for traders), data flow controls for client data. Map each control to FCA SYSC requirements. 15-page Architecture Decision Record.</div>
           </li>
           <li data-rank="#7">
@@ -1882,7 +1882,7 @@ function renderStrategy() {
               <span class="pivot-rung">📈 Mid:</span> CISSP · PRINCE2 Practitioner · CCSP<br>
               <span class="pivot-rung">🏆 Senior:</span> CISM · AZ-305/SAP-C02 · TOGAF
             </div>
-            <div class="why-natural"><strong>💡 Why natural for you:</strong> Systems Support at an integrator = uniquely deep customer-side empathy. Vendor PMs are typically engineers who lacked customer exposure — your integrator background is the differentiator. Path: Systems Support → Senior Engineer/TAM → Associate PM at a vendor.</div>
+            <div class="why-natural"><strong>💡 Why natural for this path:</strong> Systems Support at an integrator = uniquely deep customer-side empathy. Vendor PMs are typically engineers who lacked customer exposure — your integrator background is the differentiator. Path: Systems Support → Senior Engineer/TAM → Associate PM at a vendor.</div>
             <div class="gateway-project"><span class="gp-icon">🎯</span><strong>Gateway Project:</strong> Pick a security product you know (e.g., Sentinel or Milestone XProtect). Document 5 customer pain points based on real deployment experience, propose a feature addressing them, write a PRD (problem statement + user stories + success metrics + risks + competitive analysis). Public GitHub.</div>
           </li>
           
@@ -1907,7 +1907,7 @@ function renderStrategy() {
               <span class="pivot-rung">📈 Mid:</span> CISSP (credibility) · vendor sales methodologies (MEDDIC, BANT)<br>
               <span class="pivot-rung">🏆 Senior:</span> Industry certs become less important · executive presence + track record dominate
             </div>
-            <div class="why-natural"><strong>💡 Why natural for you:</strong> Highest absolute pay ceiling of any cyber role — top Enterprise AEs at CrowdStrike, Palo Alto, Wiz earn £600k-£1M+ OTE. Pure performance-driven. Skills transfer: your technical credibility + customer-facing fluency are the core requirements. Heavier sales discipline than TAM. Heavier numbers pressure than any other role here. But if customer-facing + competitive + outcome-driven appeals, this is the unrivalled compensation ceiling.</div>
+            <div class="why-natural"><strong>💡 Why natural for this path:</strong> Highest absolute pay ceiling of any cyber role — top Enterprise AEs at CrowdStrike, Palo Alto, Wiz earn £600k-£1M+ OTE. Pure performance-driven. Skills transfer: your technical credibility + customer-facing fluency are the core requirements. Heavier sales discipline than TAM. Heavier numbers pressure than any other role here. But if customer-facing + competitive + outcome-driven appeals, this is the unrivalled compensation ceiling.</div>
             <div class="gateway-project"><span class="gp-icon">🎯</span><strong>Gateway Project:</strong> Build a complete sales playbook for one security product you know well (Sentinel, CrowdStrike Falcon, or Milestone XProtect). Cover: ideal customer profile, discovery question bank (40+ questions), objection handling matrix (10 common objections), competitive battle cards vs 3 alternatives, ROI calculator template. 25-30 page playbook.</div>
           </li>
           
@@ -1931,7 +1931,7 @@ function renderStrategy() {
               <span class="pivot-rung">📈 Mid:</span> CISSP · CCSP · CISA · CRISC · ISO 27001 LI · ITIL 4 MP<br>
               <span class="pivot-rung">🏆 Senior:</span> CISM · UKCSC ChCSP · CSyP · CDPSE · optional MBA
             </div>
-            <div class="why-natural"><strong>💡 Why natural for you:</strong> Heavy report writing — be honest about whether this energises or drains you. The path requires both technical depth AND business fluency, which is rare. Your integrator role already gives you "I've seen what breaks at customer scale" — exactly the muscle DD demands. But this is the longest arc (7-10 years) and the highest writing tolerance of any role we've discussed. The compensation ceiling justifies it only if the work itself genuinely interests you.</div>
+            <div class="why-natural"><strong>💡 Why natural for this path:</strong> Heavy report writing — be honest about whether this energises or drains you. The path requires both technical depth AND business fluency, which is rare. Your integrator role already gives you "I've seen what breaks at customer scale" — exactly the muscle DD demands. But this is the longest arc (7-10 years) and the highest writing tolerance of any role we've discussed. The compensation ceiling justifies it only if the work itself genuinely interests you.</div>
             <div class="gateway-project"><span class="gp-icon">🎯</span><strong>Gateway Project:</strong> Conduct a fictional cyber due diligence on a fictional UK SaaS target being acquired by PE for £50M. Build inventory: tech stack, security tooling, certifications, recent incidents. Identify 5 critical findings. Quantify remediation cost. Write a 12-page DD report formatted for an investment committee.</div>
           </li>
           <li data-rank="#10">
@@ -1955,7 +1955,7 @@ function renderStrategy() {
               <span class="pivot-rung">📈 Mid:</span> CISSP · niche specialism certs · industry recognition<br>
               <span class="pivot-rung">🏆 Senior:</span> UKCSC ChCSP · CSyP · specialist credentials in chosen niche
             </div>
-            <div class="why-natural"><strong>💡 Why natural for you:</strong> Not a transition role — this is a destination after building 7-10 years of expertise in a specific niche. Worth including because it represents the genuine ceiling for senior IC specialists who don't want to manage teams or sell. Many of the other roles here can lead here. Your specific combination (physical security + cyber + cleared if you go that route) is a genuine niche that commands premium day rates.</div>
+            <div class="why-natural"><strong>💡 Why natural for this path:</strong> Not a transition role — this is a destination after building 7-10 years of expertise in a specific niche. Worth including because it represents the genuine ceiling for senior IC specialists who don't want to manage teams or sell. Many of the other roles here can lead here. Your specific combination (physical security + cyber + cleared if you go that route) is a genuine niche that commands premium day rates.</div>
             <div class="gateway-project"><span class="gp-icon">🎯</span><strong>Gateway Project:</strong> Build a niche specialism portfolio in something you genuinely know (e.g., physical-cyber convergence). 10-page service catalogue describing: services offered, day rate, typical engagement length, deliverables, case study format. Build a LinkedIn presence around the niche. Track £-per-day ambition across 12 months.</div>
           </li>
         </ul>
@@ -2000,7 +2000,7 @@ function renderStrategy() {
         <p><strong>Why they're separate</strong>: The "study and sit" model doesn't apply. Each requires:</p>
         <ul>
           <li>Evidence portfolio (months of assembly)</li>
-          <li>Professional references / endorsements (someone vouches for you)</li>
+          <li>Professional references / endorsements (someone vouches for this path)</li>
           <li>Application fee separate from any exam fee</li>
           <li>Ongoing CPD/CPE obligations to maintain</li>
         </ul>
