@@ -84,7 +84,7 @@
     isPlainObject(value) { return !!value && typeof value === 'object' && !Array.isArray(value); },
     clamp(value, min, max) { return Math.min(max, Math.max(min, value)); },
     escapeHtml(value) {
-      return String(value ?? '').replace(/[&<>'\"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '\"': '&quot;' }[ch]));
+      return String(value ?? '').replace(/[&<>'"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[ch]));
     },
     averageHours(cert) {
       return Array.isArray(cert?.hours) && cert.hours.length === 2
@@ -93,7 +93,7 @@
     },
     nowIso() { return new Date().toISOString(); },
     validIsoDate(value) {
-      if (typeof value !== 'string' || !/^\\d{4}-\\d{2}-\\d{2}$/.test(value)) return false;
+      if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
       const d = new Date(`${value}T12:00:00Z`);
       return Number.isFinite(d.getTime()) && d.toISOString().slice(0, 10) === value;
     },
