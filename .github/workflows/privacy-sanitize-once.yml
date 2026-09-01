@@ -1,0 +1,30 @@
+name: One-time privacy sanitization
+
+on:
+  push:
+    branches: [v3.1/ten-out-of-ten-privacy]
+
+permissions:
+  contents: write
+
+jobs:
+  sanitize:
+    if: ${{ !contains(github.event.head_commit.message, '[privacy-sanitized]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: v3.1/ten-out-of-ten-privacy
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Sanitize tracked content
+        run: node tools/privacy-sanitize.mjs
+      - name: Commit sanitized source
+        run: |
+          if git diff --quiet; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add certs.js app.js
+          git commit -m "v3.1: sanitize personal career context [privacy-sanitized]"
+          git push origin HEAD:v3.1/ten-out-of-ten-privacy
