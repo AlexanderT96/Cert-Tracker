@@ -20,6 +20,8 @@
   await test('Certification schema has no hard errors', () => CertTrackerV3.validation.diagnostics.errors.length === 0);
   await test('Certification IDs are unique', () => new Set(CERTS.map(c => c.id)).size === CERTS.length);
   await test('Dependencies resolve', () => { const ids = new Set(CERTS.map(c => c.id)); return CERTS.every(c => (c.deps || []).every(dep => ids.has(dep) && dep !== c.id)); });
+  await test('All gateway certifications have audited cert-level official sources', () => CERTS.filter(c => c.gateway).every(c => { const h = CertTrackerV3.dataHealth.record(c); return h.sourceLevel === 'CERT' && h.provenance === 'AUDITED_REGISTRY'; }));
+  await test('Core pathway has audited source coverage', () => { const core = CERTS.filter(c => c.track === 'CORE'); const exact = core.filter(c => CertTrackerV3.dataHealth.record(c).sourceLevel === 'CERT').length; return exact >= core.length - 1; });
   await test('Local date stamp is ISO-shaped', () => /^\d{4}-\d{2}-\d{2}$/.test(CertTrackerV3.dates.localDateStamp(new Date())));
   await test('ICS date formatting is stable', () => CertTrackerV3.dates.icsDate('2026-09-01') === '20260901');
   await test('ICS escaping covers reserved characters', () => CertTrackerV3.exports.icsEscape('a,b;c\\d\nx') === 'a\\,b\\;c\\\\d\\nx');
