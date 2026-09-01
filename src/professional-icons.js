@@ -13,7 +13,7 @@
   };
 
   const emojiRe=/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu;
-  const legacySymbols=/[⌘★☆◆◇●○■□▲△▼▽▶▷◀◁]/g;
+  const legacySymbols=/[⌘★☆◆◇●○■□▲△▼▽▶▷◀◁↩⊘⠿]/g;
   const TIERS=['bronze','silver','gold','platinum','diamond'];
 
   function iconSpan(name){const span=document.createElement('span');span.className='ct-line-icon';span.innerHTML=ICONS[name]||ICONS.info;return span;}
