@@ -21,8 +21,21 @@
 <div id="boot-veil"><img src="icon-192.png" alt=""></div>
 <script>try{if(sessionStorage.getItem('booted')){document.getElementById('boot-veil').style.display='none';}else{sessionStorage.setItem('booted','1');}}catch(e){}</script>
 <div id="app"></div>
+
+<!-- Canonical catalogue + legacy renderer. v3 modules own domain logic around it. -->
 <script src="certs.js"></script>
 <script src="app.js"></script>
-<script src="stability.js"></script>
+<script src="src/config.js"></script>
+<script src="src/dates.js"></script>
+<script src="src/storage.js"></script>
+<script src="src/validation.js"></script>
+<script src="src/phase-engine.js"></script>
+<script src="src/data-health.js"></script>
+<script src="src/recommendation-engine.js"></script>
+<script src="src/exports.js"></script>
+<script src="src/notifications.js"></script>
+<script src="src/sync.js"></script>
+<script src="src/ux.js"></script>
+<script src="src/bootstrap.js"></script>
 </body>
 </html>
