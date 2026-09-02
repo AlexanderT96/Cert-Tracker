@@ -25,7 +25,7 @@
   function mountPathway(){
     const content=document.getElementById('tab-content');if(!content)return;
     const existing=content.querySelector(':scope > .ct-dual-brief');
-    const tabs=new Set(['dashboard','certifications','roadmap','learning','strategy']);if(!tabs.has(state.currentTab)){existing?.remove();return;}
+    if(state.currentTab!=='dashboard'){existing?.remove();return;}
     const inputs=JSON.stringify([state,revision]);
     if(existing&&pathwayInputs.get(existing)===inputs)return;
     const item=currentFilterItem(),profile=item?CT.dualPillarDepth.pathwayProfile(item):null;if(!profile){existing?.remove();return;}

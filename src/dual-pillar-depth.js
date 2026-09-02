@@ -212,6 +212,7 @@
   }
 
   function pathwaySpec(item){
+    const role=CT.careerOptions?.byId(item.id);if(role){const f=CT.careerOptions.FAMILIES[role.family],base=ARCHETYPES[f.archetype]||ARCHETYPES.architectureConsulting;return Object.freeze({...base,archetype:f.archetype,mission:role.mission,responsibilities:f.tasks.map(t=>t[1]),evidence:CT.careerOptions.requirements(role).map(t=>t.label)});}
     const mapped=PATHWAY_MAP[item.id],key=mapped?.[0]||categoryForLabel(item.label),base=ARCHETYPES[key]||ARCHETYPES.architectureConsulting;
     return Object.freeze({...base,archetype:key,mission:mapped?.[1]||base.mission});
   }

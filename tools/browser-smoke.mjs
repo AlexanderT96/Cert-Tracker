@@ -52,6 +52,19 @@ try{
   assert.ok(healthText.includes('Credential retired')&&healthText.includes('Credential in development'));
   await desktop.page.getByRole('dialog',{name:'Certification data health'}).getByRole('button',{name:'Close',exact:true}).click();
   await desktop.page.screenshot({path:`/tmp/certtracker-${engine}-desktop.png`,animations:'disabled',timeout:30000});
+  await desktop.page.locator('[data-workspace-tab="strategy"]').click();
+  await desktop.page.locator('.career-explorer').waitFor();
+  assert.equal(await desktop.page.locator('.ct-dual-brief').count(),0);
+  await desktop.page.locator('[data-career-search]').fill('GIS');
+  assert.ok(await desktop.page.locator('.career-card').count()>0);
+  await desktop.page.locator('[data-shortlist]').first().click();
+  await desktop.page.locator('[data-career-shortlist]').check();
+  assert.equal(await desktop.page.locator('.career-card').count(),1);
+  await desktop.page.locator('.career-card summary').click();
+  await desktop.page.locator('[data-interest]').selectOption('100');
+  await desktop.page.locator('[data-evidence]').first().selectOption('LAB');
+  assert.ok(await desktop.page.evaluate(()=>Object.keys(state.customization.careerOptions.evidence).length===1));
+  for(const tab of ['learning','roadmap','certifications','customize','dashboard']){await desktop.page.locator(`[data-workspace-tab="${tab}"]`).click();await desktop.page.waitForTimeout(150);assert.equal(await desktop.page.locator('.ct-dual-brief').count(),tab==='dashboard'?1:0);}
   await desktop.context.close();
 
   console.log(`${engine}: phone first load`);
@@ -59,6 +72,7 @@ try{
   await page.waitForFunction(()=>document.documentElement.dataset.layout==='mobile');
   await navigationInViewport(page);
   assert.equal(await page.locator('.tabs').isVisible(),false,'Desktop tabs must stay hidden on phones');
+  assert.equal(await page.locator('.header-title').evaluate(el=>getComputedStyle(el).textShadow),'none');
   assert.ok((await page.locator('body').evaluate(el=>getComputedStyle(el).backgroundAttachment)).split(',').every(value=>value.trim()==='scroll'));
   assert.equal(await page.locator('#ct-mobile-navigation').evaluate(el=>getComputedStyle(el).backdropFilter),'none');
   const transforms=await page.locator('.ct-depth-surface').evaluateAll(nodes=>nodes.map(el=>getComputedStyle(el).transform));
@@ -69,6 +83,7 @@ try{
     await page.waitForFunction(tab=>state.currentTab===tab,tab);
     assert.equal(await page.locator(`[data-mobile-tab="${tab}"]`).getAttribute('aria-current'),'page');
     await navigationInViewport(page);
+    assert.equal(await page.locator('.ct-dual-brief').count(),tab==='dashboard'?1:0);
   }
   console.log(`${engine}: scrolling and More menu`);
   await page.evaluate(()=>window.scrollTo(0,Math.min(1200,document.documentElement.scrollHeight-innerHeight)));
