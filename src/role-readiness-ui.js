@@ -10,25 +10,34 @@
     @media(max-width:700px){.ct-rank-dashboard-head{grid-template-columns:1fr}.ct-rank-dashboard-score{width:max-content}.ct-rank-dashboard-ladder{display:flex;overflow-x:auto;scrollbar-width:none}.ct-rank-dashboard-ladder::-webkit-scrollbar{display:none}.ct-rank-dashboard-step{flex:0 0 82px}.ct-rank-inline{margin-left:0;margin-top:4px}}
   `;document.head.appendChild(s);}
 
-  function ladderHtml(rank){if(!rank)return'';return `<section class="ct-rank-dashboard" data-role-rank-summary><div class="ct-rank-dashboard-head"><div><div class="ct-dual-kicker">SENIORITY / ROLE READINESS</div><strong>${esc(rank.key)} · ${esc(rank.label)} — ${esc(rank.title)}</strong><small>${esc(rank.description)}</small></div><span class="ct-rank-dashboard-score">${rank.score}% · M/K FLOOR ${rank.floor}%</span></div><div class="ct-rank-dashboard-ladder">${rank.ladder.map(step=>`<span class="ct-rank-dashboard-step${step.achieved?' achieved':''}${step.current?' current':''}" title="${esc(step.title)}">${esc(step.key)}<br>${esc(step.label.toUpperCase())}</span>`).join('')}</div><div class="ct-rank-dashboard-next">${rank.next?`<strong>Next: ${esc(rank.next.key)} · ${esc(rank.next.label)} — ${esc(rank.next.title)}</strong><br>${esc(rank.next.gaps.slice(0,5).join(' · ')||'Hard gates met; continue growing role scope and evidence.')}`:'<strong>Director gate reached.</strong> Maintain OWNED evidence, strategic scope, commercial judgement and organisational outcomes.'}</div></section>`;}
+  function ladderHtml(rank){if(!rank)return'';return `<section class="ct-rank-dashboard" data-role-rank-summary data-rank-signature="${esc(`${rank.roleId}|${rank.key}|${rank.score}|${rank.floor}|${rank.next?.gaps?.join('~')||''}`)}"><div class="ct-rank-dashboard-head"><div><div class="ct-dual-kicker">SENIORITY / ROLE READINESS</div><strong>${esc(rank.key)} · ${esc(rank.label)} — ${esc(rank.title)}</strong><small>${esc(rank.description)}</small></div><span class="ct-rank-dashboard-score">${rank.score}% · M/K FLOOR ${rank.floor}%</span></div><div class="ct-rank-dashboard-ladder">${rank.ladder.map(step=>`<span class="ct-rank-dashboard-step${step.achieved?' achieved':''}${step.current?' current':''}" title="${esc(step.title)}">${esc(step.key)}<br>${esc(step.label.toUpperCase())}</span>`).join('')}</div><div class="ct-rank-dashboard-next">${rank.next?`<strong>Next: ${esc(rank.next.key)} · ${esc(rank.next.label)} — ${esc(rank.next.title)}</strong><br>${esc(rank.next.gaps.slice(0,5).join(' · ')||'Hard gates met; continue growing role scope and evidence.')}`:'<strong>Director gate reached.</strong> Maintain OWNED evidence, strategic scope, commercial judgement and organisational outcomes.'}</div></section>`;}
 
-  function dashboard(){
-    if(state.currentTab!=='dashboard')return;
-    const market=document.querySelector('[data-market-dashboard]');if(!market)return;
-    market.querySelectorAll('[data-role-rank-summary]').forEach(x=>x.remove());
+  function syncActiveRank(market){
     const activeAssessment=CT.marketReadiness.activeAssessment?.(),activeRank=activeAssessment?CT.roleReadiness.rankForRole(activeAssessment.role):null;
-    if(activeRank){const focus=market.querySelector('[data-market-focus] .ct-market-focus-body');if(focus)focus.insertAdjacentHTML('afterbegin',ladderHtml(activeRank));}
+    const existing=market.querySelector('[data-role-rank-summary]');
+    if(!activeRank){existing?.remove();return;}
+    const focus=market.querySelector('[data-market-focus] .ct-market-focus-body');if(!focus)return;
+    const signature=`${activeRank.roleId}|${activeRank.key}|${activeRank.score}|${activeRank.floor}|${activeRank.next?.gaps?.join('~')||''}`;
+    if(existing?.dataset.rankSignature===signature)return;
+    const host=document.createElement('div');host.innerHTML=ladderHtml(activeRank);const next=host.firstElementChild;
+    if(existing)existing.replaceWith(next);else focus.insertAdjacentElement('afterbegin',next);
+  }
 
+  function syncRoleBadges(market){
     const roles=CT.marketReadiness.roles?.()||[];
     market.querySelectorAll('.ct-market-role').forEach(card=>{
-      card.querySelectorAll('.ct-rank-inline').forEach(x=>x.remove());
       const label=card.querySelector('strong')?.textContent?.trim();if(!label)return;
       const role=roles.find(x=>x.label===label);if(!role)return;
-      const rank=CT.roleReadiness.rankForRole(role),status=card.querySelector('.ct-market-status');
-      const badge=document.createElement('span');badge.className='ct-rank-inline';badge.dataset.rank=rank.key;badge.textContent=`${rank.key} ${rank.short}`;badge.title=`${rank.label}: ${rank.title} · ${rank.score}% seniority/readiness score`;
-      if(status)status.insertAdjacentElement('beforebegin',badge);else card.querySelector('strong')?.insertAdjacentElement('afterend',badge);
+      const rank=CT.roleReadiness.rankForRole(role),text=`${rank.key} ${rank.short}`,title=`${rank.label}: ${rank.title} · ${rank.score}% seniority/readiness score`;
+      let badge=card.querySelector('.ct-rank-inline');
+      if(!badge){badge=document.createElement('span');badge.className='ct-rank-inline';const status=card.querySelector('.ct-market-status');if(status)status.insertAdjacentElement('beforebegin',badge);else card.querySelector('strong')?.insertAdjacentElement('afterend',badge);}
+      if(badge.dataset.rank!==rank.key)badge.dataset.rank=rank.key;
+      if(badge.textContent!==text)badge.textContent=text;
+      if(badge.title!==title)badge.title=title;
     });
   }
+
+  function dashboard(){if(state.currentTab!=='dashboard')return;const market=document.querySelector('[data-market-dashboard]');if(!market)return;syncActiveRank(market);syncRoleBadges(market);}
 
   function career(){
     const modal=document.getElementById('ct-career-modal');if(!modal||modal.querySelector('[data-rank-career-card]'))return;
@@ -44,5 +53,5 @@
   const app=document.getElementById('app');if(app)new MutationObserver(queue).observe(app,{childList:true,subtree:true});new MutationObserver(queue).observe(document.body,{childList:true,subtree:false});
   global.addEventListener('certtracker:career-context-changed',queue);global.addEventListener('certtracker:capability-evidence-changed',queue);global.addEventListener('certtracker:goal-changed',queue);
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',queue,{once:true});else queue();
-  CT.roleReadinessUI=Object.freeze({ladderHtml,mount});
+  CT.roleReadinessUI=Object.freeze({ladderHtml,mount,syncActiveRank,syncRoleBadges});
 })(window);
