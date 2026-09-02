@@ -12,7 +12,9 @@ assert.equal(summary.missingSources,0);
 assert.equal(summary.sourceCoverage,100);
 assert.equal(summary.exactSources,115);
 assert.equal(summary.vendorSources,70);
-assert.equal(summary.averageConfidence,94);
+assert.equal(summary.averageConfidence,Math.round(summary.verifiedFacts/summary.totalFacts*100));
+assert.equal(summary.priceVerified,0);
+assert.ok(summary.averageConfidence<10,'Unverified facts cannot inherit linked-source confidence');
 for(const cert of certs){
   assert.ok(CT.sourceRegistry[cert.id],`${cert.id}: explicit mapping required`);
   assert.equal(new URL(health.record(cert).sourceUrl).protocol,'https:');
@@ -29,12 +31,12 @@ assert.equal(health.record(old).freshness,'STALE','Source check cannot refresh c
 assert.ok(health.record(old).issues.includes('Price may be stale'));
 assert.equal(health.record(old).verifiedAt,'2020-01-01');
 assert.equal(health.record(old).sourceCheckedAt,'2026-09-02');
-assert.equal(health.record({id:'claroty-cert-eng',verifiedAt:'2026-09-01'}).confidence,85,'Vendor source cannot score as audited exact credential');
+assert.equal(health.record({id:'claroty-cert-eng',verifiedAt:'2026-09-01'}).confidence,0,'Vendor source cannot score as audited exact credential');
 assert.equal(health.record({id:'acp',verifiedAt:'2026-09-01'}).provenance,'EXPLICIT_MAPPING');
 assert.equal(health.record({id:'acp',verifiedAt:'2026-09-01'}).sourceCheckedAt,null,'Do not invent audit dates when inspection is unavailable');
 for(const id of ['jsnad','jsnsd'])assert.equal(CT.sourceRegistry[id].credentialStatus,'RETIRED');
 assert.equal(CT.sourceRegistry.pcpp2.credentialStatus,'IN_DEVELOPMENT');
-assert.equal(summary.availabilityWarnings,7);
+assert.equal(summary.availabilityWarnings,8);
 assert.ok(health.reviewQueue().slice(0,7).every(row=>row.credentialStatus));
 const ux=fs.readFileSync('src/ux.js','utf8');
 assert.ok(ux.includes('not that every detail is verified'));

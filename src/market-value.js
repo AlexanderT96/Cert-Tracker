@@ -6,7 +6,7 @@
 
   const SNAPSHOT = Object.freeze({
     asOf:'2026-08-31',currency:'GBP',geography:'UK',
-    disclaimer:'Indicative UK market benchmarks only. Certification value depends on role scope, experience, evidence, employer, sector and hiring conditions; no certificate guarantees a salary increase.',
+    disclaimer:'Uncalibrated illustrative UK model bands, not independently verified current compensation. Certification value depends on role scope, experience, evidence, employer, sector and hiring conditions; no certificate guarantees a salary increase.',
     sources:Object.freeze([
       Object.freeze({label:'IT Jobs Watch — Cyber Security Engineer',url:'https://www.itjobswatch.co.uk/jobs/uk/cyber%20security%20engineer.do',median:65000}),
       Object.freeze({label:'IT Jobs Watch — Network Security Engineer',url:'https://www.itjobswatch.co.uk/jobs/uk/network%20security%20engineer.do',median:67500}),
@@ -68,7 +68,7 @@
     const low=Math.round(base.contributionRange.low*gatewayFloor/100)*100; const high=Math.max(low,Math.round(base.contributionRange.high*gatewayFloor/100)*100);
     return Object.freeze({
       roleKey:base.roleKey,role:base.role,marketBand:Object.freeze(base.marketBand),contributionRange:Object.freeze({low,high,midpoint}),
-      contributionLabel:`${money(low)}–${money(high)}`,confidence:base.confidence,overlap:Math.round(overlapScore*100),novelty:Math.round(gatewayFloor*100),
+      contributionLabel:'Uncalibrated planning signal — not salary uplift',confidence:base.confidence,overlap:Math.round(overlapScore*100),novelty:Math.round(gatewayFloor*100),
       valuePerStudyHour:Math.round(midpoint/base.hours),valueToCostRatio:base.cost>0?Number((midpoint/base.cost).toFixed(1)):null,selfFundedCost:base.cost,
       evidence:cert?.projectRec?'Certification + portfolio evidence':'Certification signal only',disclaimer:SNAPSHOT.disclaimer
     });

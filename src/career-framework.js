@@ -52,7 +52,7 @@
 
   function selected(key, fallback) {const value = localStorage.getItem(STORAGE[key]);return value && ROLE_PROFILES[value] ? value : fallback;}
   function context() {return Object.freeze({current:selected('currentRole','generalIT'),next:selected('nextRole','cyber'),target:selected('targetRole','convergence')});}
-  function setContext(update={}) {for (const [field,value] of Object.entries(update)) {const storageKey = STORAGE[field] || STORAGE[`${field}Role`];if (!storageKey) continue;if (!ROLE_PROFILES[value]) throw new Error(`Unknown role profile: ${value}`);localStorage.setItem(storageKey,value);}CT.events.emit('career-context-changed', context());return context();}
+  function setContext(update={}) {for(const [field,value]of Object.entries(update))if((STORAGE[field]||STORAGE[`${field}Role`])&&!ROLE_PROFILES[value])throw new Error(`Unknown role profile: ${value}`);CT.storage?.captureUndoPoint('career context');for (const [field,value] of Object.entries(update)) {const storageKey = STORAGE[field] || STORAGE[`${field}Role`];if(storageKey)localStorage.setItem(storageKey,value);}const at=new Date().toISOString();localStorage.setItem(CT.config.lastChangeKey,at);CT.events.emit('career-context-changed', context());CT.events.emit('state-saved',{key:'careerContext',at});return context();}
 
   function profileFit(cert, roleKey) {const role = ROLE_PROFILES[roleKey] || ROLE_PROFILES.generalIT;const comp = CT.competency.competencies(cert); let weighted=0,total=0;Object.entries(role.weights).forEach(([skill,w]) => { total += w; weighted += w * Number(comp[skill] || 0); });return total ? Math.round(weighted / total * 100) : 0;}
   function relevance10(cert, roleKey) { return Number((profileFit(cert,roleKey)/10).toFixed(1)); }

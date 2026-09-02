@@ -16,7 +16,7 @@
   });
 
   function currentGoal(){const key=localStorage.getItem(CT.config.goalKey)||'convergence';return GOALS[key]?key:'convergence';}
-  function setGoal(key){if(!GOALS[key])throw new Error(`Unknown goal profile: ${key}`);localStorage.setItem(CT.config.goalKey,key);CT.events.emit('goal-changed',{key,profile:GOALS[key]});return key;}
+  function setGoal(key){if(!GOALS[key])throw new Error(`Unknown goal profile: ${key}`);CT.storage?.captureUndoPoint('goal profile');localStorage.setItem(CT.config.goalKey,key);const at=new Date().toISOString();localStorage.setItem(CT.config.lastChangeKey,at);CT.events.emit('state-saved',{key:'goalProfile',at});CT.events.emit('goal-changed',{key,profile:GOALS[key]});return key;}
   function dependencies(cert,passes=state.passes){const ids=Array.isArray(cert?.deps)?cert.deps:[];const missing=ids.filter(id=>!passes?.[id]);return {ids,missing,satisfied:missing.length===0};}
   function directUnlocks(cert,passes=state.passes){return CERTS.filter(item=>!passes?.[item.id]&&(item.deps||[]).includes(cert.id));}
   function goalRelevance(cert,goalKey=currentGoal()){const fit=CT.competency.goalFit(cert,goalKey);return {matches:fit.matched,score:fit.score,percent:fit.score,competencies:fit.competencies};}
@@ -36,7 +36,7 @@
 
   function score(cert,options={}){
     const goalKey=options.goal||currentGoal(); const passes=options.passes||state.passes; const phase=CT.phases?.currentPhase?.()||1;
-    const dep=dependencies(cert,passes); const health=CT.dataHealth?.record(cert)||{confidence:70,freshness:'UNKNOWN',sourceLevel:'NONE'};
+    const dep=dependencies(cert,passes); const eligibility=CT.credentials.eligibility(cert,passes); const health=CT.dataHealth?.record(cert)||{confidence:70,freshness:'UNKNOWN',sourceLevel:'NONE'};
     const relevance=goalRelevance(cert,goalKey); const portfolio=CERTS.filter(c=>passes?.[c.id]&&c.id!==cert.id);
     const value=CT.marketValue?.marginalContribution(cert,portfolio)||null; const ready=CT.competency.readiness(cert,goalKey); const hours=Math.max(1,ready.remainingHours||CT.util.averageHours(cert));
     const effectivePhase=CT.store.effectivePhase(cert); const phaseDistance=Number(effectivePhase||6)-Number(phase||1); const inPath=CT.phases?.inPath?CT.phases.inPath(cert):!!state.myPath?.[cert.id];
@@ -56,7 +56,7 @@
       novelty:value?Math.max(-2,Math.min(3,Math.round((value.novelty-50)/20))):0,
       phase:phaseDistance===0?20:phaseDistance===1?8:phaseDistance<0?1:Math.max(-16,4-phaseDistance*5),
       path:inPath?18:-8,
-      employer:cert.employer?8:0,
+      employer:CT.credentials.record(cert).funding==='employer'?8:0,
       gateway:cert.gateway?8:0,
       effortFit:hours<=20?3:hours<=70?4:hours<=110?3:hours<=180?1:0,
       scheduled:state.exams?.[cert.id]?10:0,
@@ -65,22 +65,23 @@
     };
     let total=Object.values(breakdown).reduce((sum,n)=>sum+n,0); if(passes?.[cert.id])total=-9999;if(state.skipped?.[cert.id])total=-9998;
     const reasons=[];
+    if(!eligibility.eligible)reasons.push(eligibility.reason);
     if(career.M>=8&&career.K>=8)reasons.push(`Strong combined market and capability value (M${career.M}/K${career.K})`);
     else if(tandem.skew>=2)reasons.push(`Market access currently exceeds capability depth (M${career.M}/K${career.K}); pair this with practical work before a major role jump`);
     else if(tandem.skew<=-2)reasons.push(`Capability depth currently exceeds direct market signal (M${career.M}/K${career.K}); useful learning, but recruiter value may be weaker`);
     else reasons.push(`Market and capability value are closely aligned (M${career.M}/K${career.K})`);
     if(unlocks.length)reasons.push(`Structured rung unlocking ${unlocks.length} downstream credential${unlocks.length===1?'':'s'}`);
-    if(phaseDistance===0)reasons.push('Current-phase learning'); if(cert.employer)reasons.push('Employer-funded learning'); if(cert.gateway)reasons.push('Gateway certification');
+    if(phaseDistance===0)reasons.push('Current-phase learning'); if(CT.credentials.record(cert).funding==='employer')reasons.push('Employer funding confirmed in your settings'); if(cert.gateway)reasons.push('Gateway certification');
     reasons.push(portfolioClass.toLowerCase().replace(/\b\w/g,c=>c.toUpperCase()));
     if(career.C>=6)reasons.push(`Strong current-role relevance (C${career.C})`); if(career.N>=7)reasons.push(`Strong next-role leverage (N${career.N})`); if(career.E>=7)reasons.push(`Strong long-term alignment (E${career.E})`);
     if(experienceGate&&!experienceGate.ready)reasons.push(`Experience gate ${experienceGate.score}%: ${experienceGate.label} evidence is not mature enough yet`);else if(experienceGate?.ready)reasons.push(`Experience gate met: ${experienceGate.label}`);
     if(career.T==='T3')reasons.push('Experience-gated: keep as a future curriculum target until practical responsibility catches up');
     if(relevance.percent>=35)reasons.push(`${relevance.percent}% target-competency fit`); if(ready.score>=60)reasons.push(`${ready.score}% exam/study readiness`);
-    if(value?.contributionLabel)reasons.push(`Indicative career-value signal ${value.contributionLabel} after ${value.overlap}% portfolio overlap`);
+    if(value?.contributionLabel)reasons.push(`Uncalibrated planning signal; ${value.overlap}% portfolio overlap, not a salary uplift`);
     if(hours<=40)reasons.push(`~${Math.round(hours)}h remaining effort`);
     if(!dep.satisfied)reasons.push(`Blocked by: ${dep.missing.map(id=>CERTS.find(c=>c.id===id)?.name||id).join(', ')}`);
     if(['STALE','UNKNOWN'].includes(health.freshness))reasons.push('Verify certification data before booking');
-    return Object.freeze({cert,id:cert.id,name:cert.name,score:Math.round(total),available:dep.satisfied&&!passes?.[cert.id]&&!state.skipped?.[cert.id],dependencies:dep,directUnlocks:Object.freeze(unlocks.map(x=>x.id)),relevance,career,tandem,health,marketValue:value,readiness:ready,estimatedHours:hours,phaseDistance,effectivePhase,inPath,horizon,portfolioClass,experienceGate,breakdown:Object.freeze(breakdown),reasons:Object.freeze(reasons)});
+    return Object.freeze({cert,id:cert.id,name:cert.name,score:Math.round(total),available:eligibility.eligible&&dep.satisfied&&!passes?.[cert.id]&&!state.skipped?.[cert.id],dependencies:dep,directUnlocks:Object.freeze(unlocks.map(x=>x.id)),relevance,career,tandem,health,marketValue:value,readiness:ready,estimatedHours:hours,phaseDistance,effectivePhase,inPath,horizon,portfolioClass,experienceGate,breakdown:Object.freeze(breakdown),reasons:Object.freeze(reasons)});
   }
 
   function recommend(options={}){const limit=Number(options.limit||5);const includeBlocked=!!options.includeBlocked;const goal=options.goal||currentGoal();const passes=options.passes||state.passes;const horizon=options.horizon||'now';return CERTS.filter(cert=>!passes?.[cert.id]&&!state.skipped?.[cert.id]).map(cert=>score(cert,{goal,passes,horizon})).filter(item=>includeBlocked||item.available).sort((a,b)=>b.score-a.score||b.tandem.weaker-a.tandem.weaker||b.tandem.strength-a.tandem.strength||b.relevance.percent-a.relevance.percent||a.name.localeCompare(b.name)).slice(0,limit);}

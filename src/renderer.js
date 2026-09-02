@@ -2837,25 +2837,32 @@ function rerenderCurrentTab() {
 
 // ───── UPDATE HANDLERS ────────────────────────────────────────────────────
 function updateExam(id, date) {
+  const cert=CERTS.find(c=>c.id===id),CT=window.CertTrackerV3;
+  if(date&&(!CT.util.validIsoDate(date)||!CT.credentials.eligibility(cert).eligible)){showToast('Exam unavailable or date invalid — check the issuer requirements.');return;}
   if (date) state.exams[id] = date; else delete state.exams[id];
   save.exams();
   rerenderCurrentTab();
   updateHeaderCount();
 }
 function updatePass(id, date) {
+  const CT=window.CertTrackerV3;
+  if(date&&(!CT.util.validIsoDate(date)||date>CT.dates.localDateStamp())){showToast('Use a valid past or present exam pass date.');return;}
+  CT.storage.captureUndoPoint('exam pass');
   if (date) state.passes[id] = date; else delete state.passes[id];
   // Passing a cert removes any "skipped" status
-  if (date && state.skipped[id]) { delete state.skipped[id]; save.skipped(); }
+  if (date && state.skipped[id]) { delete state.skipped[id]; }
   const renewed = [];
   if (date && RENEWAL_CHAINS[id]) {
     RENEWAL_CHAINS[id].forEach(rid => {
       if (state.passes[rid]) {
-        state.passes[rid] = date;
+        state.customization.credentials=state.customization.credentials||{};
+        state.customization.credentials[rid]={...state.customization.credentials[rid],renewedAt:date};
         renewed.push(CERTS.find(c => c.id === rid)?.name);
       }
     });
   }
-  save.passes();
+  CT.storage.persistAll();
+  CT.events.emit('state-saved',{key:'passes',at:new Date().toISOString()});
   if (renewed.length > 0) showToast(`Auto-renewed: ${renewed.filter(Boolean).join(', ')}`);
   rerenderCurrentTab();
   updateHeaderCount();

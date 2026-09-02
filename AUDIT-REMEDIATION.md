@@ -1,0 +1,54 @@
+# Audit remediation — v4.9.0
+
+Implements the 2 September 2026 audit against v4.8.6. Stable certification and role IDs are retained; existing exam passes are not deleted. Backup schema is now 7.
+
+## Changes
+
+| Audit | Remediation |
+|---|---|
+| A01 eligibility | Shared eligibility policy excludes retired, in-development and unconfirmed credentials. Planner, recommendation engine, suggested learning and exam-date handler use it. Learning dependencies are separately labelled from formal prerequisites. |
+| A02 readiness | Dashboard uses the same 70-role evidence assessment as Career Options. Credential accumulation cannot create an APPLY NOW verdict. Practical scores no longer substitute knowledge for work evidence. |
+| A03 freshness | Failed refreshes retain the last successful timestamp and mark degradation. Provider outcomes, per-listing observation times, strict date normalisation and timeouts are explicit. Consumers suppress stale/degraded job matches. |
+| A04 Undo | Save wrappers read the previous persisted snapshot; explicit compound changes capture once. Separate rapid changes no longer collapse into the same throttled snapshot. |
+| A05 WebDAV | Unbound differing vaults cannot be pushed or smart-synced silently. Existing-vault writes require an exposed ETag, including force writes. Changing endpoints clears prior binding metadata. |
+| A06 backup | Current, next and target career roles now round-trip. Context and goal changes emit save events. Sync hashes exclude release metadata/timestamps and are recomputed on remote reads. |
+| A07 provenance | Source linkage remains 185/185; fact verification is counted per identity, availability, eligibility, blueprint, renewal and price field. Undated prices and unchecked fields receive no verification credit. Reachability warnings no longer print an all-sources-passed result. |
+| A08 empty path | Defaults apply only when no saved path exists. Empty and deliberately excluded paths survive reload; release additions are no longer silently selected. |
+| A09 integration | Shared role registry and capability-evidence records drive explorer and dashboard. Legacy career evidence is readable; new edits write canonical evidence and remain exportable. |
+| A10 monetary precision | No unsupported current-pay headline without usable salary samples. Remaining bands are explicitly illustrative; monetary uplift, signal-per-hour and ROI presentation removed from the market modal. |
+| A11 job coverage | Provider queries derive from the full role registry plus legacy queries. Alias-aware token matching, salary-period/currency requirements, conventional median and strict job dates are tested. |
+| A12 compatibility | Interest remains separate from evidence. Role-specific evidence has half the weight, family evidence half. Optional location/work-arrangement filters and self-recorded eligibility barriers are available. Scores are not hiring probabilities. |
+| A13 facts/lifecycle | Corrected PCPP2 validity/availability, CJCA name, CISSP Associate terminology and CKS prerequisite wording. Award confirmation, issuer expiry and renewal inputs are available. CNCF CARE dates are modelled; original pass dates are preserved. |
+| A14 costs | Employer funding requires user confirmation. Unknown costs are not silently zero. Awards & funding accepts a user-verified total quote. Study hours and catalogue costs remain estimates. |
+| A15 validation | Nested career preferences, eligibility, credential records, evidence IDs, dates and labels are validated. Invalid calendar dates do not roll into the next month. |
+| A16 loading | Local dashboard renders before the market request finishes. Feed timeout/cache TTL and bounded service-worker network-first fallback prevent indefinite waits. Career search is debounced. Existing flat/opaque mobile header and Dashboard-only pathway placement retained. |
+| A17 tests | New isolated audit-regression suite covers the reproduced defects, plus renewal preservation, encryption, salary units, shared evidence and outages. Browser suite adds new contracts. |
+| A18 reminders | Correct notification asset path; award controls explain that reminders run when the app opens, not independently in the background. |
+
+## Migration and use
+
+- Export a backup before upgrading or resolving a sync conflict.
+- Existing passes are retained. For CISSP/CCSP and application-based awards, confirm the full award in Today → Awards & funding; exam pass alone no longer counts as an active market credential.
+- Older backups have no career-context field. Restoring them preserves this device's existing context rather than inventing a remote value.
+- Digest semantics have changed. A legacy vault can require explicit reconciliation/Pull before the first new-version sync; do not force-push without first checking both copies. The backup and Undo paths remain available.
+- The old 94% number was a provenance heuristic, not factual accuracy. The new, much lower number counts dated checks of individual fact fields. It must not be increased by simply redating the catalogue.
+- Unknown-cost certificates require a verified cost or confirmed employer funding before inclusion in a costed plan. Catalogue amounts are not a checkout quote and may omit optional materials or travel.
+
+## Verification and honest limits
+
+The local npm test includes the audit regressions and the existing structural, model, privacy, security, lifecycle and compatibility checks. Real-engine CI is required before merging this release. No real private vault is used by tests.
+
+The following are not claimed complete:
+
+1. **Working live-provider access.** The audited published feed had no jobs, the no-key provider was unavailable, and Adzuna credentials were not configured. This release fixes failure semantics, not account provisioning. Configure a working provider server-side; never put provider secrets into the public site.
+2. **Exhaustive issuer verification.** All records retain sources, but every price/blueprint/eligibility statement has not been independently verified. The UI now exposes this instead of implying otherwise. SecOT+ booking availability remains unconfirmed and is therefore blocked.
+3. **Physical iPhone acceptance.** Automated browser checks are not a substitute for testing the installed PWA and Safari on the affected phone, including cold load, scroll, rotation and modal focus.
+4. **Empirical career calibration.** Broad coverage and transparent heuristics are implemented; hiring probability and salary uplift are not scientifically validated outputs.
+
+## Issuer evidence used for corrections
+
+- [Python Institute PCPP2](https://pythoninstitute.org/pcpp2): in development, five-year validity and no formal prerequisites.
+- [CNCF CKS / CKA CARE update](https://www.cncf.io/blog/2026/06/17/expanding-care-passing-cks-can-now-extend-your-cka-certification/): effective 18 June 2026, including previously expired CKA.
+- [ISC2 Associate pathway](https://www.isc2.org/certifications/associate) and [mark-use policy](https://www.isc2.org/policies-procedures/member-policies): exam pass and full certification are distinct.
+- [HTB CJCA](https://academy.hackthebox.com/preview/certifications/htb-certified-junior-cybersecurity-associate): correct credential title.
+- [JSNAD retirement](https://training.linuxfoundation.org/jsnad-cert-inactive/) and [JSNSD retirement](https://training.linuxfoundation.org/jsnsd-cert-inactive/): no longer available to new candidates.

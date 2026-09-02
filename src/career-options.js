@@ -100,32 +100,34 @@
   const LEVELS=Object.freeze({UNKNOWN:0,NONE:0,LAB:25,USED:55,DESIGNED:80,OWNED:100});
   const byId=id=>ROLES.find(r=>r.id===id);
   function prefs(){const p=state.customization?.careerOptions;return p&&typeof p==='object'?p:{};}
-  function update(patch){state.customization={...state.customization,careerOptions:{...prefs(),...patch}};save.customization();CT.events.emit('career-options-changed',{});CT.events.emit('state-saved',{key:'customization',at:new Date().toISOString()});}
+  function update(patch){const next={...prefs(),...patch};const validation=CT.storage?.validateBackup({version:CT.version.backup,customization:{careerOptions:next}});if(validation&&!validation.ok)throw new Error(validation.errors.join(' '));CT.storage?.captureUndoPoint('career preferences');state.customization={...state.customization,careerOptions:{...prefs(),...patch}};if(patch.evidence&&CT.storage){for(const [id,level]of Object.entries(patch.evidence)){if(level==='UNKNOWN')delete state.capabilityEvidence[id];else state.capabilityEvidence[id]={...state.capabilityEvidence[id],level,updatedAt:new Date().toISOString()};}CT.storage.persistAll();}else save.customization();CT.events.emit('career-options-changed',{});CT.events.emit('state-saved',{key:'customization',at:new Date().toISOString()});}
   function requirements(role){return [...FAMILIES[role.family].tasks.map(([id,label])=>({id,label})),{id:`role:${role.id}`,label:role.mission}].map(r=>({...r,target:role.stage===1?'LAB':role.stage===3?'DESIGNED':'USED'}));}
-  function evidenceLevel(id,p=prefs()){const own=p.evidence?.[id];if(Object.hasOwn(LEVELS,own))return own;const shared=state.capabilityEvidence?.[id]?.level;return Object.hasOwn(LEVELS,shared)?shared:'UNKNOWN';}
+  function evidenceLevel(id,p=prefs()){const shared=state.capabilityEvidence?.[id]?.level;const own=p.evidence?.[id];return Object.hasOwn(LEVELS,shared)?shared:Object.hasOwn(LEVELS,own)?own:'UNKNOWN';}
   function assess(role,p=prefs()){
     const f=FAMILIES[role.family],background=byId(p.background),ctx=CT.careerFramework.context();
     const weights=background?Object.fromEntries(FAMILIES[background.family].skills.map(k=>[k,1])):CT.careerFramework.ROLE_PROFILES[ctx.current]?.weights||{};
     const overlap=Math.round(f.skills.reduce((s,k)=>s+Math.min(1,weights[k]||0),0)/f.skills.length*100);
-    const certs=role.certs.map(id=>CERTS.find(c=>c.id===id)).filter(Boolean),passed=certs.filter(c=>state.passes?.[c.id]),credential=certs.length?Math.round(passed.length/certs.length*100):0;
+    const certs=role.certs.map(id=>CERTS.find(c=>c.id===id)).filter(Boolean),passed=certs.filter(c=>CT.credentials?CT.credentials.active(c):state.passes?.[c.id]),credential=certs.length?Math.round(passed.length/certs.length*100):0;
     const vote=p.interests?.[role.id]??p.families?.[role.family],interest=[0,50,100].includes(vote)?vote:null;
     const compatibility=Math.round(interest===null?overlap*.75+credential*.25:overlap*.6+credential*.2+interest*.2);
     const req=requirements(role).map(r=>{const level=evidenceLevel(r.id,p);return {...r,level,coverage:Math.min(100,LEVELS[level]/LEVELS[r.target]*100)};});
-    const recorded=req.filter(r=>r.level!=='UNKNOWN').length,readiness=recorded?Math.round(req.reduce((s,r)=>s+r.coverage,0)/req.length):null;
-    const gaps=req.filter(r=>r.coverage<100),status=!recorded?'Not assessed':!gaps.length?'Compare vacancies':readiness>=60?'Close evidence gaps':readiness>=25?'Build next':'Explore / build evidence';
+    const recorded=req.filter(r=>r.level!=='UNKNOWN').length,readiness=recorded?Math.round(req.reduce((s,r)=>s+r.coverage*(r.id.startsWith('role:')?.5:1/6),0)):null;
+    const gaps=req.filter(r=>r.coverage<100),status=p.eligibility?.[role.id]==='ineligible'?'Eligibility barrier':!recorded?'Not assessed':!gaps.length?'Compare vacancies':readiness>=60?'Close evidence gaps':readiness>=25?'Build next':'Explore / build evidence';
     return {role,overlap,credential,interest,compatibility,provisional:interest===null,readiness,recorded,requirements:req,gaps,status,passed:passed.length,totalCerts:certs.length,shortlisted:!!p.shortlist?.[role.id],background:background?.title||CT.careerFramework.ROLE_PROFILES[ctx.current]?.label||'Unspecified'};
   }
   const normal=value=>String(value||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+  const ALIASES={'career-gis':['gis analyst','geospatial analyst','geographic information systems analyst'],'pv-a-iam':['iam engineer','identity engineer','identity and access management engineer'],'career-support':['it support engineer','systems support engineer','technical support engineer'],'pv-c-se':['cybersecurity engineer','cyber security engineer']};
+  function matchesTitle(role,value){const text=' '+normal(value)+' ';return [role.title,...(ALIASES[role.id]||[])].some(alias=>{const tokens=normal(alias).split(' ').filter(x=>!['and','the'].includes(x));return tokens.every(token=>text.includes(' '+token+' '));});}
   function market(role,feed,now=Date.now()){
-    const age=now-Date.parse(feed?.fetchedAt),fresh=Number.isFinite(age)&&age>=-60000&&age<=15*60000&&!feed?.refreshError&&['live','ready','ok'].includes(feed?.status);
+    const age=now-Date.parse(feed?.lastSuccessfulFetchAt||feed?.fetchedAt),fresh=Number.isFinite(age)&&age>=-60000&&age<=15*60000&&!feed?.refreshError&&['live','ready','ok'].includes(feed?.status);
     const title=normal(role.title),seen=new Set();
-    const jobs=(feed?.jobs||[]).filter(j=>{const key=j.id||j.url;if(!key||seen.has(key))return false;const created=Date.parse(j.created),recent=Number.isFinite(created)&&now-created>=-60000&&now-created<=30*86400000;if(!recent||!normal(j.title).includes(title))return false;seen.add(key);return true;});
+    const jobs=(feed?.jobs||[]).filter(j=>{const key=j.id||j.url;if(!key||seen.has(key))return false;const created=Date.parse(j.created),recent=Number.isFinite(created)&&now-created>=-60000&&now-created<=30*86400000;const p=prefs(),locationOk=!p.location||normal(j.location).includes(normal(p.location)),modeOk=!p.workMode||p.workMode==='any'||j.workMode===p.workMode||p.workMode==='remote'&&j.remote===true;if(!locationOk||!modeOk||!recent||!matchesTitle(role,j.title))return false;seen.add(key);return true;});
     const salaries=jobs.map(j=>{const lo=Number(j.salaryMin),hi=Number(j.salaryMax);return lo>0&&hi>=lo&&hi<300000&&(j.currency==='GBP'||feed?.country==='gb')&&(j.salaryPeriod==='year'||j.salaryPeriod==='annual')?(lo+hi)/2:null;}).filter(Boolean).sort((a,b)=>a-b);
-    return {usable:fresh,count:fresh?jobs.length:null,jobs:fresh?jobs:[],label:!fresh?'Market evidence unavailable':jobs.length?'Observed in this feed sample':'No matching sample — demand unknown',salary:fresh&&salaries.length>=3?Math.round(salaries[Math.floor(salaries.length/2)]):null,salarySamples:salaries.length,checkedAt:feed?.fetchedAt||null};
+    return {usable:fresh,count:fresh?jobs.length:null,jobs:fresh?jobs:[],label:!fresh?'Market evidence unavailable':jobs.length?'Observed in this feed sample':'No matching sample — demand unknown',salary:fresh&&salaries.length>=3?Math.round((salaries[Math.floor((salaries.length-1)/2)]+salaries[Math.floor(salaries.length/2)])/2):null,salarySamples:salaries.length,checkedAt:feed?.fetchedAt||null};
   }
-  function learning(role){return role.certs.map(id=>CERTS.find(c=>c.id===id)).filter(c=>c&&!['RETIRED','IN_DEVELOPMENT'].includes(CT.sourceRegistry?.[c.id]?.credentialStatus));}
+  function learning(role){return role.certs.map(id=>CERTS.find(c=>c.id===id)).filter(c=>c&&(CT.credentials?CT.credentials.availability(c).eligible:!['RETIRED','IN_DEVELOPMENT','UNCONFIRMED'].includes(CT.sourceRegistry?.[c.id]?.credentialStatus)));}
   function options({family='all',search='',shortlist=false,sort='compatibility'}={}){const p=prefs(),q=normal(search);return ROLES.map(r=>assess(r,p)).filter(x=>(family==='all'||x.role.family===family)&&(!shortlist||x.shortlisted)&&(!q||normal(`${x.role.title} ${x.role.mission} ${FAMILIES[x.role.family].label}`).includes(q))).sort((a,b)=>sort==='title'?a.role.title.localeCompare(b.role.title):sort==='readiness'?(b.readiness??-1)-(a.readiness??-1)||b.compatibility-a.compatibility:b.compatibility-a.compatibility||(b.readiness??-1)-(a.readiness??-1));}
-  CT.careerOptions=Object.freeze({FAMILIES,ROLES,CONTEXTS,LEVELS,byId,prefs,update,requirements,evidenceLevel,assess,market,learning,options});
+  CT.careerOptions=Object.freeze({FAMILIES,ROLES,CONTEXTS,LEVELS,byId,prefs,update,requirements,evidenceLevel,assess,market,matchesTitle,learning,options});
   // Normalise every filter label, keeping all saved IDs and legacy memberships.
   const original=global.getFilterDefs;
   if(original)global.getFilterDefs=function(){const defs=original(),all=[...defs.filters,...Object.values(defs.filterGroups).flatMap(g=>g.chips||[])],prior=new Map(all.map(x=>[x.id,x]));

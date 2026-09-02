@@ -15,7 +15,7 @@
   }
 
   function horizonHours(cfg) {if (!cfg.targetDate || !CT.util.validIsoDate(cfg.targetDate)) return Infinity;const days = Math.max(0, CT.dates.daysUntil(cfg.targetDate));return Math.max(0, days/7*cfg.weeklyHours);}
-  function effectiveCost(cert) {return cert.employer ? 0 : Math.max(0,Number(cert.costNum||0));}
+  function effectiveCost(cert) {const r=CT.credentials.record(cert);return r.funding==='employer'?0:r.cost!=null?Number(r.cost):cert.free?0:cert.costNum>0?Number(cert.costNum):Infinity;}
 
   function plan(options={}) {
     const cfg=settings(options); const goal=options.goal || CT.recommendations.currentGoal();
@@ -23,7 +23,7 @@
     const chosen=[]; let usedHours=0,usedBudget=0; const maxHours=horizonHours(cfg); let passes={...(state.passes||{})};
 
     for (let step=0;step<cfg.maxCerts;step++) {
-      const pool=CERTS.filter(cert=>!completed.has(cert.id)&&!state.skipped?.[cert.id]&&(!state.myPath||state.myPath[cert.id]));
+      const pool=CERTS.filter(cert=>CT.credentials.eligibility(cert,passes).eligible&&!completed.has(cert.id)&&!state.skipped?.[cert.id]&&(!state.myPath||state.myPath[cert.id]));
       const feasible=pool.filter(cert=>(cert.deps||[]).every(id=>completed.has(id)));
       const ranked=feasible.map(cert=>{
         const rec=CT.recommendations.score(cert,{goal,passes,horizon:'now'});
@@ -41,7 +41,7 @@
         // determine sequencing among otherwise strong dual-pillar options.
         const score=rec.score + tandemWeaker*4 + tandemStrength*2 + coverage*.30 + ready.score*.20 + curriculum*.50;
         return {cert,rec,marginal,ready,hours,cost,score,market,knowledge,tandemWeaker,tandemStrength,curriculum};
-      }).filter(x=>(!x.rec.experienceGate||x.rec.experienceGate.ready||x.rec.career.T!=='T3')&&usedHours+x.hours<=maxHours&&usedBudget+x.cost<=cfg.budget)
+      }).filter(x=>Number.isFinite(x.cost)&&(!x.rec.experienceGate||x.rec.experienceGate.ready||x.rec.career.T!=='T3')&&usedHours+x.hours<=maxHours&&usedBudget+x.cost<=cfg.budget)
         .sort((a,b)=>b.score-a.score||b.tandemWeaker-a.tandemWeaker||b.tandemStrength-a.tandemStrength||b.curriculum-a.curriculum||a.hours-b.hours||a.cost-b.cost);
       if (!ranked.length) break;
       const pick=ranked[0]; completed.add(pick.cert.id); passes[pick.cert.id]='2099-01-01'; usedHours+=pick.hours; usedBudget+=pick.cost;
@@ -53,7 +53,7 @@
     const simulated={...(state.passes||{})}; chosen.forEach(item=>{simulated[item.id]='2099-01-01';});
     const projected=CT.competency.goalCoverage(goal,simulated).score;
     const blocked=CERTS.filter(cert=>state.myPath?.[cert.id]&&!state.passes?.[cert.id]&&!state.skipped?.[cert.id]&&(cert.deps||[]).some(id=>!completed.has(id))).length;
-    return Object.freeze({ goal,goalLabel:CT.competency.GOALS[goal]?.label||goal,settings:cfg,sequence:Object.freeze(chosen),usedHours:Math.round(usedHours),usedBudget:Math.round(usedBudget),baselineCoverage:baseline,projectedCoverage:projected,coverageGain:projected-baseline,blocked,withinTarget:usedHours<=maxHours&&usedBudget<=cfg.budget,optimisation:'dual-pillar' });
+    return Object.freeze({ unknownCosts:CERTS.filter(c=>state.myPath?.[c.id]&&!Number.isFinite(effectiveCost(c))).map(c=>c.id),costBasis:'Indicative exam-only budget; verify regional prices and required training. Employer funding must be confirmed per credential.',goal,goalLabel:CT.competency.GOALS[goal]?.label||goal,settings:cfg,sequence:Object.freeze(chosen),usedHours:Math.round(usedHours),usedBudget:Math.round(usedBudget),baselineCoverage:baseline,projectedCoverage:projected,coverageGain:projected-baseline,blocked,withinTarget:usedHours<=maxHours&&usedBudget<=cfg.budget,optimisation:'dual-pillar' });
   }
 
   function saveSettings(next) { return CT.store.setPlanner(settings(next)); }

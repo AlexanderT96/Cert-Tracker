@@ -57,7 +57,7 @@
     const meta=options.filterId?{id:options.filterId,label:options.label||''}:activeFilterMeta();
     const ranked=rankRows(candidates,{...options,filterId:meta.id,label:meta.label});
     const available=ranked.filter(item=>item.available&&!item.cert.pending);
-    return (available[0]||ranked.find(item=>item.available)||ranked[0]||null)?.cert||null;
+    return (available[0]||ranked.find(item=>item.available)||null)?.cert||null;
   }
 
   // Function name retained for compatibility with existing callers; semantics are now
