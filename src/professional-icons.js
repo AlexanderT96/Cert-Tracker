@@ -15,6 +15,7 @@
   const emojiRe=/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu;
   const legacySymbols=/[⌘★☆◆◇●○■□▲△▼▽▶▷◀◁↩⊘⠿]/g;
   const TIERS=['bronze','silver','gold','platinum','diamond'];
+  const RANK_TO_TIER=Object.freeze({S:'diamond',A:'platinum',B:'gold',C:'silver',D:'bronze'});
 
   function iconSpan(name){const span=document.createElement('span');span.className='ct-line-icon';span.innerHTML=ICONS[name]||ICONS.info;return span;}
   function tierFromMedallion(old){for(const tier of TIERS)if(old.classList.contains(`cbm-tier-${tier}`))return tier;return 'bronze';}
@@ -58,6 +59,42 @@
     });
   }
 
+  function matching(root,selector){
+    const nodes=[];
+    if(root.matches?.(selector))nodes.push(root);
+    root.querySelectorAll?.(selector).forEach(node=>nodes.push(node));
+    return nodes;
+  }
+
+  function tierFromCertRow(row){
+    for(const [rank,tier] of Object.entries(RANK_TO_TIER))if(row.querySelector(`.signature-tier-${rank}`))return tier;
+    return 'bronze';
+  }
+
+  // Every certification keeps its ROI tier visible, including unearned rows. This
+  // is presentational only: completion, expansion, drag and learning links remain
+  // bound to the original controls and data model.
+  function decorateCertRows(root=document){
+    matching(root,'.cert-row').forEach(row=>{
+      const summary=row.querySelector('.cert-summary');
+      if(!summary||summary.querySelector('.ct-credential-mark'))return;
+      const mark=credentialMark(tierFromCertRow(row));
+      const status=summary.querySelector('.cert-status-dot,.drag-handle');
+      if(status)status.insertAdjacentElement('afterend',mark);else summary.prepend(mark);
+    });
+  }
+
+  function decorateMedalShelf(root=document){
+    matching(root,'.trophy-row').forEach(row=>{
+      const old=row.querySelector('.trophy-ico');
+      if(!old||old.classList.contains('ct-credential-mark'))return;
+      const label=(row.querySelector('.trophy-name')?.textContent||'bronze').trim().toLowerCase();
+      const mark=credentialMark(TIERS.includes(label)?label:'bronze');
+      mark.classList.add('trophy-ico');
+      old.replaceWith(mark);
+    });
+  }
+
   function labelLauncher(root=document){
     const btn=root.querySelector('#ct3-launcher');
     if(btn&&btn.textContent!=='Today'){
@@ -88,9 +125,9 @@
     else root.querySelectorAll?.('.header,.tabs,.content,.ct-command-dock').forEach(cleanElementText);
   }
 
-  function apply(root=document){labelLauncher(root);replaceMedallions(root);bannerIcons(root);stripDecorativeSymbols(root);}
-  function init(){apply();let queued=false;new MutationObserver(mutations=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;for(const m of mutations){for(const n of m.addedNodes){if(n.nodeType===1)apply(n);}}labelLauncher();replaceMedallions();bannerIcons();stripDecorativeSymbols();});}).observe(document.body,{childList:true,subtree:true});}
+  function apply(root=document){labelLauncher(root);replaceMedallions(root);decorateCertRows(root);decorateMedalShelf(root);bannerIcons(root);stripDecorativeSymbols(root);}
+  function init(){apply();let queued=false;new MutationObserver(mutations=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;for(const m of mutations){for(const n of m.addedNodes){if(n.nodeType===1)apply(n);}}labelLauncher();replaceMedallions();decorateCertRows();decorateMedalShelf();bannerIcons();stripDecorativeSymbols();});}).observe(document.body,{childList:true,subtree:true});}
 
-  CT.professionalIcons=Object.freeze({apply,icons:ICONS,tiers:Object.freeze([...TIERS])});
+  CT.professionalIcons=Object.freeze({apply,icons:ICONS,tiers:Object.freeze([...TIERS]),rankToTier:RANK_TO_TIER});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })(window);

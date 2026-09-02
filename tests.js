@@ -3,7 +3,7 @@
   async function test(name,fn){try{const value=await fn();const ok=value!==false;results.push({name,status:ok?'PASS':'FAIL',detail:ok?'':'returned false'});}catch(error){results.push({name,status:'FAIL',detail:error?.message||String(error)});}}
   function skip(name,detail){results.push({name,status:'SKIP',detail});}
 
-  await test('Application core loads',()=>window.CertTrackerV3?.version?.app==='4.3.0');
+  await test('Application core loads',()=>window.CertTrackerV3?.version?.app==='4.4.0');
   await test('Renderer state is provided by state-core',()=>window.CertTrackerState?.state===state&&SK.myPath==='ct4-mypath'&&typeof save.passes==='function'&&typeof save.capabilityEvidence==='function'&&typeof save.customization==='function');
   await test('Curated path is separate and frozen',()=>Array.isArray(window.CERT_TRACKER_DEFAULT_PATH)&&Object.isFrozen(window.CERT_TRACKER_DEFAULT_PATH)&&Array.isArray(window.CERT_TRACKER_DEFAULT_ADDITIONS));
   await test('Certification schema has no hard errors',()=>CertTrackerV3.validation.diagnostics.errors.length===0);
@@ -67,4 +67,3 @@
   const list=document.getElementById('results');results.forEach(result=>{const li=document.createElement('li');li.className=result.status.toLowerCase();li.textContent=`${result.status} — ${result.name}${result.detail?` (${result.detail})`:''}`;list.appendChild(li);});
   const failed=results.filter(r=>r.status==='FAIL').length,skipped=results.filter(r=>r.status==='SKIP').length;const summary=document.getElementById('summary');summary.className=failed?'fail':'pass';summary.textContent=failed?`${failed} of ${results.length} checks failed.`:`All ${results.length-skipped} executed checks passed${skipped?` (${skipped} skipped)`:''}.`;console.table(results);
 })();
-

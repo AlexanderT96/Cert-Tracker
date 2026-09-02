@@ -566,7 +566,7 @@ function renderDashboard() {
   const _tc = {}; _TIERS.forEach(t => _tc[t] = { e: 0, n: 0 });
   scopeCerts.forEach(c => { const t = medalTier(c); if (_tc[t]) { _tc[t].n++; if (state.passes[c.id]) _tc[t].e++; } });
   const trophyRows = _TIERS.map(t => { const m = _TM[t], x = _tc[t]; const pct = x.n ? Math.round(x.e / x.n * 100) : 0;
-    return `<div class="trophy-row"><span class="trophy-ico">${m[0]}</span><span class="trophy-name" style="color:${m[1] === 'Silver' || m[1] === 'Platinum' ? '#d4d1e8' : m[2]}">${m[1]}</span><span class="trophy-bar"><span class="trophy-bar-fill" style="width:${pct}%;background:${m[2]}"></span></span><span class="trophy-count">${x.e}<span style="opacity:.5">/${x.n}</span></span></div>`;
+    return `<div class="trophy-row"><span class="trophy-ico">${m[0]}</span><span class="trophy-name" style="color:${m[1] === 'Silver' || m[1] === 'Platinum' ? '#c0d7dc' : m[2]}">${m[1]}</span><span class="trophy-bar"><span class="trophy-bar-fill" style="width:${pct}%;background:${m[2]}"></span></span><span class="trophy-count">${x.e}<span style="opacity:.5">/${x.n}</span></span></div>`;
   }).join('');
   // ── Funding Exposure (dim 2): self-funded £ across unpassed path certs ──
   const selfFunded = CERTS.filter(c => state.myPath[c.id] && !state.passes[c.id] && !state.skipped[c.id] && !c.employer && c.costNum > 0);
@@ -605,7 +605,7 @@ function renderDashboard() {
 
   const trophyCard = `
       <div class="card">
-        <div class="card-title"><span class="dot" style="background:#c084fc"></span>Medal Shelf <span style="font-weight:500;color:var(--dim);text-transform:none;letter-spacing:0">· tier = ROI rank</span></div>
+        <div class="card-title"><span class="dot" style="background:#00cdb7"></span>Medal Shelf <span style="font-weight:500;color:var(--dim);text-transform:none;letter-spacing:0">· tier = ROI rank</span></div>
         ${trophyRows}
       </div>`;
 
@@ -981,30 +981,30 @@ function renderStrategy() {
         
         <div style="background: linear-gradient(135deg, rgba(62, 230, 160, 0.08), rgba(62, 230, 160, 0.04)); border-left: 3px solid #34d399; padding: 12px 14px; margin: 12px 0; border-radius: 6px; font-size: 11px; line-height: 1.6;">
           <strong style="color: #8ef5c9; font-size: 12.5px;">💰 ROI Optimisation — maximise return, minimise spend</strong>
-          <p style="margin: 6px 0; color: #d4d1e8;">The path costs ~£32.5k of exam fees over the ~10-year horizon — but with the right approach, the <em>real</em> spend is far lower and the early return is far higher. Four levers:</p>
+          <p style="margin: 6px 0; color: #c0d7dc;">The path costs ~£32.5k of exam fees over the ~10-year horizon — but with the right approach, the <em>real</em> spend is far lower and the early return is far higher. Four levers:</p>
 
           <p style="margin: 8px 0 3px; color: #8ef5c9;"><strong>① Free training is the biggest cost lever (cuts ~80% of effective cost):</strong></p>
-          <p style="margin: 2px 0 6px; color: #d4d1e8;">Almost every cert here has a 100% free study route — the exam fee is the only unavoidable cost. <strong>Microsoft Learn</strong> (all SC-/AZ-/AI- certs), <strong>CrowdStrike University</strong> (free for partners), <strong>AWS Skill Builder</strong>, <strong>Palo Alto Beacon</strong> (free for partners), <strong>Professor Messer</strong> (all CompTIA). Never pay for a training course where a free path exists — it rarely changes pass rates.</p>
+          <p style="margin: 2px 0 6px; color: #c0d7dc;">Almost every cert here has a 100% free study route — the exam fee is the only unavoidable cost. <strong>Microsoft Learn</strong> (all SC-/AZ-/AI- certs), <strong>CrowdStrike University</strong> (free for partners), <strong>AWS Skill Builder</strong>, <strong>Palo Alto Beacon</strong> (free for partners), <strong>Professor Messer</strong> (all CompTIA). Never pay for a training course where a free path exists — it rarely changes pass rates.</p>
 
           <p style="margin: 8px 0 3px; color: #8ef5c9;"><strong>② Front-load the quick wins (highest efficiency — do Year 1-2):</strong></p>
-          <ul style="margin: 2px 0 6px 16px; padding: 0; color: #d4d1e8;">
+          <ul style="margin: 2px 0 6px 16px; padding: 0; color: #c0d7dc;">
             <li><strong>Employer-funded (£0 to the candidate):</strong> LCA · LCP · LCDA · MCIT · MCIE · MCDE · ACP · IEC 62443-CFS — the relevant organisation pays for these as an Axis/Milestone/LenelS2 partner. Pure ROI: career value at zero personal cost. Knock these out first.</li>
             <li><strong>Cheap + high-value (£89-130, free study):</strong> AZ-900 · AI-900 · Security+ (Professor Messer) · Palo Alto Practitioner (free Beacon) · ISA/IEC 62443 Fundamentals.</li>
           </ul>
 
           <p style="margin: 8px 0 3px; color: #8ef5c9;"><strong>③ Budget for the expensive essentials (low efficiency, but non-negotiable):</strong></p>
-          <p style="margin: 2px 0 6px; color: #d4d1e8;">CISSP (£590) · SABSA (£2k) · ISSAP (£475) · CCSP (£480) · ISO 27001 LI (£800) · ESDP (£240). These score "low" on cost-efficiency only because they're expensive and slow — but they're the credentials that unlock Senior/Director roles. They're not optional; just <em>plan and time</em> them (one major cert per 6-9 months) and seek employer funding where clawback terms are acceptable.</p>
+          <p style="margin: 2px 0 6px; color: #c0d7dc;">CISSP (£590) · SABSA (£2k) · ISSAP (£475) · CCSP (£480) · ISO 27001 LI (£800) · ESDP (£240). These score "low" on cost-efficiency only because they're expensive and slow — but they're the credentials that unlock Senior/Director roles. They're not optional; just <em>plan and time</em> them (one major cert per 6-9 months) and seek employer funding where clawback terms are acceptable.</p>
 
           <p style="margin: 8px 0 3px; color: #8ef5c9;"><strong>④ The one genuine reconsider:</strong></p>
-          <p style="margin: 2px 0 0; color: #d4d1e8;"><strong>GICSP via SANS (~£7,800)</strong> is the single biggest line item. The <strong>exam-only challenge route (~£1,300)</strong> cuts it dramatically if the candidate self-study with the ISA/IEC 62443 materials and the OT lab — strongly worth weighing before committing to the full SANS course. Saving here ≈ £6,500.</p>
+          <p style="margin: 2px 0 0; color: #c0d7dc;"><strong>GICSP via SANS (~£7,800)</strong> is the single biggest line item. The <strong>exam-only challenge route (~£1,300)</strong> cuts it dramatically if the candidate self-study with the ISA/IEC 62443 materials and the OT lab — strongly worth weighing before committing to the full SANS course. Saving here ≈ £6,500.</p>
 
-          <p style="margin: 8px 0 0; color: #d4d1e8;"><strong style="color: #8ef5c9;">Net effect:</strong> Of the ~£32.5k headline — most certs have free training (Microsoft Learn, vendor academies), employer covers the physical-vendor certs (£0 to the candidate), and the GICSP exam-only route saves ~£6,500. Realistic personal exam-fee spend over the ~10-year horizon: <strong>~£22-26k (~£2,200-2,600/year)</strong> — and the highest-value certs come early, so the earning uplift compounds across the whole decade.</p>
+          <p style="margin: 8px 0 0; color: #c0d7dc;"><strong style="color: #8ef5c9;">Net effect:</strong> Of the ~£32.5k headline — most certs have free training (Microsoft Learn, vendor academies), employer covers the physical-vendor certs (£0 to the candidate), and the GICSP exam-only route saves ~£6,500. Realistic personal exam-fee spend over the ~10-year horizon: <strong>~£22-26k (~£2,200-2,600/year)</strong> — and the highest-value certs come early, so the earning uplift compounds across the whole decade.</p>
         </div>
         <div class="tier-block tier-junior">
           <div class="tier-header"><span class="tier-icon">🚀</span><strong>Junior Tier</strong> · Years 1-3 · <span class="tier-pay">£30-55k</span> · 25 certs</div>
           <div class="tier-focus">Foundation across both layers + AI literacy + UK project methodology</div>
-        <div style="background: rgba(160, 160, 200, 0.07); border-left: 3px solid #a0a0c8; padding: 9px 12px; margin: 8px 0 12px; border-radius: 6px; font-size: 10.5px; line-height: 1.55; color: #d4d1e8;">
-          <strong style="color: #d4d1e8;">📊 Wage brackets — calibrated to 2026 UK market data.</strong> Junior £30-55k reflects an entry-level systems-engineer start (UK security-systems engineer averages ~£34k; junior cyber £30-50k). Senior £60-135k = mid-to-senior security architect (UK avg £66-88k; London cyber architect £95-130k). Director £120-400k+ = head-of-security/CISO base (£110-185k) rising to Big-4 partner / independent specialist (day rates £900-2,500 = £180-450k annualised). <em>The video-analytics + GIS convergence premium is a <em>benched</em> upside — if ever un-benched, it pushes the ceiling toward £400-500k+ — treat that as the scarce-specialist case, not the baseline.</em>
+        <div style="background: rgba(160, 160, 200, 0.07); border-left: 3px solid #7ea5b0; padding: 9px 12px; margin: 8px 0 12px; border-radius: 6px; font-size: 10.5px; line-height: 1.55; color: #c0d7dc;">
+          <strong style="color: #c0d7dc;">📊 Wage brackets — calibrated to 2026 UK market data.</strong> Junior £30-55k reflects an entry-level systems-engineer start (UK security-systems engineer averages ~£34k; junior cyber £30-50k). Senior £60-135k = mid-to-senior security architect (UK avg £66-88k; London cyber architect £95-130k). Director £120-400k+ = head-of-security/CISO base (£110-185k) rising to Big-4 partner / independent specialist (day rates £900-2,500 = £180-450k annualised). <em>The video-analytics + GIS convergence premium is a <em>benched</em> upside — if ever un-benched, it pushes the ceiling toward £400-500k+ — treat that as the scarce-specialist case, not the baseline.</em>
         </div>
           <div class="tier-certs">
             <span class="tier-group"><strong>Physical:</strong> MCIT · LCA · LCP · ACP</span>
@@ -1027,7 +1027,7 @@ function renderStrategy() {
             <span class="tier-group"><strong>Cloud:</strong> CCSP · CCSK · AWS SAA</span>
             <span class="tier-group"><strong>Physical depth:</strong> LCE · LCDA · MCIE · <strong>MCDE</strong> · IEC 62443 CFS · CDS · GICSP</span>
             <span class="tier-group"><strong>CrowdStrike (vendor-agnostic depth):</strong> Falcon Admin+Responder · Hunter · Identity · Cloud</span>
-            <span class="tier-group"><strong>Palo Alto (vendor-agnostic depth):</strong> Practitioner · NetSec Pro · NGFW Eng · Cloud Sec Pro · NetSec Architect <span style="color:#776aa5">(SecOps/XDR chain → optional SOC specialism)</span></span>
+            <span class="tier-group"><strong>Palo Alto (vendor-agnostic depth):</strong> Practitioner · NetSec Pro · NGFW Eng · Cloud Sec Pro · NetSec Architect <span style="color:#68838b">(SecOps/XDR chain → optional SOC specialism)</span></span>
             <span class="tier-group"><strong>Service mgmt:</strong> ITIL 4 Foundation (Junior) — MP deferred (low ROI for architect; star if service-lead role)</span>
             <span class="tier-group"><strong>UK chartered:</strong> UKCSC Practitioner · Principal</span>
             <span class="tier-group ai-multiplier"><strong>🤖 AI:</strong> CAISP · SC-500 (Cloud + AI Security Engineer)</span>
@@ -1042,7 +1042,7 @@ function renderStrategy() {
           <div class="tier-header"><span class="tier-icon">🏆</span><strong>Principal / Distinguished Tier</strong> · Years 8+ · <span class="tier-pay">£120-400k+</span> · trimmed for focus</div>
           <div class="tier-focus">Deep convergence architecture · OT/CNI mastery · AI security · technical authority</div>
           <div class="tier-certs">
-            <span class="tier-group"><strong>Senior vendor architect:</strong> PAN NetSec Architect <span style="color:#776aa5">(SecOps Architect → optional)</span></span>
+            <span class="tier-group"><strong>Senior vendor architect:</strong> PAN NetSec Architect <span style="color:#68838b">(SecOps Architect → optional)</span></span>
             <span class="tier-group"><strong>Risk:</strong> CRISC</span>
             <span class="tier-group"><strong>🏭 OT/CNI mastery (spearhead):</strong> GICSP · 62443 CRA · CMS · <strong>62443 Expert</strong> (capstone) · GRID · ASIS PSP</span>
             <span class="tier-group"><strong>UK Chartered top:</strong> UKCSC Chartered · CSyP</span>
@@ -1053,33 +1053,33 @@ function renderStrategy() {
           </div>
         <div style="background: linear-gradient(135deg, rgba(85, 214, 255, 0.08), rgba(85, 214, 255, 0.04)); border-left: 3px solid #38bdf8; padding: 12px 14px; margin: 12px 0; border-radius: 6px; font-size: 11px; line-height: 1.6;">
           <strong style="color: #8ee7ff; font-size: 12.5px;">💻 Language Certifications — only where they're worth it</strong>
-          <p style="margin: 6px 0; color: #d4d1e8;">Of the five core languages, only two have certifications worth holding. The rest are validated through certs the candidate already have — chasing a standalone cert for them would be the time-waste to avoid:</p>
-          <ul style="margin: 4px 0 6px 16px; padding: 0; color: #d4d1e8;">
+          <p style="margin: 6px 0; color: #c0d7dc;">Of the five core languages, only two have certifications worth holding. The rest are validated through certs the candidate already have — chasing a standalone cert for them would be the time-waste to avoid:</p>
+          <ul style="margin: 4px 0 6px 16px; padding: 0; color: #c0d7dc;">
             <li><strong style="color:#8ee7ff;">Python ✅ — the scripting backbone</strong> — <strong>PCEP → PCAP</strong> (Python Institute) is in My Path. Python is the automation and AI-security tooling language: parsing logs, wiring detections, prototyping against APIs — including the <strong>ArcGIS API for Python</strong>, which is how a camera-analytics–GIS integration is actually built (paired with the Developer Foundation cert). PCEP/PCAP cover that working literacy; the professional-developer ladder (PCPP1/PCPP2) stays skipped — that’s software-engineer depth the architect role doesn’t need.</li>
             <li><strong style="color:#8ee7ff;">JavaScript/TypeScript ⚪ — relevant, but deliberately NOT in My Path</strong> — useful for reviewing serverless + web-app security architectures, but that's <em>developer</em> territory — the target is architect/advisory, not building apps, so JS stays literacy-level. <strong>JSNSD</strong> (security-focused services) + <strong>JSNAD</strong> live in the AppSec/DevSecOps pathways for anyone who pivots that way; they are intentionally absent from the core path.</li>
-            <li><strong style="color:#a0a0c8;">PowerShell ❌</strong> — no standalone cert exists. Validated inside AZ-104 / SC-200 / SC-300 (already in path).</li>
-            <li><strong style="color:#a0a0c8;">SQL ❌</strong> — no security-relevant standalone cert. the SQL (KQL + Splunk SPL) is validated via the Splunk certs + SC-200. A pure Oracle/DP-900 SQL cert is a data-admin credential — wrong signal, skip it.</li>
-            <li><strong style="color:#a0a0c8;">Bash ❌</strong> — no standalone Bash cert exists; covered by <strong>Linux+ (XK0-006)</strong> if the candidate want the credential (now part of My Path — add only if a Linux/cloud-heavy role demands it).</li>
+            <li><strong style="color:#7ea5b0;">PowerShell ❌</strong> — no standalone cert exists. Validated inside AZ-104 / SC-200 / SC-300 (already in path).</li>
+            <li><strong style="color:#7ea5b0;">SQL ❌</strong> — no security-relevant standalone cert. the SQL (KQL + Splunk SPL) is validated via the Splunk certs + SC-200. A pure Oracle/DP-900 SQL cert is a data-admin credential — wrong signal, skip it.</li>
+            <li><strong style="color:#7ea5b0;">Bash ❌</strong> — no standalone Bash cert exists; covered by <strong>Linux+ (XK0-006)</strong> if the candidate want the credential (now part of My Path — add only if a Linux/cloud-heavy role demands it).</li>
           </ul>
-          <p style="margin: 6px 0 0; color: #d4d1e8;"><strong style="color:#8ee7ff;">Bottom line:</strong> PCEP → PCAP give the scripting signal worth holding. Everything else is either already validated (PowerShell/SQL/Bash via existing certs) or a deliberate skip.</p>
+          <p style="margin: 6px 0 0; color: #c0d7dc;"><strong style="color:#8ee7ff;">Bottom line:</strong> PCEP → PCAP give the scripting signal worth holding. Everything else is either already validated (PowerShell/SQL/Bash via existing certs) or a deliberate skip.</p>
         </div>
           <div class="tier-target">→ <em>Position: Principal / Lead / Distinguished Security Architect · independent OT-convergence specialist (£1,200-2,000/day)</em></div>
         </div>
 
-        <div style="background: linear-gradient(135deg, rgba(192, 132, 252, 0.08), rgba(192, 132, 252, 0.04)); border-left: 3px solid #c084fc; padding: 12px 14px; margin: 12px 0; border-radius: 6px; font-size: 11px; line-height: 1.6;">
-          <strong style="color: #d8b0ff; font-size: 12.5px;">🏆 Director-Level Requirements — what actually gates this tier</strong>
-          <p style="margin: 6px 0; color: #d4d1e8;">Certs are necessary but <strong>not sufficient</strong> for Director. The tier has three distinct gates — credentials are only the first.</p>
+        <div style="background: linear-gradient(135deg, rgba(0, 205, 183, 0.10), rgba(0, 205, 183, 0.04)); border-left: 3px solid #00cdb7; padding: 12px 14px; margin: 12px 0; border-radius: 6px; font-size: 11px; line-height: 1.6;">
+          <strong style="color: #67ffe9; font-size: 12.5px;">🏆 Director-Level Requirements — what actually gates this tier</strong>
+          <p style="margin: 6px 0; color: #c0d7dc;">Certs are necessary but <strong>not sufficient</strong> for Director. The tier has three distinct gates — credentials are only the first.</p>
 
-          <p style="margin: 8px 0 3px; color: #d8b0ff;"><strong>① Experience gates (hard minimums):</strong></p>
-          <ul style="margin: 2px 0 6px 16px; padding: 0; color: #d4d1e8;">
+          <p style="margin: 8px 0 3px; color: #67ffe9;"><strong>① Experience gates (hard minimums):</strong></p>
+          <ul style="margin: 2px 0 6px 16px; padding: 0; color: #c0d7dc;">
             <li>10-15 years total industry experience (the candidate is ~5 now — Director is realistically Year 10-12 from today)</li>
             <li>4-6 years demonstrable at Senior Architect level</li>
             <li>Ownership of at least one major delivery's technical architecture end-to-end</li>
             <li>Line-management or practice-lead experience (2+ direct reports or workstream ownership)</li>
           </ul>
 
-          <p style="margin: 8px 0 3px; color: #d8b0ff;"><strong>② Credential gates (experience-locked certs):</strong></p>
-          <ul style="margin: 2px 0 6px 16px; padding: 0; color: #d4d1e8;">
+          <p style="margin: 8px 0 3px; color: #67ffe9;"><strong>② Credential gates (experience-locked certs):</strong></p>
+          <ul style="margin: 2px 0 6px 16px; padding: 0; color: #c0d7dc;">
             <li><strong>CISM</strong> — requires 5 years infosec work, 3 in management roles</li>
             <li><strong>CRISC</strong> — requires 3 years risk-management experience</li>
             <li><strong>CSyP (Chartered Security Professional)</strong> — requires 5+ years senior experience + peer endorsement + interview panel</li>
@@ -1088,8 +1088,8 @@ function renderStrategy() {
             <li><strong>PAN architect certs</strong> — require the full Professional-tier chain held first</li>
           </ul>
 
-          <p style="margin: 8px 0 3px; color: #d8b0ff;"><strong>③ Non-credential requirements (the actual ceiling-breakers — no cert delivers these):</strong></p>
-          <ul style="margin: 2px 0 6px 16px; padding: 0; color: #d4d1e8;">
+          <p style="margin: 8px 0 3px; color: #67ffe9;"><strong>③ Non-credential requirements (the actual ceiling-breakers — no cert delivers these):</strong></p>
+          <ul style="margin: 2px 0 6px 16px; padding: 0; color: #c0d7dc;">
             <li><strong>Book of business</strong> — relationships with 50-100 UK security buyers who know the name. This is what separates £200k seniors from £400k+ directors.</li>
             <li><strong>Thought leadership track record</strong> — published reference designs, in-depth articles, and open-source tooling; a recognised POV on convergence (built through writing, not the speaking circuit)</li>
             <li><strong>2-3 signature deliveries</strong> — major convergence projects the candidate can name and reference (anonymised). Proof the candidate has done it, not just certified for it.</li>
@@ -1097,7 +1097,7 @@ function renderStrategy() {
             <li><strong>Practice-building</strong> — mentoring juniors, growing capability, contributing to the firm's IP/methodology</li>
           </ul>
 
-          <p style="margin: 8px 0 0; color: #d4d1e8;"><strong style="color: #d8b0ff;">Honest framing:</strong> The certs in this tier get the candidate <em>into the room</em> for Director interviews and consultancy-partner conversations. Gates ① and ② are checkboxes that accumulate with time. Gate ③ is the real work — and it must be built <strong>in parallel</strong> with Senior-tier cert study (Years 4-7), not after. Start the thought-leadership and relationship-building now; they compound over a decade. A Director with 14 certs and no book of business earns less than a Director with 6 certs and 80 client relationships.</p>
+          <p style="margin: 8px 0 0; color: #c0d7dc;"><strong style="color: #67ffe9;">Honest framing:</strong> The certs in this tier get the candidate <em>into the room</em> for Director interviews and consultancy-partner conversations. Gates ① and ② are checkboxes that accumulate with time. Gate ③ is the real work — and it must be built <strong>in parallel</strong> with Senior-tier cert study (Years 4-7), not after. Start the thought-leadership and relationship-building now; they compound over a decade. A Director with 14 certs and no book of business earns less than a Director with 6 certs and 80 client relationships.</p>
         </div>
         
         <div class="why-natural">
@@ -1191,8 +1191,8 @@ function renderStrategy() {
 
     <div style="background: linear-gradient(135deg, rgba(255, 201, 77, 0.07), rgba(255, 181, 77, 0.03)); border-left: 3px solid #ffc94d; padding: 10px 12px; margin: 10px 0; border-radius: 6px; font-size: 11px; line-height: 1.55;">
       <strong style="color: #ffe08a; font-size: 12px;">🛰️ The video-analytics + GIS angle — a specialist bet, framed honestly</strong>
-      <p style="margin: 6px 0 0; color: #d4d1e8;">Modern <strong>edge-analytics</strong> platforms run detection directly on the cameras — object, vehicle and person detection, ANPR, line-crossing, occupancy. The play: feed that live analytic data onto geospatial site maps (built from survey data and, where useful, drone imagery) to give each customer a tailored <strong>common operating picture</strong>. The analytic model differs per customer — a local authority maps town-centre cameras for public safety and footfall, a port tracks vehicles and containers, an industrial site watches perimeter zones, a campus monitors occupancy — so the architect's job is designing how each customer's analytics feeds map into the spatial view and delivering it as a web COP. The combination of <strong>deep Axis deployment experience + ArcGIS fluency + the Python to build the pipeline</strong> is rare and valuable, and it plugs straight into CNI work where geospatial and OT security already overlap.</p>
-      <p style="margin: 6px 0 0; color: #d4d1e8;"><strong style="color:#ffc94d;">Held honestly:</strong> this is a <em>forward bet</em> — timing and mainstream adoption aren't guaranteed — so it's sized as a focused 5-cert layer (~£900), not a career-defining commitment. the candidate is also pursuing it because it genuinely interests the candidate, which is a perfectly good reason to hold a small, cheap, on-theme specialist track. It enriches the physical/CNI edge of the convergence profile; it never replaces the OT + cyber spine.</p>
+      <p style="margin: 6px 0 0; color: #c0d7dc;">Modern <strong>edge-analytics</strong> platforms run detection directly on the cameras — object, vehicle and person detection, ANPR, line-crossing, occupancy. The play: feed that live analytic data onto geospatial site maps (built from survey data and, where useful, drone imagery) to give each customer a tailored <strong>common operating picture</strong>. The analytic model differs per customer — a local authority maps town-centre cameras for public safety and footfall, a port tracks vehicles and containers, an industrial site watches perimeter zones, a campus monitors occupancy — so the architect's job is designing how each customer's analytics feeds map into the spatial view and delivering it as a web COP. The combination of <strong>deep Axis deployment experience + ArcGIS fluency + the Python to build the pipeline</strong> is rare and valuable, and it plugs straight into CNI work where geospatial and OT security already overlap.</p>
+      <p style="margin: 6px 0 0; color: #c0d7dc;"><strong style="color:#ffc94d;">Held honestly:</strong> this is a <em>forward bet</em> — timing and mainstream adoption aren't guaranteed — so it's sized as a focused 5-cert layer (~£900), not a career-defining commitment. the candidate is also pursuing it because it genuinely interests the candidate, which is a perfectly good reason to hold a small, cheap, on-theme specialist track. It enriches the physical/CNI edge of the convergence profile; it never replaces the OT + cyber spine.</p>
     </div>
 
     <div class="strat-band">🧭 The Three Career Tracks</div>
@@ -1545,14 +1545,14 @@ function renderStrategy() {
             
         <div style="background: linear-gradient(135deg, rgba(85, 214, 255, 0.08), rgba(85, 214, 255, 0.04)); border-left: 3px solid #55d6ff; padding: 12px 14px; margin: 12px 0; border-radius: 6px; font-size: 11px; line-height: 1.6;">
           <strong style="color: #a5e9ff; font-size: 12.5px;">🎯 Why Dual-Vendor = the Stronger Consultancy Position</strong>
-          <p style="margin: 6px 0; color: #d4d1e8;">Carrying both CrowdStrike <em>and</em> Palo Alto at architect level isn't redundancy — it's the core of the consultancy value proposition. Four reasons it beats single-vendor specialism:</p>
-          <ul style="margin: 4px 0 6px 16px; padding: 0; color: #d4d1e8;">
+          <p style="margin: 6px 0; color: #c0d7dc;">Carrying both CrowdStrike <em>and</em> Palo Alto at architect level isn't redundancy — it's the core of the consultancy value proposition. Four reasons it beats single-vendor specialism:</p>
+          <ul style="margin: 4px 0 6px 16px; padding: 0; color: #c0d7dc;">
             <li><strong>Vendor-neutral credibility:</strong> the candidate recommend the right tool for each customer's estate, not the one vendor the candidate is locked into. Customers pay premiums for advice they can trust isn't a sales pitch.</li>
             <li><strong>Wider addressable market:</strong> CrowdStrike strength = endpoint (the IT estate); Palo Alto strength = network (where physical-security/OT/IoT devices live — cameras, controllers, readers the candidate can't put an agent on). Together they cover the full convergence surface. Most customers run one or the other; the candidate serve both.</li>
             <li><strong>Higher day rates:</strong> vendor-agnostic convergence architects command more than single-stack specialists — the candidate is harder to replace and broader in applicability.</li>
             <li><strong>Defensible moat:</strong> deep fluency in physical + OT + Microsoft + CrowdStrike + Palo Alto + AI is a combination almost no one else holds. That breadth IS the moat.</li>
           </ul>
-          <p style="margin: 6px 0 0; color: #d4d1e8;"><strong style="color: #a5e9ff;">Scope discipline:</strong> both vendors are carried at <em>architect</em> level (design + recommend), not deep SOC-engineering level. The Palo Alto SecOps/XDR/XSIAM chain and CrowdStrike SIEM Analyst/Engineer certs stay <em>optional</em> — add them only if the consultancy develops a SOC-build / MSSP specialism, which is a different business from convergence architecture. Architect-grade fluency in both is the consultancy core; operator-grade engineering depth in both would be over-investment.</p>
+          <p style="margin: 6px 0 0; color: #c0d7dc;"><strong style="color: #a5e9ff;">Scope discipline:</strong> both vendors are carried at <em>architect</em> level (design + recommend), not deep SOC-engineering level. The Palo Alto SecOps/XDR/XSIAM chain and CrowdStrike SIEM Analyst/Engineer certs stay <em>optional</em> — add them only if the consultancy develops a SOC-build / MSSP specialism, which is a different business from convergence architecture. Architect-grade fluency in both is the consultancy core; operator-grade engineering depth in both would be over-investment.</p>
         </div>
         <div class="why-natural"><strong>💡 Why natural for this path:</strong> the candidate ALREADY do TAM-like work in relevant hands-on experience — supporting customer deployments, troubleshooting configs, managing the vendor relationship. Pivoting to vendor-side TAM is the same job, different employer. Lower friction than SE (less sales pressure, similar pay).</div>
             <div class="gateway-project"><span class="gp-icon">🎯</span><strong>Gateway Project:</strong> Author a customer-success playbook for one platform the candidate know deeply (CrowdStrike Falcon, Sentinel, or Milestone XProtect). Cover: onboarding sequence (week 1-12), 10 most common misconfigurations + how to spot them, health-check template, QBR slide template, escalation matrix. 15-20 page document. Public GitHub.</div>
@@ -2591,7 +2591,7 @@ function badgeVendor(cert) {
   if (id.startsWith('arcgis') || id.startsWith('esri')) return 'Esri';
   return pathwayOf(cert);
 }
-function badgeColors(cert) { return BADGE_COLORS[badgeVendor(cert)] || ['#334155','#776aa5']; }
+function badgeColors(cert) { return BADGE_COLORS[badgeVendor(cert)] || ['#334155','#68838b']; }
 function badgeText(cert) {
   let t = cert.code || '';
   if (!t) t = (cert.name || '').replace(/[^A-Za-z0-9 ]/g,'').split(/\s+/).map(w=>w[0]).join('').slice(0,4);
@@ -2684,12 +2684,12 @@ function certBadgeSVG(cert) {
     silver:   ['#8b94a6','#39404f'],  /* cold neutral steel */
     gold:     ['#e0ae3a','#7a520f'],  /* blazing amber */
     platinum: ['#9a5cf5','#3d1a78'],  /* deep amethyst */
-    diamond:  ['#2fb3e6','#b03fd0']   /* cyan->magenta crystal */
+    diamond:  ['#2fb3e6','#00cdb7']   /* cyan->magenta crystal */
   };
   const faceC = FACES[mtier] || FACES.silver;
   const c1n = faceC[1], c2n = faceC[0];
-  const PHASE_NEON = {1:'#55d6ff',2:'#ff6ee0',3:'#3ee6a0',4:'#ffc94d',5:'#ff5d7d',6:'#b3a6e0'};
-  const accentN = PHASE_NEON[certPhase(cert)] || '#ff7ad9';
+  const PHASE_NEON = {1:'#55d6ff',2:'#00cdb7',3:'#3ee6a0',4:'#ffc94d',5:'#ff684c',6:'#6cb8c9'};
+  const accentN = PHASE_NEON[certPhase(cert)] || '#00eff5';
   const faceTop = shade(c2n, 0.12);
 
   let outer, inner, midband = '', beading = '';
