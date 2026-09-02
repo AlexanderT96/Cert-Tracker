@@ -1,0 +1,25 @@
+/* Cert Tracker — Roadmap Map zoom / pinch interaction layer. */
+.ct-map-stage{position:relative;min-width:max-content;min-height:max-content}
+.ct-map-canvas{transform-origin:0 0;will-change:transform}
+.ct-map-zoom-group{display:grid;grid-template-columns:38px minmax(52px,auto) 38px auto auto;align-items:stretch;gap:4px;min-height:36px}
+.ct-map-zoom-group button,.ct-map-zoom-group output{min-height:36px;border:1px solid var(--border-2);border-radius:var(--ct-control-radius);background:linear-gradient(180deg,color-mix(in srgb,var(--surface-2) 92%,#12313a),var(--surface-2));color:var(--text);font:750 11px/1 "Segoe UI Variable Text","Segoe UI",system-ui,sans-serif;display:grid;place-items:center;padding:0 10px}
+.ct-map-zoom-group button{cursor:pointer;touch-action:manipulation}
+.ct-map-zoom-group button:hover{border-color:color-mix(in srgb,var(--blue) 65%,var(--border-2));color:var(--blue-text);transform:translateY(-1px)}
+.ct-map-zoom-group button:active{transform:translateY(1px)}
+.ct-map-zoom-group button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.ct-map-zoom-group output{min-width:56px;color:var(--blue-text);letter-spacing:.035em;background:var(--surface)}
+.ct-map-viewport{touch-action:none!important;user-select:none;-webkit-user-select:none;cursor:grab}
+.ct-map-viewport:active{cursor:grabbing}
+.ct-map-viewport a,.ct-map-viewport button,.ct-map-viewport summary,.ct-map-viewport select{user-select:auto;-webkit-user-select:auto}
+
+@media(max-width:760px){
+  .ct-map-toolbar{grid-template-columns:1fr 1fr}
+  .ct-map-zoom-group{grid-column:1/-1;grid-template-columns:44px minmax(58px,1fr) 44px minmax(58px,auto) minmax(62px,auto);position:sticky;top:0;z-index:12}
+  .ct-map-zoom-group button,.ct-map-zoom-group output{min-height:44px;font-size:12px}
+  .ct-map-home{grid-column:1/-1;min-height:44px}
+  .ct-map-viewport{max-height:68vh;min-height:52vh;overscroll-behavior:contain}
+  .ct-map-stage{min-width:1px;min-height:1px}
+}
+
+@media(prefers-reduced-motion:reduce){.ct-map-zoom-group button{transition:none!important}.ct-map-canvas{transition:none!important}}
+@media(forced-colors:active){.ct-map-zoom-group button,.ct-map-zoom-group output{forced-color-adjust:auto}}
