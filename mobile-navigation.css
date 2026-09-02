@@ -170,6 +170,11 @@ html.ct-mobile-menu-open{overflow:hidden}
 
 /* Keep phone scrolling in normal document flow. Large 3D/blurred surfaces force
    expensive offscreen raster tiles on mobile; retain their static borders/gradients. */
+html[data-layout="mobile"] body{
+  height:auto!important;
+  min-height:100%;
+  overflow:visible!important;
+}
 html[data-layout="mobile"] .ct-depth-surface{
   transform:none!important;
   transform-style:flat!important;
