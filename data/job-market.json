@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 3,
-  "lastAttemptAt": "2026-09-02T21:01:46.125Z",
-  "lastSuccessfulFetchAt": "2026-09-02T20:58:41.616Z",
+  "schemaVersion": 4,
+  "lastAttemptAt": "2026-09-02T21:08:59.741Z",
+  "lastSuccessfulFetchAt": null,
   "providerCoverage": {
     "successes": 0,
     "failures": 1,
@@ -10,7 +10,7 @@
   "provider": "UK market feed",
   "providerUrl": "https://www.arbeitnow.co.uk/",
   "country": "gb",
-  "fetchedAt": "2026-09-02T20:58:41.616Z",
+  "fetchedAt": null,
   "refreshTargetMinutes": 5,
   "status": "degraded",
   "location": "United Kingdom",
@@ -119,19 +119,19 @@
     "security solutions engineer"
   ],
   "lastBatch": [
-    "network engineer",
-    "cyber security engineer",
-    "vulnerability management analyst",
-    "data security engineer",
-    "solutions engineer — physical security",
-    "embedded systems security engineer",
-    "data engineer",
-    "technical account manager",
-    "business continuity & resilience manager",
-    "cloud SOC analyst",
-    "AI security engineer",
-    "cyber risk analyst",
-    "cyber security contractor"
+    "network security engineer",
+    "soc analyst — cloud specialism",
+    "identity & access management engineer",
+    "governance, risk & compliance analyst",
+    "ot cyber security engineer",
+    "physical security penetration tester",
+    "gis analyst",
+    "enterprise account executive",
+    "cybersecurity due diligence consultant",
+    "malware analyst",
+    "OT security engineer",
+    "crisis resilience manager",
+    "security solutions engineer"
   ],
   "providerStatus": [
     "Arbeitnow UK unavailable",
