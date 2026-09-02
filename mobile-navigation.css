@@ -1,0 +1,180 @@
+/* Cert Tracker — compact phone navigation.
+   Desktop/tablet retain the full workspace rail and command dock.
+   Phones use one primary bottom rail plus an on-demand More sheet. */
+
+#ct-mobile-navigation,
+#ct-mobile-more-layer{display:none}
+
+html[data-layout="mobile"] .tabs{display:none!important}
+html[data-layout="mobile"] .ct-command-dock{display:none!important}
+html[data-layout="mobile"] #app{padding-bottom:calc(78px + var(--ct-mobile-safe-bottom))!important}
+
+html[data-layout="mobile"] #ct-mobile-navigation{
+  position:fixed;
+  left:var(--ct-mobile-safe-left);
+  right:var(--ct-mobile-safe-right);
+  bottom:var(--ct-mobile-safe-bottom);
+  z-index:9995;
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:3px;
+  min-height:58px;
+  padding:5px;
+  border:1px solid rgba(22,217,227,.34);
+  border-bottom-color:rgba(32,227,154,.45);
+  background:
+    linear-gradient(180deg,rgba(14,33,43,.98),rgba(3,10,14,.98)),
+    #061016;
+  box-shadow:
+    0 -10px 28px rgba(0,0,0,.52),
+    inset 0 1px rgba(255,255,255,.05),
+    inset 0 -1px rgba(22,217,227,.12);
+  clip-path:polygon(7px 0,calc(100% - 7px) 0,100% 7px,100% 100%,0 100%,0 7px);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+}
+
+html[data-layout="mobile"] #ct-mobile-navigation button{
+  position:relative;
+  min-width:0;
+  min-height:48px;
+  padding:7px 4px 6px;
+  border:1px solid transparent;
+  border-radius:4px;
+  background:transparent;
+  color:#8eabb5;
+  font:700 9px/1.15 "Segoe UI Variable Text","Segoe UI",system-ui,sans-serif;
+  letter-spacing:.055em;
+  text-transform:uppercase;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  touch-action:manipulation;
+}
+
+html[data-layout="mobile"] #ct-mobile-navigation button::before{
+  content:"";
+  display:block;
+  width:18px;
+  height:2px;
+  margin:0 auto 7px;
+  border-radius:999px;
+  background:#31515d;
+  box-shadow:0 0 0 transparent;
+  transition:background .16s ease,box-shadow .16s ease,width .16s ease;
+}
+
+html[data-layout="mobile"] #ct-mobile-navigation button.active,
+html[data-layout="mobile"] #ct-mobile-navigation button[aria-current="page"]{
+  color:#e8fcff;
+  border-color:rgba(22,217,227,.18);
+  background:linear-gradient(180deg,rgba(22,217,227,.11),rgba(22,217,227,.025));
+  box-shadow:inset 0 -2px rgba(22,217,227,.6);
+}
+
+html[data-layout="mobile"] #ct-mobile-navigation button.active::before,
+html[data-layout="mobile"] #ct-mobile-navigation button[aria-current="page"]::before{
+  width:28px;
+  background:#16d9e3;
+  box-shadow:0 0 10px rgba(22,217,227,.58);
+}
+
+html[data-layout="mobile"] #ct-mobile-more-layer[hidden]{display:none!important}
+html[data-layout="mobile"] #ct-mobile-more-layer:not([hidden]){
+  position:fixed;
+  inset:0;
+  z-index:10020;
+  display:block;
+}
+
+html[data-layout="mobile"] .ct-mobile-more-backdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(0,4,7,.72);
+  backdrop-filter:blur(3px);
+  -webkit-backdrop-filter:blur(3px);
+}
+
+html[data-layout="mobile"] .ct-mobile-more-sheet{
+  position:absolute;
+  left:var(--ct-mobile-safe-left);
+  right:var(--ct-mobile-safe-right);
+  bottom:var(--ct-mobile-safe-bottom);
+  max-height:min(72dvh,620px);
+  overflow:auto;
+  padding:10px;
+  border:1px solid rgba(22,217,227,.42);
+  border-top-color:rgba(32,227,154,.48);
+  background:
+    linear-gradient(180deg,rgba(13,29,38,.99),rgba(2,8,11,.995)),
+    #061016;
+  box-shadow:0 -20px 50px rgba(0,0,0,.68),inset 0 1px rgba(255,255,255,.055);
+  clip-path:polygon(9px 0,calc(100% - 9px) 0,100% 9px,100% 100%,0 100%,0 9px);
+}
+
+html[data-layout="mobile"] .ct-mobile-more-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:4px 4px 10px;
+  border-bottom:1px solid rgba(22,217,227,.18);
+}
+
+html[data-layout="mobile"] .ct-mobile-more-head strong{
+  color:#e5fbff;
+  font:800 14px/1.2 "Segoe UI Variable Display","Segoe UI",system-ui,sans-serif;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+
+html[data-layout="mobile"] .ct-mobile-more-close{
+  min-height:42px;
+  padding:0 14px;
+  border:1px solid rgba(22,217,227,.25);
+  border-radius:4px;
+  background:#0b1821;
+  color:#b7d7de;
+  font:700 10px/1 "Segoe UI Variable Text","Segoe UI",system-ui,sans-serif;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+
+html[data-layout="mobile"] .ct-mobile-more-actions{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:7px;
+  padding-top:10px;
+}
+
+html[data-layout="mobile"] .ct-mobile-more-action{
+  min-height:52px;
+  padding:10px 12px;
+  border:1px solid #183b4a;
+  border-radius:4px;
+  background:linear-gradient(180deg,#0d202b,#08141b);
+  color:#d8f4f7;
+  font:700 11px/1.25 "Segoe UI Variable Text","Segoe UI",system-ui,sans-serif;
+  text-align:left;
+  letter-spacing:.025em;
+  touch-action:manipulation;
+}
+
+html[data-layout="mobile"] .ct-mobile-more-action[aria-current="page"]{
+  border-color:rgba(22,217,227,.55);
+  color:#ffffff;
+  box-shadow:inset 3px 0 #16d9e3,0 0 14px rgba(22,217,227,.08);
+}
+
+html.ct-mobile-menu-open{overflow:hidden}
+
+@media(prefers-reduced-motion:reduce){
+  #ct-mobile-navigation button::before{transition:none!important}
+}
+
+@media(forced-colors:active){
+  html[data-layout="mobile"] #ct-mobile-navigation,
+  html[data-layout="mobile"] .ct-mobile-more-sheet,
+  html[data-layout="mobile"] .ct-mobile-more-action,
+  html[data-layout="mobile"] .ct-mobile-more-close{forced-color-adjust:auto;clip-path:none}
+}
