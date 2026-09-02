@@ -1,0 +1,94 @@
+// Cert Tracker — current-program compatibility layer (September 2026).
+// Stable internal IDs are deliberately preserved so saved progress/filter state survives
+// vendor renames. Display names, codes, requirements and source URLs follow current programmes.
+(function refreshCatalogueCurrentness(){
+  'use strict';
+  if(typeof CERTS==='undefined'||!Array.isArray(CERTS))throw new Error('cert catalogue must load before catalogue-currentness.js');
+  const VERIFIED='2026-09-02';
+  const byId=Object.fromEntries(CERTS.map(cert=>[cert.id,cert]));
+  const patch=(id,values)=>{if(byId[id])Object.assign(byId[id],values);};
+
+  // Fortinet rebuilt the certification programme into NSE 1-8 levels on 15 July 2026.
+  // Keep legacy tracker IDs but never present retired FCP/FCSS/FCX branding as current.
+  patch('nse-4',{
+    name:'Fortinet NSE 4: FortiOS',code:'NSE 4',vendor:'Fortinet',validity:24,verifiedAt:VERIFIED,
+    sourceUrl:'https://www.fortinet.com/training-certification',
+    coverage:'Configure, operate and administer FortiGate / FortiOS on a day-to-day basis to secure networks and applications.',
+    prerequisites:'No lower NSE certification is required. Current certification requires passing the proctored NSE 4 FortiOS exam.',
+    studyMaterials:'Fortinet Training Institute NSE 4 FortiOS learning path, product documentation and hands-on FortiGate lab practice.',
+    subjects:['FortiOS administration','Firewall policy','NAT and routing','VPN','Security profiles','Monitoring and troubleshooting'],
+    skills:['FortiGate','FortiOS','Firewalling','NAT','VPN','Network security troubleshooting'],
+    examFormat:'Current Fortinet NSE 4 proctored certification exam. Verify the active FortiOS exam version in the Training Institute immediately before booking.',
+    projectRec:'Build a FortiGate lab with routed interfaces, policy/NAT, site-to-site VPN, security profiles, logging and a documented break/fix exercise.',
+    note:'Current Fortinet foundation for the advanced NSE 5-8 programme. Older FCP branding is retired; the stable tracker ID is retained only to preserve saved state.'
+  });
+  patch('fcss-secops',{
+    name:'Fortinet NSE 7: Security Operations',code:'NSE 7 SECURITY OPERATIONS',vendor:'Fortinet',validity:24,verifiedAt:VERIFIED,
+    sourceUrl:'https://www.fortinet.com/training-certification',
+    coverage:'Design, administer, monitor and troubleshoot advanced Fortinet security-operations solutions and infrastructures.',
+    prerequisites:'Current programme requires active NSE 4 plus an active NSE 5 or NSE 6 in Security Operations, then the NSE 7 Security Operations proctored exam. The tracker keeps the intermediate either/or requirement in guidance rather than pretending it is a single hard dependency.',
+    studyMaterials:'Fortinet Training Institute Security Operations track, current NSE 7 exam objectives, product labs and troubleshooting scenarios.',
+    subjects:['Security operations architecture','Fortinet SOC products','Monitoring and investigation','Advanced troubleshooting','Security operations integrations'],
+    skills:['Security operations','Fortinet','SOC','Monitoring','Troubleshooting'],
+    examFormat:'NSE 7 Security Operations proctored exam after the current NSE prerequisite chain is satisfied.',
+    projectRec:'Design and lab a Fortinet security-operations workflow showing telemetry ingestion, alert/investigation flow, response, integrations and failure diagnosis.',
+    note:'This tracker ID formerly represented an FCSS-era record. FCSS was retired on 15 July 2026; this record now represents the current NSE 7 Security Operations rung without breaking historic state.'
+  });
+  patch('fcx',{
+    name:'Fortinet NSE 8 Cybersecurity Expert',code:'NSE 8',vendor:'Fortinet',validity:24,verifiedAt:VERIFIED,
+    sourceUrl:'https://www.fortinet.com/training-certification',
+    coverage:'Expert network-security design, configuration, operation and troubleshooting across complex Fortinet environments.',
+    prerequisites:'Current programme requires active NSE 4, active NSE 5 or NSE 6, active NSE 7 on the same track, then the NSE 8 Core practical and one NSE 8 Elective practical exam.',
+    studyMaterials:'Fortinet Training Institute NSE 8 resources plus extensive production-equivalent multi-product lab practice.',
+    subjects:['Expert Fortinet architecture','Complex network security design','Advanced troubleshooting','Cross-product integration','Operational validation'],
+    skills:['Expert network security','Fortinet architecture','Troubleshooting','Integration'],
+    examFormat:'Two practical exams: NSE 8 Core followed by one NSE 8 Elective. Current prerequisite certifications must be active before scheduling the Core.',
+    projectRec:'Maintain an expert multi-site Fortinet lab portfolio with timed implementation, fault isolation, design decisions and cross-product integration evidence.',
+    note:'FCX branding was retired on 15 July 2026. Stable tracker ID retained for saved-state compatibility; current credential is NSE 8.'
+  });
+
+  // CrowdStrike added an explicit entry-level Falcon Practitioner credential.
+  patch('crowdstrike-ccf',{
+    name:'CrowdStrike Certified Falcon Practitioner',code:'CCFP',vendor:'CrowdStrike',verifiedAt:VERIFIED,
+    sourceUrl:'https://www.crowdstrike.com/en-us/crowdstrike-university/crowdstrike-falcon-certification-program/',
+    coverage:'Foundational cybersecurity knowledge and entry-level proficiency using the CrowdStrike Falcon platform.',
+    prerequisites:'No formal prerequisite stated; use CrowdStrike University learning and practical Falcon familiarity before attempting the exam.',
+    studyMaterials:'CrowdStrike University CCFP exam guide, recommended learning and Falcon platform practice.',
+    subjects:['Falcon platform fundamentals','Core cybersecurity concepts','Falcon navigation and workflows','Foundational detection context'],
+    skills:['CrowdStrike Falcon','Endpoint security','Security operations fundamentals'],
+    examFormat:'CrowdStrike Certified Falcon Practitioner role-based certification exam; use the current CCFP exam guide for objectives and logistics.',
+    projectRec:'Document a basic Falcon operational workflow covering platform navigation, detections, host context, policy awareness and escalation decisions.',
+    note:'CCFP is the current practitioner-level entry credential. The internal ID remains unchanged so existing filters and progress survive the programme refresh.'
+  });
+
+  // Cisco remains ENCOR + concentration for CCNP Enterprise. Cisco U training now references
+  // ENCOR v1.2; avoid stale v1.1-only wording while keeping ENARSI as the deep-routing choice.
+  patch('ccnp-enterprise',{
+    verifiedAt:VERIFIED,
+    sourceUrl:'https://www.cisco.com/site/us/en/learn/training-certifications/certifications/enterprise/ccnp-enterprise/index.html',
+    note:'Current CCNP Enterprise structure remains 350-401 ENCOR plus one concentration. This roadmap intentionally selects 300-410 ENARSI for the strongest advanced-routing/troubleshooting curriculum. Re-check the active ENCOR blueprint before study because Cisco U training has moved to the newer ENCOR v1.2 content.'
+  });
+  patch('ccie-enterprise',{
+    verifiedAt:VERIFIED,
+    sourceUrl:'https://www.cisco.com/site/us/en/learn/training-certifications/certifications/enterprise/ccie-enterprise-infrastructure/index.html'
+  });
+
+  // Add the current Fortinet OT industry credential as a conditional specialist branch.
+  if(!byId['fortinet-ot-security']){
+    const cert={
+      id:'fortinet-ot-security',name:'Fortinet Industry Certification: OT Security',code:'FORTINET OT SECURITY',phase:4,track:'ROLE-DRIVEN',gateway:false,tier:'B',vendor:'Fortinet',
+      validity:24,cost:'Current proctored industry exam; verify regional fee',costNum:300,cvValue:2600,verifiedAt:VERIFIED,employer:false,free:false,cpe:0,cpePeriod:24,difficulty:8,roi:8,hours:[70,130],
+      sourceUrl:'https://www.fortinet.com/training-certification',
+      coverage:'Design, deploy and monitor advanced Fortinet security solutions for operational-technology environments.',
+      prerequisites:'Current programme requires active NSE 4, active NSE 5 or NSE 6, an active NSE 7 on the same track, and the OT Security industry proctored exam. Treat this as a Fortinet-exposure branch, not a generic OT prerequisite.',
+      studyMaterials:'Fortinet Training Institute OT Security curriculum, current industry-certification objectives and a segmented IT/OT FortiGate lab.',
+      subjects:['OT security architecture','IT/OT segmentation','Fortinet OT controls','Industrial visibility and monitoring','OT secure remote access','OT troubleshooting'],
+      skills:['OT security','Fortinet','Network segmentation','Industrial security','Firewalling'],
+      examFormat:'Fortinet OT Security Industry Certification proctored exam after the active NSE prerequisite chain is satisfied.',
+      projectRec:'Build an IT/OT segmentation design with zones/conduits, FortiGate policy, industrial asset visibility, remote-access controls, logging and an OT-focused failure-response runbook.',
+      note:'Conditional vendor specialisation with high practical value only when Fortinet is present in the target environment. It supplements, rather than replaces, vendor-neutral ISA/IEC 62443 and GICSP learning.',
+      deps:['nse-4','fcss-secops'],tracks:['B','C']
+    };
+    CERTS.push(cert);byId[cert.id]=cert;
+  }
+})();
