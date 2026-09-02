@@ -1,6 +1,6 @@
 {
   "schemaVersion": 4,
-  "lastAttemptAt": "2026-09-02T21:08:59.741Z",
+  "lastAttemptAt": "2026-09-02T23:13:57.014Z",
   "lastSuccessfulFetchAt": null,
   "providerCoverage": {
     "successes": 0,
@@ -119,19 +119,18 @@
     "security solutions engineer"
   ],
   "lastBatch": [
-    "network security engineer",
-    "soc analyst — cloud specialism",
-    "identity & access management engineer",
-    "governance, risk & compliance analyst",
-    "ot cyber security engineer",
-    "physical security penetration tester",
-    "gis analyst",
-    "enterprise account executive",
-    "cybersecurity due diligence consultant",
-    "malware analyst",
-    "OT security engineer",
-    "crisis resilience manager",
-    "security solutions engineer"
+    "wireless network engineer",
+    "detection engineer",
+    "privileged access management engineer",
+    "it auditor",
+    "industrial network engineer",
+    "python developer",
+    "geospatial developer",
+    "security consultant",
+    "systems support engineer",
+    "cloud security engineer",
+    "ICS security engineer",
+    "insider threat analyst"
   ],
   "providerStatus": [
     "Arbeitnow UK unavailable",
