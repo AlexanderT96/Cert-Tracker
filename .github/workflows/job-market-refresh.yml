@@ -1,6 +1,12 @@
 name: Job Market Refresh
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'tools/refresh-job-market.mjs'
+      - '.github/workflows/job-market-refresh.yml'
   schedule:
     - cron: '*/5 * * * *'
   workflow_dispatch:
