@@ -1,19 +1,21 @@
 {
   "name":"cert-tracker",
-  "version":"4.6.0",
+  "version":"4.7.0",
   "private":true,
   "type":"module",
   "scripts":{
-    "test":"node tools/quality-check.mjs && node tools/filter-model-check.mjs && node tools/formatting-check.mjs && node tools/responsive-check.mjs && node tools/privacy-check.mjs && node tools/security-check.mjs && node tools/browser-compat-check.mjs",
-    "test:quality":"node tools/quality-check.mjs && node tools/filter-model-check.mjs && node tools/formatting-check.mjs && node tools/responsive-check.mjs && node tools/security-check.mjs && node tools/browser-compat-check.mjs",
+    "test":"node tools/quality-check.mjs && node tools/filter-model-check.mjs && node tools/dual-pillar-depth-check.mjs && node tools/formatting-check.mjs && node tools/responsive-check.mjs && node tools/privacy-check.mjs && node tools/security-check.mjs && node tools/browser-compat-check.mjs",
+    "test:quality":"node tools/quality-check.mjs && node tools/filter-model-check.mjs && node tools/dual-pillar-depth-check.mjs && node tools/formatting-check.mjs && node tools/responsive-check.mjs && node tools/security-check.mjs && node tools/browser-compat-check.mjs",
     "test:filters":"node tools/filter-model-check.mjs",
+    "test:depth":"node tools/dual-pillar-depth-check.mjs",
     "test:formatting":"node tools/formatting-check.mjs",
     "test:responsive":"node tools/responsive-check.mjs",
     "test:privacy":"node tools/privacy-check.mjs",
     "test:security":"node tools/security-check.mjs",
     "test:compat":"node tools/browser-compat-check.mjs",
     "test:freshness":"node tools/quality-check.mjs --freshness",
-    "test:sources":"node tools/source-check.mjs"
+    "test:sources":"node tools/source-check.mjs",
+    "market:refresh":"node tools/refresh-job-market.mjs"
   },
   "engines":{"node":">=20"}
 }
