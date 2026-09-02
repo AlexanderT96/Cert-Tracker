@@ -17,7 +17,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Static, data-contract and privacy checks
+      - name: Static, data-contract, privacy, security and compatibility checks
         run: npm test
       - name: Browser regression suite
         shell: bash
@@ -45,3 +45,34 @@ jobs:
               exit "$code"
             }
           grep -Eq 'All [0-9]+ executed checks passed' /tmp/certtracker-tests.html || { grep -E 'summary|PASS|FAIL|SKIP|Fatal browser error|Fatal promise rejection' /tmp/certtracker-tests.html || cat /tmp/certtracker-tests.html; exit 1; }
+
+  cross-browser-smoke:
+    name: Smoke / ${{ matrix.browser }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser engine
+        run: npx --yes playwright@1.55.0 install --with-deps ${{ matrix.browser }}
+      - name: Render application in browser engine
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 >/tmp/certtracker-http.log 2>&1 &
+          server=$!
+          trap 'kill $server || true' EXIT
+          sleep 2
+          npx --yes playwright@1.55.0 screenshot \
+            --browser=${{ matrix.browser }} \
+            --viewport-size="1280,900" \
+            --wait-for-timeout=5000 \
+            http://127.0.0.1:4173/ \
+            /tmp/certtracker-${{ matrix.browser }}.png
+          test -s /tmp/certtracker-${{ matrix.browser }}.png
