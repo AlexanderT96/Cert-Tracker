@@ -28,8 +28,11 @@ require(/Fine-grained GitHub token/i.test(read('src/github-sync-ui.js')),'Least-
 require(/AES-GCM-256/.test(sync)&&/PBKDF2-SHA256/.test(sync),'Encrypted sync must use AES-GCM with PBKDF2-SHA256.');
 require(/250000/.test(sync),'PBKDF2 work factor unexpectedly changed.');
 require(/Sync endpoint must use HTTPS/.test(sync),'WebDAV sync must enforce HTTPS.');
+require(/Do not embed WebDAV credentials/.test(sync),'WebDAV URL credential rejection is missing.');
+require(/credentials:'omit'/.test(sync)&&/referrerPolicy:'no-referrer'/.test(sync),'WebDAV transport must omit ambient credentials and referrers.');
 require(/noopener noreferrer/.test(ui),'External learning links must use noopener noreferrer.');
-require(/SAFE_PROTOCOLS/.test(hardening)&&/javascript:/.test('javascript:') ,'Security URL protocol guard is missing.');
+require(/SAFE_PROTOCOLS=new Set\(\['http:','https:','mailto:'\]\)/.test(hardening),'Security URL protocol allow-list changed unexpectedly.');
+require(!/SAFE_PROTOCOLS[^\n]+javascript:/i.test(hardening),'javascript: must never be an allowed navigation protocol.');
 require(/target==='_blank'/.test(hardening)&&/noopener/.test(hardening)&&/noreferrer/.test(hardening),'Reverse-tabnabbing protection is missing.');
 require(/referrerPolicy='no-referrer'/.test(hardening),'External navigation referrer suppression is missing.');
 
