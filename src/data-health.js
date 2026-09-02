@@ -6,19 +6,17 @@
 
   function normaliseVerifiedDate(value) {
     if (!value || typeof value !== 'string') return null;
-    if (/^\d{4}-\d{2}$/.test(value)) return new Date(`${value}-15T12:00:00`);
-    if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return new Date(`${value}T12:00:00`);
-    return null;
+    const day = /^\d{4}-\d{2}$/.test(value) ? `${value}-01` : value;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) return null;
+    const parsed = new Date(`${day}T00:00:00Z`);
+    if (!Number.isFinite(parsed.getTime()) || parsed.toISOString().slice(0,10) !== day || parsed.getTime() > Date.now()) return null;
+    return parsed;
   }
 
   function vendorSource(cert) {
     const vendor = cert?.vendor || '';
-    if (CT.vendorSources[vendor]) return CT.vendorSources[vendor];
-    const haystack = `${cert?.name || ''} ${cert?.coverage || ''}`.toLowerCase();
-    for (const [name, url] of Object.entries(CT.vendorSources)) {
-      if (haystack.includes(name.toLowerCase())) return url;
-    }
-    return null;
+    // Descriptions mention other vendors. Only an explicit issuer is safe.
+    return CT.vendorSources[vendor] || null;
   }
 
   function record(cert) {
@@ -30,7 +28,9 @@
     const fallbackSource = vendorSource(cert);
     const sourceUrl = audited?.url || embeddedExactSource || fallbackSource;
     const sourceLevel = audited?.level || (embeddedExactSource ? 'CERT' : fallbackSource ? 'VENDOR' : 'NONE');
-    const provenance = audited ? 'AUDITED_REGISTRY' : embeddedExactSource ? 'CATALOGUE' : fallbackSource ? 'VENDOR_FALLBACK' : 'NONE';
+    const provenance = audited ? audited.sourceAudited === false ? 'EXPLICIT_MAPPING' : 'AUDITED_REGISTRY' : embeddedExactSource ? 'CATALOGUE' : fallbackSource ? 'VENDOR_FALLBACK' : 'NONE';
+    const sourceCheckedAt = audited?.sourceCheckedAt || audited?.verifiedAt || null;
+    const credentialStatus = audited?.credentialStatus || null;
 
     let freshness = 'UNKNOWN';
     if (ageDays != null) {
@@ -52,12 +52,16 @@
     );
 
     const issues = [];
-    if (!verifiedValue) issues.push('No verification date');
+    if (!verified) issues.push(verifiedValue ? 'Invalid or future verification date' : 'No verification date');
     if (freshness === 'REVIEW') issues.push('Verification due for review');
     if (freshness === 'STALE') issues.push('Verification is stale');
     if (sourceLevel === 'NONE') issues.push('No official source');
     else if (sourceLevel === 'VENDOR') issues.push(audited ? 'Audited vendor-level source; cert-specific source still required' : 'Only vendor-level source mapped');
     if (!cert?.code) issues.push('No exam/cert code');
+    if (credentialStatus === 'RETIRED') issues.push('Credential retired — not available to new candidates');
+    if (credentialStatus === 'IN_DEVELOPMENT') issues.push('Credential in development — not confirmed bookable');
+    if (credentialStatus === 'UNCONFIRMED') issues.push('Exact credential title/availability unconfirmed');
+    if (audited?.sourceAudited === false) issues.push('Source details still require inspection');
     if (cert?.costNum > 0 && priceAgeDays != null && priceAgeDays > 365) issues.push('Price may be stale');
 
     return Object.freeze({
@@ -70,6 +74,8 @@
       sourceLevel,
       provenance,
       sourceNote: audited?.note || null,
+      sourceCheckedAt,
+      credentialStatus,
       priceAgeDays,
       confidence,
       issues: Object.freeze(issues)
@@ -90,19 +96,21 @@
       total: rows.length,
       fresh: count('FRESH'), review: count('REVIEW'), stale: count('STALE'), unknown: count('UNKNOWN'),
       exactSources, auditedExactSources, vendorSources, missingSources, averageConfidence,
+      sourceCoverage: rows.length ? Math.round((rows.length - missingSources) / rows.length * 100) : 0,
+      availabilityWarnings: rows.filter(row => row.credentialStatus).length,
       healthy: rows.filter(row => row.freshness === 'FRESH' && row.sourceLevel !== 'NONE').length
     });
   }
 
   function reviewQueue() {
     const order = { STALE: 0, UNKNOWN: 1, REVIEW: 2, FRESH: 3 };
-    return allRecords().filter(row => row.issues.length).sort((a, b) => order[a.freshness] - order[b.freshness] || a.confidence - b.confidence || a.name.localeCompare(b.name));
+    return allRecords().filter(row => row.issues.length).sort((a, b) => Number(!!b.credentialStatus) - Number(!!a.credentialStatus) || order[a.freshness] - order[b.freshness] || a.confidence - b.confidence || a.name.localeCompare(b.name));
   }
 
   function toCsv() {
     const esc = value => `"${String(value ?? '').replace(/"/g, '""')}"`;
-    const rows = [['id', 'name', 'verifiedAt', 'freshness', 'sourceLevel', 'provenance', 'sourceUrl', 'confidence', 'issues']];
-    allRecords().forEach(row => rows.push([row.id, row.name, row.verifiedAt, row.freshness, row.sourceLevel, row.provenance, row.sourceUrl, row.confidence, row.issues.join('; ')]));
+    const rows = [['id', 'name', 'verifiedAt', 'freshness', 'sourceLevel', 'provenance', 'sourceUrl', 'confidence', 'issues', 'sourceCheckedAt', 'credentialStatus', 'sourceNote']];
+    allRecords().forEach(row => rows.push([row.id, row.name, row.verifiedAt, row.freshness, row.sourceLevel, row.provenance, row.sourceUrl, row.confidence, row.issues.join('; '), row.sourceCheckedAt, row.credentialStatus, row.sourceNote]));
     return rows.map(row => row.map(esc).join(',')).join('\r\n');
   }
 

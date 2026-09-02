@@ -3,7 +3,7 @@
   async function test(name,fn){try{const value=await fn();const ok=value!==false;results.push({name,status:ok?'PASS':'FAIL',detail:ok?'':'returned false'});}catch(error){results.push({name,status:'FAIL',detail:error?.message||String(error)});}}
   function skip(name,detail){results.push({name,status:'SKIP',detail});}
 
-  await test('Application core loads',()=>window.CertTrackerV3?.version?.app==='4.8.3');
+  await test('Application core loads',()=>window.CertTrackerV3?.version?.app==='4.8.4');
   await test('Renderer state is provided by state-core',()=>window.CertTrackerState?.state===state&&SK.myPath==='ct4-mypath'&&typeof save.passes==='function'&&typeof save.capabilityEvidence==='function'&&typeof save.customization==='function');
   await test('Curated path is separate and frozen',()=>Array.isArray(window.CERT_TRACKER_DEFAULT_PATH)&&Object.isFrozen(window.CERT_TRACKER_DEFAULT_PATH)&&Array.isArray(window.CERT_TRACKER_DEFAULT_ADDITIONS));
   await test('Certification schema has no hard errors',()=>CertTrackerV3.validation.diagnostics.errors.length===0);
@@ -56,6 +56,9 @@
   await test('Planner advertises dual-pillar optimisation',()=>CertTrackerV3.planner.plan({maxCerts:2}).optimisation==='dual-pillar');
   await test('Planner does not schedule an unmet T3 experience gate',()=>CertTrackerV3.planner.plan({maxCerts:30}).sequence.every(item=>{const cert=CERTS.find(c=>c.id===item.id);const gate=cert&&CertTrackerV3.capabilityGates.gateForCert(cert);return !gate||gate.ready||CertTrackerV3.careerFramework.timing(cert)!=='T3';}));
   await test('Data health confidence stays bounded',()=>CertTrackerV3.dataHealth.allRecords().every(x=>x.confidence>=0&&x.confidence<=100));
+  await test('Every certification has explicit official provenance',()=>CERTS.every(c=>CertTrackerV3.sourceRegistry[c.id]?.url?.startsWith('https://'))&&CertTrackerV3.dataHealth.summary().sourceCoverage===100);
+  await test('Data health does not guess issuer from descriptive text',()=>CertTrackerV3.dataHealth.record({name:'Unknown',coverage:'AWS Microsoft Axis',verifiedAt:'2026-09-01'}).sourceLevel==='NONE');
+  await test('Retired and in-development credentials stay visible in review',()=>['jsnad','jsnsd','pcpp2'].every(id=>CertTrackerV3.dataHealth.reviewQueue().some(row=>row.id===id&&row.credentialStatus)));
 
   if(window.crypto?.subtle){
     const fastKdf={iterations:1000};
