@@ -28,7 +28,7 @@
   function safeColor(value,fallback){return /^#[0-9a-f]{6}$/i.test(String(value||''))?String(value):fallback;}
   function setVar(name,value){document.documentElement.style.setProperty(name,String(value));}
   function tabOrder(){const s=settings();const valid=['dashboard','learning','roadmap','certifications','strategy','customize'];return [...new Set((s.tabOrder||[]).filter(x=>valid.includes(x)).concat(valid))].filter(tab=>tab==='customize'||s.visibility?.[tab]!==false);}
-  function tabLabel(tab){return String(settings().tabLabels?.[tab]||DEFAULTS.tabLabels[tab]||tab);}
+  function tabLabel(tab){const label=String(settings().tabLabels?.[tab]||DEFAULTS.tabLabels[tab]||tab);return tab==='strategy'&&label==='Strategy'?'Career Options':label;}
   function title(){return String(settings().appTitle||DEFAULTS.appTitle).slice(0,40);}
 
   function migrateLegacyProfessional(){
@@ -94,7 +94,7 @@
   }
   function update(patch){state.customization=merge(settings(),patch);save.customization?.();apply(state.customization);CT.events.emit('personalization-changed',settings());if(typeof renderApp==='function')renderApp();requestAnimationFrame(()=>apply());return settings();}
   function preset(key){const p=PRESETS[key];if(!p)throw new Error('Unknown preset.');return update({preset:key,colors:{...p.colors},...(key==='professional'?{phaseColors:{...DEFAULTS.phaseColors},shadowStrength:DEFAULTS.shadowStrength,glowStrength:DEFAULTS.glowStrength,cardRadius:DEFAULTS.cardRadius,contentWidth:DEFAULTS.contentWidth}:{})});}
-  function reset(){state.customization=clone(DEFAULTS);save.customization?.();apply(state.customization);CT.events.emit('personalization-changed',settings());if(typeof renderApp==='function')renderApp();requestAnimationFrame(()=>apply());return settings();}
+  function reset(){const careerOptions=state.customization?.careerOptions;state.customization=clone(DEFAULTS);if(careerOptions)state.customization.careerOptions=careerOptions;save.customization?.();apply(state.customization);CT.events.emit('personalization-changed',settings());if(typeof renderApp==='function')renderApp();requestAnimationFrame(()=>apply());return settings();}
   function organiseDock(){
     let dock=document.getElementById('ct-command-dock');if(!dock){dock=document.createElement('div');dock.id='ct-command-dock';dock.className='ct-command-dock';dock.setAttribute('aria-label','Tracker tools');document.body.appendChild(dock);}
     // Keep existing tool handlers available inside Recommendations and mobile More,

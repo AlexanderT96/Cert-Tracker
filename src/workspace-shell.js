@@ -131,6 +131,7 @@
   }
   function renderWorkspaceContent(){
     const content=document.getElementById('tab-content');if(!content)return;
+    if(state.currentTab==='strategy'&&CT.careerOptionsUI){CT.careerOptionsUI.bind(content);return;}
     if(state.currentTab==='learning'){content.innerHTML=CT.learningPath.render();return;}
     if(state.currentTab==='roadmap'){content.innerHTML=CT.roadmapMap.render();CT.roadmapMap.bind(content);return;}
     if(state.currentTab==='customize'){content.innerHTML=CT.personalizationUI.render();CT.personalizationUI.bind(content);return;}
