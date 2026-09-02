@@ -4,9 +4,10 @@
   "private":true,
   "type":"module",
   "scripts":{
-    "test":"node tools/quality-check.mjs && node tools/formatting-check.mjs && node tools/privacy-check.mjs",
-    "test:quality":"node tools/quality-check.mjs && node tools/formatting-check.mjs",
+    "test":"node tools/quality-check.mjs && node tools/formatting-check.mjs && node tools/responsive-check.mjs && node tools/privacy-check.mjs",
+    "test:quality":"node tools/quality-check.mjs && node tools/formatting-check.mjs && node tools/responsive-check.mjs",
     "test:formatting":"node tools/formatting-check.mjs",
+    "test:responsive":"node tools/responsive-check.mjs",
     "test:privacy":"node tools/privacy-check.mjs",
     "test:freshness":"node tools/quality-check.mjs --freshness",
     "test:sources":"node tools/source-check.mjs"
