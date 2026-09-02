@@ -43,6 +43,14 @@ try{
   await desktop.page.screenshot({path:`/tmp/certtracker-${engine}-recommendations.png`,animations:'disabled',timeout:30000});
   await today.locator('.ct3-close').click();
   assert.equal(await launcher.evaluate(el=>document.activeElement===el),true,'Closing recommendations restores launcher focus');
+  await desktop.page.locator('.ct3-health').click();
+  const dataHealth=desktop.page.locator('[data-cert-data-health]');
+  await dataHealth.waitFor();
+  const healthText=await dataHealth.textContent();
+  assert.ok(healthText.includes('100%')&&healthText.includes('185/185 linked'));
+  assert.ok(healthText.includes('115 cert-level')&&healthText.includes('70 vendor-level'));
+  assert.ok(healthText.includes('Credential retired')&&healthText.includes('Credential in development'));
+  await desktop.page.getByRole('dialog',{name:'Certification data health'}).getByRole('button',{name:'Close',exact:true}).click();
   await desktop.page.screenshot({path:`/tmp/certtracker-${engine}-desktop.png`,animations:'disabled',timeout:30000});
   await desktop.context.close();
 
@@ -70,6 +78,12 @@ try{
   await page.locator('#ct-mobile-more-layer').waitFor({state:'visible'});
   await page.getByRole('button',{name:"Today's Recommendations",exact:true}).click();
   await page.locator('[data-today-recommendations]').waitFor();
+  await page.locator('[data-today-recommendations] [data-act="health"]').click();
+  await page.locator('[data-cert-data-health]').waitFor();
+  assert.ok((await page.locator('[data-cert-data-health]').textContent()).includes('185/185 linked'));
+  await page.getByRole('dialog',{name:'Certification data health'}).getByRole('button',{name:'Close',exact:true}).click();
+  await page.locator('#ct-mobile-more-button').click();
+  await page.getByRole('button',{name:"Today's Recommendations",exact:true}).click();
   await page.locator('[data-today-recommendations] .ct3-close').click();
   await page.locator('#ct-mobile-more-button').click();
   await page.locator('.ct-mobile-more-close').click();

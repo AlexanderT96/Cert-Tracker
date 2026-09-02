@@ -5,7 +5,7 @@
   const CT = global.CertTrackerV3 = global.CertTrackerV3 || {};
 
   CT.version = Object.freeze({
-    app: '4.8.3',
+    app: '4.8.4',
     data: 64,
     storage: 7,
     backup: 6,
