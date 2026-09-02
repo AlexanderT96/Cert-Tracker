@@ -3,7 +3,7 @@
   async function test(name,fn){try{const value=await fn();const ok=value!==false;results.push({name,status:ok?'PASS':'FAIL',detail:ok?'':'returned false'});}catch(error){results.push({name,status:'FAIL',detail:error?.message||String(error)});}}
   function skip(name,detail){results.push({name,status:'SKIP',detail});}
 
-  await test('Application core loads',()=>window.CertTrackerV3?.version?.app==='4.5.0');
+  await test('Application core loads',()=>window.CertTrackerV3?.version?.app==='4.6.0');
   await test('Renderer state is provided by state-core',()=>window.CertTrackerState?.state===state&&SK.myPath==='ct4-mypath'&&typeof save.passes==='function'&&typeof save.capabilityEvidence==='function'&&typeof save.customization==='function');
   await test('Curated path is separate and frozen',()=>Array.isArray(window.CERT_TRACKER_DEFAULT_PATH)&&Object.isFrozen(window.CERT_TRACKER_DEFAULT_PATH)&&Array.isArray(window.CERT_TRACKER_DEFAULT_ADDITIONS));
   await test('Certification schema has no hard errors',()=>CertTrackerV3.validation.diagnostics.errors.length===0);
@@ -35,8 +35,8 @@
   await test('Evidence maturity progresses monotonically',()=>{const L=CertTrackerV3.capabilityGates.LEVELS;return L.NONE.score<L.LAB.score&&L.LAB.score<L.USED.score&&L.USED.score<L.DESIGNED.score&&L.DESIGNED.score<L.OWNED.score;});
   await test('Competency similarity detects full self-overlap',()=>{const cert=CERTS[0];return Math.abs(CertTrackerV3.marketValue.overlap(cert,[cert])-1)<0.0001;});
   await test('Marginal value discounts a highly overlapping distinct credential',()=>{let best=null;for(let i=0;i<CERTS.length;i++){if(!Number(CERTS[i].cvValue))continue;for(let j=0;j<CERTS.length;j++){if(i===j)continue;const overlap=CertTrackerV3.marketValue.overlap(CERTS[i],[CERTS[j]]);if(!best||overlap>best.overlap)best={cert:CERTS[i],other:CERTS[j],overlap};}}if(!best||best.overlap<0.2)return true;const solo=CertTrackerV3.marketValue.marginalContribution(best.cert,[]);const marginal=CertTrackerV3.marketValue.marginalContribution(best.cert,[best.other]);return marginal.contributionRange.midpoint<=solo.contributionRange.midpoint&&marginal.novelty<=100;});
-  await test('Recommendation engine is competency-aware',()=>{const rows=CertTrackerV3.recommendations.recommend({limit:10});return rows.every(x=>x.available&&x.marketValue&&x.readiness&&Number.isFinite(x.relevance.percent)&&typeof x.portfolioClass==='string')&&rows.every((x,i)=>i===0||rows[i-1].score>=x.score);});
-  await test('Recommendation horizons are learning-first',()=>Object.values(CertTrackerV3.recommendations.HORIZONS).every(h=>h.weights.K>h.weights.M));
+  await test('Recommendation engine is competency-aware',()=>{const rows=CertTrackerV3.recommendations.recommend({limit:10});return rows.every(x=>x.available&&x.marketValue&&x.readiness&&x.tandem&&Number.isFinite(x.relevance.percent)&&typeof x.portfolioClass==='string')&&rows.every((x,i)=>i===0||rows[i-1].score>=x.score);});
+  await test('Recommendation horizons keep Market and Knowledge ROI equal',()=>Object.values(CertTrackerV3.recommendations.HORIZONS).every(h=>h.weights.K===h.weights.M));
   await test('Curriculum rungs receive explicit classification',()=>{const cert=CERTS.find(c=>c.id==='pcep');return !cert||['CURRICULUM RUNG','CORE CAPABILITY','PRIMARY SPECIALISATION','SUPPORTING','CAPSTONE'].includes(CertTrackerV3.capabilityGates.portfolioClass(cert));});
   await test('Experience-gated recommendations expose role gate status where mapped',()=>{const cert=CERTS.find(c=>c.id==='cissp')||CERTS.find(c=>c.id==='ccie-enterprise');if(!cert)return true;const row=CertTrackerV3.recommendations.score(cert,{horizon:'now'});return !!row.experienceGate&&typeof row.experienceGate.ready==='boolean';});
   await test('Topic engine returns a bounded learning recommendation',()=>{const row=CertTrackerV3.topicEngine.next({cert:CertTrackerV3.recommendations.recommend({limit:1})[0]?.cert});return !row||(row.mastery>=0&&row.mastery<=100&&row.score>=0&&Array.isArray(row.topic.actions));});
@@ -48,7 +48,7 @@
   await test('Planner respects maximum certification count',()=>CertTrackerV3.planner.plan({maxCerts:3}).sequence.length<=3);
   await test('Planner respects a zero self-funded budget',()=>CertTrackerV3.planner.plan({budget:0,maxCerts:10}).sequence.every(item=>item.cost===0));
   await test('Planner produces ordered cumulative effort',()=>{const rows=CertTrackerV3.planner.plan({maxCerts:8}).sequence;return rows.every((x,i)=>i===0||x.cumulativeHours>=rows[i-1].cumulativeHours);});
-  await test('Planner advertises learning-first optimisation',()=>CertTrackerV3.planner.plan({maxCerts:2}).optimisation==='learning-first');
+  await test('Planner advertises dual-pillar optimisation',()=>CertTrackerV3.planner.plan({maxCerts:2}).optimisation==='dual-pillar');
   await test('Planner does not schedule an unmet T3 experience gate',()=>CertTrackerV3.planner.plan({maxCerts:30}).sequence.every(item=>{const cert=CERTS.find(c=>c.id===item.id);const gate=cert&&CertTrackerV3.capabilityGates.gateForCert(cert);return !gate||gate.ready||CertTrackerV3.careerFramework.timing(cert)!=='T3';}));
   await test('Data health confidence stays bounded',()=>CertTrackerV3.dataHealth.allRecords().every(x=>x.confidence>=0&&x.confidence<=100));
 
