@@ -76,4 +76,26 @@ resolve(delayed.feed);await pending;
 assert.equal(old.querySelector('[data-market-dashboard]'),null,'A late feed must not render into a detached workspace');
 await delayed.settle();
 assert.equal(delayed.content.querySelectorAll('[data-market-dashboard]').length,1);
-console.log('UI lifecycle gate passed: observers settle, unchanged panels retain identity, state changes render, refresh fetches once and stale workspaces stay untouched.');
+// Navigation ordering must settle too: moving every tab to the end on every
+// observer callback leaves the same order but generates another full DOM update.
+{
+  const keys=['dashboard','learning','roadmap','certifications','strategy','customize'];
+  let writes=0;
+  const nav={children:keys.map(key=>({dataset:{workspaceTab:key,ctWorkspace:key},textContent:key,style:{}})),
+    querySelector(selector){return this.children.find(b=>selector.includes(`"${b.dataset.workspaceTab}"`))||null;},
+    querySelectorAll(){return this.children;},
+    get lastElementChild(){return this.children.at(-1);},
+    appendChild(button){this.children=this.children.filter(b=>b!==button);this.children.push(button);writes++;},
+    insertBefore(button,next){this.children=this.children.filter(b=>b!==button);this.children.splice(next?this.children.indexOf(next):this.children.length,0,button);writes++;}
+  };
+  const CT={store:{}},state={customization:{}};
+  const document={readyState:'loading',addEventListener(){},querySelector:selector=>selector==='.tabs'?nav:null};
+  const sandbox={CertTrackerV3:CT,state,document};sandbox.window=sandbox;
+  vm.runInNewContext(fs.readFileSync('src/personalization.js','utf8'),sandbox);
+  CT.personalization.applyNavigation();writes=0;
+  CT.personalization.applyNavigation();assert.equal(writes,0,'Already ordered tabs must not mutate the DOM');
+  state.customization.tabOrder=[...keys].reverse();CT.personalization.applyNavigation();
+  assert.deepEqual(nav.children.map(b=>b.dataset.workspaceTab),[...keys].reverse());
+  writes=0;CT.personalization.applyNavigation();assert.equal(writes,0,'Custom tab order must also settle');
+}
+console.log('UI lifecycle gate passed: panel and navigation observers settle, updates render, refresh fetches once and stale workspaces stay untouched.');

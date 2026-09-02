@@ -11,7 +11,7 @@ async function open(options){
   page.setDefaultTimeout(15000);page.setDefaultNavigationTimeout(60000);
   page.on('pageerror',error=>{errors.push(error.message);console.error('Application error:',error.stack||error.message);});
   page.on('console',message=>{if(message.type()==='error'&&message.text().includes('[CertTracker] initial render failed'))errors.push(message.text());});
-  await page.goto('http://127.0.0.1:4173/');
+  await page.goto('http://localhost:4173/');
   console.log('Startup modules:',await page.evaluate(()=>({modules:Object.keys(window.CertTrackerV3||{}),alias:!!window.CertTracker})));
   await page.waitForFunction(()=>!!window.CertTracker?.workspaceShell);
   await page.locator('[data-market-dashboard]').waitFor();
