@@ -19,12 +19,18 @@
 
   function certHtml(cert){const p=CT.dualPillarDepth.certProfile(cert);return `<section class="ct-dual-cert" data-dual-cert="${esc(cert.id)}"><div class="ct-dual-cert-title"><strong>CAREER + PERFORMANCE INTELLIGENCE</strong><span class="ct-dual-pill">M${p.card.M} / K${p.card.K} · BAL ${p.tandem.balance}/10</span></div><div class="ct-dual-metrics" style="justify-content:flex-start"><span class="ct-dual-metric">M${p.card.M} MARKET</span><span class="ct-dual-metric">K${p.card.K} CAPABILITY</span><span class="ct-dual-metric">${p.depth.subjects} SUBJECTS</span><span class="ct-dual-metric">${p.depth.deepCount} D4/D5</span><span class="ct-dual-metric">TARGET ${esc(p.evidenceLevel)}</span></div><div class="ct-dual-grid"><div class="ct-dual-pane"><b>Why it helps you get the role</b><p>${esc(p.marketAccess)}</p></div><div class="ct-dual-pane"><b>Why it helps you perform the role</b><p>${esc(p.capability)}</p></div><div class="ct-dual-pane"><b>Best-fit role contexts</b><p>${esc(p.roleFits.map(x=>`${x.label} ${x.fit}%`).join(' · '))}</p></div><div class="ct-dual-pane"><b>Deepest syllabus areas</b><p>${esc(p.depth.deepSubjects.join(' · ')||'No D4/D5 topic is currently recorded; use the practical conversion tasks to prevent shallow completion.')}</p></div></div><div class="ct-dual-pane"><b>Convert the badge into job performance</b><ul class="ct-dual-list">${p.performanceTasks.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div><div class="ct-dual-standard"><strong>Completion standard:</strong> ${esc(p.completionStandard)}<br><strong>Risk check:</strong> ${esc(p.imbalance)}</div></section>`;}
 
+  const pathwayMarkup=new WeakMap();
   function mountPathway(){
     const content=document.getElementById('tab-content');if(!content)return;
-    const item=currentFilterItem(),profile=item?CT.dualPillarDepth.pathwayProfile(item):null;if(!profile)return;
-    content.querySelectorAll(':scope > .ct-dual-brief').forEach(x=>x.remove());
-    const tabs=new Set(['dashboard','certifications','roadmap','learning','strategy']);if(!tabs.has(state.currentTab))return;
-    content.insertAdjacentHTML('afterbegin',pathwayHtml(profile));
+    const existing=content.querySelector(':scope > .ct-dual-brief');
+    const tabs=new Set(['dashboard','certifications','roadmap','learning','strategy']);if(!tabs.has(state.currentTab)){existing?.remove();return;}
+    const item=currentFilterItem(),profile=item?CT.dualPillarDepth.pathwayProfile(item):null;if(!profile){existing?.remove();return;}
+    const html=pathwayHtml(profile);
+    // Compare our source markup, not decorated DOM: observers must settle after their own writes.
+    if(existing&&pathwayMarkup.get(existing)===html)return;
+    const host=document.createElement('div');host.innerHTML=html;const next=host.firstElementChild;
+    pathwayMarkup.set(next,html);
+    if(existing)existing.replaceWith(next);else content.prepend(next);
   }
 
   function mountCerts(root=document){

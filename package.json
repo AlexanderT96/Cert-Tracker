@@ -1,11 +1,12 @@
 {
   "name":"cert-tracker",
-  "version":"4.8.0",
+  "version":"4.8.1",
   "private":true,
   "type":"module",
   "scripts":{
-    "test":"node tools/quality-check.mjs && node tools/filter-model-check.mjs && node tools/dual-pillar-depth-check.mjs && node tools/market-readiness-check.mjs && node tools/role-readiness-check.mjs && node tools/formatting-check.mjs && node tools/responsive-check.mjs && node tools/privacy-check.mjs && node tools/security-check.mjs && node tools/browser-compat-check.mjs",
-    "test:quality":"node tools/quality-check.mjs && node tools/filter-model-check.mjs && node tools/dual-pillar-depth-check.mjs && node tools/market-readiness-check.mjs && node tools/role-readiness-check.mjs && node tools/formatting-check.mjs && node tools/responsive-check.mjs && node tools/security-check.mjs && node tools/browser-compat-check.mjs",
+    "test":"node tools/quality-check.mjs && node tools/filter-model-check.mjs && node tools/dual-pillar-depth-check.mjs && node tools/market-readiness-check.mjs && node tools/role-readiness-check.mjs && node tools/ui-lifecycle-check.mjs && node tools/formatting-check.mjs && node tools/responsive-check.mjs && node tools/privacy-check.mjs && node tools/security-check.mjs && node tools/browser-compat-check.mjs",
+    "test:quality":"node tools/quality-check.mjs && node tools/filter-model-check.mjs && node tools/dual-pillar-depth-check.mjs && node tools/market-readiness-check.mjs && node tools/role-readiness-check.mjs && node tools/ui-lifecycle-check.mjs && node tools/formatting-check.mjs && node tools/responsive-check.mjs && node tools/security-check.mjs && node tools/browser-compat-check.mjs",
+    "test:lifecycle":"node tools/ui-lifecycle-check.mjs",
     "test:filters":"node tools/filter-model-check.mjs",
     "test:depth":"node tools/dual-pillar-depth-check.mjs",
     "test:market":"node tools/market-readiness-check.mjs",
