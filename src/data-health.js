@@ -24,7 +24,8 @@
   }
   function eligibility(cert,passes=CT.store?.state?.passes||{}){
     const a=availability(cert),missing=(cert?.formalPrerequisites||[]).filter(id=>!passes[id]);
-    return {...a,missing,eligible:a.eligible&&!missing.length,reason:!a.eligible?'Credential '+a.status.toLowerCase().replaceAll('_',' '):missing.length?'Formal prerequisite not recorded':'Check issuer booking requirements'};
+    const external=cert?.requiresExternalPrerequisites&&credentialRecord(cert).eligibilityConfirmed!==true;
+    return {...a,missing,eligible:a.eligible&&!missing.length&&!external,reason:external?'Confirm the active issuer prerequisite chain in Awards & funding':!a.eligible?'Credential '+a.status.toLowerCase().replaceAll('_',' '):missing.length?'Formal prerequisite not recorded':'Check issuer booking requirements'};
   }
   CT.credentials=Object.freeze({record:credentialRecord,availability,active:activeCredential,eligibility});
   function vendorSource(cert) {

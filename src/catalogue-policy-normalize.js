@@ -37,5 +37,6 @@
   patch('cissp',{requiresAwardConfirmation:true,prerequisites:'Full CISSP certification requires qualifying experience and endorsement, not only an exam pass. Candidates without the experience may pursue Associate of ISC2 status. Do not describe this as CISSP Associate.',factChecks:{eligibility:fact('https://www.isc2.org/certifications/associate')}});
   for(const id of ['ccsp','issap','issep','issmp','cisa','cism','crisc','cgeit'])patch(id,{requiresAwardConfirmation:true});
   for(const id of ['jsnad','jsnsd'])patch(id,{factChecks:{availability:fact('https://training.linuxfoundation.org/'+id+'-cert-inactive/')}});
+  for(const id of ['fcx','fcss-secops','fortinet-ot-security'])patch(id,{requiresExternalPrerequisites:true});
   for(const cert of CERTS){cert.learningDependencies=[...(cert.deps||[])];cert.formalPrerequisites=cert.formalPrerequisites||[];}
 })();

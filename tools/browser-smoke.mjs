@@ -56,6 +56,11 @@ try{
   await desktop.page.locator('.career-explorer').waitFor();
   assert.equal(await desktop.page.locator('.ct-dual-brief').count(),0);
   await desktop.page.locator('[data-career-search]').fill('GIS');
+  await desktop.page.waitForFunction(()=>{
+    const shown=[...document.querySelectorAll('[data-shortlist]')].map(el=>el.dataset.shortlist);
+    const expected=window.CertTrackerV3.careerOptions.options({search:'GIS'}).map(a=>a.role.id);
+    return shown.length>0&&JSON.stringify(shown)===JSON.stringify(expected);
+  });
   assert.ok(await desktop.page.locator('.career-card').count()>0);
   await desktop.page.locator('[data-shortlist]').first().click();
   await desktop.page.locator('[data-career-shortlist]').check();

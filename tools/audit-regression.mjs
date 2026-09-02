@@ -15,6 +15,7 @@ for(const id of ['jsnad','jsnsd','pcpp2','secot-plus']){
  assert.equal(CT.recommendations.score(c,{passes}).available,false,id+' unavailable');
 }
 run("updateExam('jsnad','2026-09-15')");assert.equal(state.exams.jsnad,undefined);
+assert.equal(CT.credentials.eligibility(cert('fcx')).eligible,false,'Unmodelled prerequisite chain requires explicit checking');
 state.myPath={jsnad:true};state.passes={};state.skipped={};assert.equal(CT.planner.plan().sequence.length,0);
 state.objectiveProgress={};run('save.objectives()');CT.store.setObjective('ccna',80);CT.storage.undoLastChange();assert.equal(state.objectiveProgress.ccna,undefined);
 CT.store.setObjective('ccna',20);CT.store.setObjective('ccna',30);CT.storage.undoLastChange();assert.equal(state.objectiveProgress.ccna,20,'Rapid separate changes must undo one step');

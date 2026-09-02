@@ -64,6 +64,7 @@
 
     if(value.credentials!=null){if(!isObj(value.credentials))errors.push('credentials must be an object.');else for(const [id,row]of Object.entries(value.credentials)){
       if(!validIds.has(id)||!isObj(row)){errors.push('Invalid credential record: '+id);continue;}
+      if(row.eligibilityConfirmed!=null&&typeof row.eligibilityConfirmed!=='boolean')errors.push('Invalid prerequisite confirmation: '+id);
       if(row.status!=null&&!['PENDING','ASSOCIATE','ACTIVE','EXPIRED'].includes(row.status))errors.push('Invalid award status: '+id);
       if(row.funding!=null&&!['self','employer'].includes(row.funding))errors.push('Invalid funding: '+id);
       if(row.cost!=null&&(typeof row.cost!=='number'||!Number.isFinite(row.cost)||row.cost<0))errors.push('Invalid quoted cost: '+id);
