@@ -97,8 +97,11 @@
   function reset(){state.customization=clone(DEFAULTS);save.customization?.();apply(state.customization);CT.events.emit('personalization-changed',settings());if(typeof renderApp==='function')renderApp();requestAnimationFrame(()=>apply());return settings();}
   function organiseDock(){
     let dock=document.getElementById('ct-command-dock');if(!dock){dock=document.createElement('div');dock.id='ct-command-dock';dock.className='ct-command-dock';dock.setAttribute('aria-label','Tracker tools');document.body.appendChild(dock);}
-    ['ct3-launcher','ct-learning-launcher','ct-intel-launcher','ct-career-launcher','ct31-market-launcher','ct-github-sync-launcher','ct-customize-launcher'].forEach(id=>{const el=document.getElementById(id);if(el&&el.parentElement!==dock)dock.appendChild(el);});
-    const s=settings();const visible=['learning','plan','career','market','sync'].some(k=>s.visibility?.[k]!==false);const wanted=(visible||document.getElementById('ct-customize-launcher')||document.getElementById('ct3-launcher'))?'':'none';if(dock.style.display!==wanted)dock.style.display=wanted;
+    // Keep existing tool handlers available inside Recommendations and mobile More,
+    // but retire the multi-button floating dock entirely.
+    ['ct-learning-launcher','ct-intel-launcher','ct-career-launcher','ct31-market-launcher','ct-github-sync-launcher','ct-customize-launcher'].forEach(id=>{const el=document.getElementById(id);if(el&&el.parentElement!==dock)dock.appendChild(el);});
+    const today=document.getElementById('ct3-launcher');if(today&&today.parentElement!==document.body)document.body.appendChild(today);
+    if(!dock.hidden)dock.hidden=true;
   }
   function init(){if(!state.customization||typeof state.customization!=='object')state.customization=clone(DEFAULTS);else migrateLegacyProfessional();apply();let queued=false;new MutationObserver(()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;applyVisibility(settings().visibility||{});applyNavigation();organiseDock();});}).observe(document.body,{childList:true,subtree:true});}
   CT.personalization=Object.freeze({PRESETS,DEFAULTS,settings,apply,update,preset,reset,tabOrder,tabLabel,title,applyNavigation,organiseDock,migrateLegacyProfessional});

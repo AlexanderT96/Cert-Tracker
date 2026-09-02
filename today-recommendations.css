@@ -1,0 +1,26 @@
+/* A single, quiet entry point replaces the multi-button desktop tool dock. */
+#ct-command-dock,
+#ct-learning-launcher,#ct-intel-launcher,#ct-career-launcher,
+#ct31-market-launcher,#ct-github-sync-launcher,#ct-customize-launcher{display:none!important}
+body > #ct3-launcher{
+  position:fixed!important;inset:auto 24px 20px auto!important;z-index:9996!important;
+  display:inline-flex;align-items:center;justify-content:center;min-height:46px;
+  max-width:calc(100vw - 32px);padding:12px 20px!important;
+  border:1px solid #29857f!important;border-radius:8px!important;
+  background:linear-gradient(160deg,#103438,#091b20)!important;color:#bafff4!important;
+  font:700 12px/1.3 var(--ct-font-family,system-ui)!important;letter-spacing:.025em;
+  box-shadow:0 6px 20px #0008!important;backdrop-filter:none!important;
+  transform:none!important;white-space:normal;text-align:center;cursor:pointer;
+}
+body > #ct3-launcher::before,body > #ct3-launcher::after{display:none!important}
+body > #ct3-launcher:hover{border-color:#67e8d7!important;background:#123c3e!important}
+body > #ct3-launcher:focus-visible{outline:2px solid #8ffff0;outline-offset:4px}
+[data-today-recommendations] .ct3-panel{background:var(--surface,#091b20);color:var(--text,#e8f5f6);border-color:var(--border,#21515a)}
+[data-today-recommendations] .ct3-sub,[data-today-recommendations] .ct3-muted{color:var(--muted,#9bb6bd)}
+[data-today-recommendations] .ct3-btn.primary{background:#15464a;border-color:#368c85}
+[data-today-recommendations] .ct3-big{font-size:22px;line-height:1.3}
+[data-today-market-status]{font-size:12px;line-height:1.6;color:var(--muted,#9bb6bd)}
+.ct-today-tools{margin-top:18px;border-top:1px solid var(--border,#21515a);padding-top:12px}
+.ct-today-tools summary{cursor:pointer;font-size:12px;color:var(--muted,#9bb6bd)}
+/* On phones the existing More sheet owns this entry: no second bottom bar. */
+html[data-layout="mobile"] body > #ct3-launcher{display:none!important}

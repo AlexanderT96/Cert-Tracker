@@ -103,3 +103,21 @@ assert.equal(delayed.content.querySelectorAll('[data-market-dashboard]').length,
   writes=0;CT.personalization.applyNavigation();assert.equal(writes,0,'Custom tab order must also settle');
 }
 console.log('UI lifecycle gate passed: panel and navigation observers settle, updates render, refresh fetches once and stale workspaces stay untouched.');
+
+// Source freshness is distinct from the time a user clicks Refresh.
+{
+  const now=Date.parse('2026-09-02T12:00:00Z'),feed={status:'live',fetchedAt:new Date(now).toISOString(),jobs:[]};
+  let offline=false,requests=0;
+  const CT={marketReadiness:{}};
+  const sandbox={CertTrackerV3:CT,console:{warn(){}},AbortController,setTimeout,clearTimeout,fetch:async()=>{requests++;if(offline)throw Error('offline');return{ok:true,json:async()=>feed};}};sandbox.window=sandbox;
+  vm.runInNewContext(fs.readFileSync('src/job-market.js','utf8'),sandbox);
+  assert.match(CT.jobMarket.freshness(feed,now).label,/Recent/);
+  assert.match(CT.jobMarket.freshness(feed,now+3600000).label,/Stale/);
+  assert.match(CT.jobMarket.freshness({...feed,fetchedAt:null},now).label,/unverified/);
+  assert.match(CT.jobMarket.freshness({...feed,status:'degraded'},now).label,/Partial/);
+  await CT.jobMarket.load();offline=true;
+  const fallback=await CT.jobMarket.load({force:true});
+  assert.equal(requests,2);assert.equal(fallback.fetchedAt,feed.fetchedAt);
+  assert.match(CT.jobMarket.freshness(fallback,now).label,/cached/);
+  console.log('Recommendations freshness passed: recent, stale, missing, degraded and offline-cache cases.');
+}

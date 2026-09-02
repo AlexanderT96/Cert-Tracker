@@ -4,6 +4,14 @@
   const CT=global.CertTrackerV3;if(!CT?.marketReadiness)return;
   let cache=null,loading=null;
   const FEED='data/job-market.json';
+  function freshness(feed,now=Date.now()){
+    const at=Date.parse(feed?.fetchedAt||''),age=now-at;
+    const source=Number.isFinite(at)?`Source updated ${new Date(at).toLocaleString()}. `:'No verified source timestamp. ';
+    if(feed?.refreshError||!feed||['unavailable','awaiting-provider-credentials'].includes(feed.status))return{label:'Unavailable / cached data',detail:source+'A current provider feed could not be verified.'};
+    if(!Number.isFinite(at)||age< -60000||age>15*60000)return{label:'Stale or unverified market data',detail:source+'Do not treat these listings as live.'};
+    if(!['live','ready','ok'].includes(feed.status))return{label:'Partial market feed',detail:source+'Provider coverage is degraded; listings may be incomplete.'};
+    return{label:'Recent published market data',detail:source+'Listings are provider snapshots, not real-time guarantees.'};
+  }
   const STOP=new Set(['and','the','for','with','security','engineer','analyst','specialist','manager','uk','cyber']);
   const RANK_INDEX=Object.freeze({R1:1,R2:2,R3:3,R4:4,R5:5,R6:6});
   function words(value){return [...new Set(String(value||'').toLowerCase().replace(/[^a-z0-9+#/. -]+/g,' ').split(/\s+/).filter(x=>x.length>2&&!STOP.has(x)))];}
@@ -11,7 +19,7 @@
   function ageScore(created){if(!created)return 30;const days=(Date.now()-new Date(created).getTime())/86400000;if(!Number.isFinite(days))return 20;return Math.max(0,100-days*9);}
   function salaryMid(job){const lo=Number(job.salaryMin)||0,hi=Number(job.salaryMax)||0;return lo&&hi?(lo+hi)/2:lo||hi||0;}
   function providerSearch(role,provider){const q=encodeURIComponent(role?.query||role?.label||'cyber security');if(provider==='indeed')return`https://uk.indeed.com/jobs?q=${q}`;if(provider==='reed')return`https://www.reed.co.uk/jobs/${q.replace(/%20/g,'-')}-jobs`;return`https://www.adzuna.co.uk/search?q=${q}`;}
-  async function load({force=false}={}){if(cache&&!force)return cache;if(loading&&!force)return loading;loading=fetch(`${FEED}?v=${Date.now()}`,{cache:'no-store',credentials:'same-origin'}).then(r=>{if(!r.ok)throw new Error(`Market feed HTTP ${r.status}`);return r.json();}).then(data=>{cache=data;return data;}).catch(error=>{console.warn('[CertTracker job market]',error);return cache||{schemaVersion:1,status:'unavailable',jobs:[],fetchedAt:null,provider:'Adzuna'};}).finally(()=>{loading=null;});return loading;}
+  async function load({force=false}={}){if(cache&&!force)return cache;if(loading)return loading;const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),12000);loading=fetch(`${FEED}?v=${Date.now()}`,{cache:'no-store',credentials:'same-origin',signal:controller.signal}).then(r=>{if(!r.ok)throw new Error(`Market feed HTTP ${r.status}`);return r.json();}).then(data=>{cache=data;return data;}).catch(error=>{console.warn('[CertTracker job market]',error);return cache?{...cache,refreshError:true}:{schemaVersion:1,status:'unavailable',jobs:[],fetchedAt:null,provider:'Adzuna'};}).finally(()=>{clearTimeout(timer);loading=null;});return loading;}
   function roleForJob(job,roles=CT.marketReadiness.roles()){const text=`${job.query||''} ${job.title||''} ${job.description||''}`;return roles.map(role=>{const direct=Math.max(overlap(role.query,text),overlap(role.label,text)),path=role.path?.spec?.mission?overlap(role.path.spec.mission,text):0;return{role,match:Math.max(direct,path*.8)};}).sort((a,b)=>b.match-a.match||b.role.score-a.role.score)[0]||null;}
   function jobSeniority(job){
     const text=` ${String(job?.title||'').toLowerCase().replace(/[^a-z0-9]+/g,' ')} `;
@@ -37,5 +45,5 @@
   function liveBand(role,feed=cache){const rows=rankJobs(feed,[role]).filter(x=>x.roleMatch>=38&&x.seniorityGap<=0).map(x=>x.salaryMid).filter(x=>x>=20000&&x<=250000).sort((a,b)=>a-b);if(rows.length<3)return null;const pct=p=>rows[Math.min(rows.length-1,Math.floor((rows.length-1)*p))];return Object.freeze({low:Math.round(pct(.2)/500)*500,median:Math.round(pct(.5)/500)*500,high:Math.round(pct(.8)/500)*500,samples:rows.length,source:feed?.provider||'live feed',fetchedAt:feed?.fetchedAt||null});}
   function bestFit(feed=cache,limit=10){return rankJobs(feed).filter(x=>x.role?.score>=45&&x.seniorityGap<=0).slice(0,limit);}
   function summary(feed=cache){const roles=CT.marketReadiness.roles(),ranked=rankJobs(feed,roles),best=ranked.filter(x=>x.role?.score>=58&&x.seniorityGap<=0);return Object.freeze({status:feed?.status||'unavailable',provider:feed?.provider||'Adzuna',fetchedAt:feed?.fetchedAt||null,total:Number(feed?.jobs?.length||0),bestFit:Object.freeze(best.slice(0,12)),ranked,roles:Object.freeze(roles.slice(0,12))});}
-  CT.jobMarket=Object.freeze({FEED,load,rankJobs,roleForJob,jobSeniority,seniorityFit,liveBand,bestFit,summary,providerSearch,salaryMid});
+  CT.jobMarket=Object.freeze({FEED,load,freshness,rankJobs,roleForJob,jobSeniority,seniorityFit,liveBand,bestFit,summary,providerSearch,salaryMid});
 })(window);

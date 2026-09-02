@@ -34,7 +34,9 @@
 
   let activeModal = null;
   let previousFocus = null;
+  let todayTimer = null;
   function closeModal() {
+    clearInterval(todayTimer);todayTimer=null;
     if (!activeModal) return;
     activeModal.remove(); activeModal = null;
     previousFocus?.focus?.(); previousFocus = null;
@@ -62,6 +64,7 @@
   }
 
   function showToday() {
+    const calculatedAt=new Date();
     const explanation = CT.recommendations.explainTop();
     const top = explanation?.top;
     const due = dueItems();
@@ -70,20 +73,45 @@
     const blockers = CT.phases.phaseBlockers(phase);
     const lastBackup = CT.storage.lastBackupAt();
     const backupAge = lastBackup ? Math.floor((Date.now() - new Date(lastBackup).getTime()) / 86400000) : null;
+    const topic=CT.topicEngine?.next({cert:top?.cert||null});
     const body = `
+      <div class="ct3-notice" data-today-calculated>Recommendations recalculated ${esc(calculatedAt.toLocaleString())} from your current progress, evidence and bundled certification catalogue. Catalogue sources are not fetched live; check Data health before booking.</div>
       <div class="ct3-grid">
-        <div class="ct3-card"><h3>Best next move</h3>${top ? `<div class="ct3-big">${esc(top.name)}</div><div class="ct3-muted">Score ${top.score} · ~${Math.round(top.estimatedHours)} focused hours</div><div class="ct3-notice">${esc(top.reasons.slice(0,3).join(' · '))}</div>` : '<div class="ct3-muted">No available recommendation.</div>'}</div>
+        <div class="ct3-card"><h3>Best next move</h3>${top ? `<div class="ct3-big">${esc(top.name)}</div><div class="ct3-muted">M${top.career.M} market · K${top.career.K} capability · ~${Math.round(top.estimatedHours)} focused hours</div><div class="ct3-notice">${esc(top.reasons.slice(0,3).join(' · '))}</div>` : '<div class="ct3-muted">No available recommendation.</div>'}${topic?`<h3>Study alongside it</h3><strong>${esc(topic.topic.title)}</strong><div class="ct3-muted">${esc(topic.topic.actions[0]||topic.topic.why)}</div>`:''}</div>
         <div class="ct3-card"><h3>Phase ${phase}</h3><div class="ct3-big">${blockers.length}</div><div class="ct3-muted">remaining blocker${blockers.length === 1 ? '' : 's'}</div><div class="ct3-list">${blockers.slice(0,3).map(b => `<div class="ct3-row"><span>${esc(b.label)}</span><span class="ct3-pill">${esc(b.type)}</span></div>`).join('') || '<div class="ct3-muted">Phase gate complete.</div>'}</div></div>
         <div class="ct3-card"><h3>Next 30 days</h3><div class="ct3-list">${due.exams.slice(0,4).map(x => `<div class="ct3-row"><span>${esc(x.cert.name)}</span><span>${x.days}d</span></div>`).join('') || '<div class="ct3-muted">No exams due.</div>'}</div></div>
         <div class="ct3-card"><h3>Data confidence</h3><div class="ct3-big">${health.averageConfidence}%</div><div class="ct3-muted">${health.stale} stale · ${health.review} review · ${health.unknown} unknown</div><div class="ct3-muted" style="margin-top:8px">Backup: ${backupAge == null ? 'never exported' : backupAge === 0 ? 'today' : `${backupAge}d ago`}</div></div>
       </div>
       ${due.renewals.length ? `<div class="ct3-card" style="margin-top:12px"><h3>Renewal attention</h3>${due.renewals.slice(0,5).map(x => `<div class="ct3-row"><span>${esc(x.cert.name)}</span><span class="ct3-pill">${esc(x.info.status)} ${x.info.days == null ? '' : `${x.info.days}d`}</span></div>`).join('')}</div>` : ''}
-      <div class="ct3-actions"><button class="ct3-btn primary" data-act="recommend">Recommendations</button><button class="ct3-btn" data-act="health">Data health</button><button class="ct3-btn" data-act="sync">Sync vault</button><button class="ct3-btn" data-act="backup">Export backup</button></div>`;
-    modal({ title: 'Today', subtitle: `${explanation?.goalLabel || 'Career plan'} · Cert Tracker v${CT.version.app}`, body, onMount(root) {
+      <div class="ct3-card ct-today-market" style="margin-top:12px"><h3>Latest available job-market matches</h3><div data-today-market-status role="status">Checking the published market feed…</div><div data-today-jobs></div></div>
+      <div class="ct3-actions"><button class="ct3-btn primary" data-act="refresh-today">Refresh recommendations</button><button class="ct3-btn" data-act="recommend">All recommendations</button><button class="ct3-btn" data-act="health">Data health</button></div>
+      <details class="ct-today-tools"><summary>Tools &amp; backups</summary><div class="ct3-actions"><button class="ct3-btn" data-tool="ct-intel-launcher">Plan</button><button class="ct3-btn" data-tool="ct31-market-launcher">Market value</button><button class="ct3-btn" data-tool="ct-career-launcher">Career</button><button class="ct3-btn" data-tool="ct-github-sync-launcher">GitHub sync</button><button class="ct3-btn" data-act="sync">Sync vault</button><button class="ct3-btn" data-act="backup">Export backup</button></div></details>`;
+    modal({ title: "Today's Recommendations", subtitle: `${explanation?.goalLabel || 'Career plan'} · Cert Tracker v${CT.version.app}`, body, onMount(root) {
+      root.dataset.todayRecommendations='true';
+      root.querySelector('[data-act="refresh-today"]').addEventListener('click',showToday);
+      root.querySelectorAll('[data-tool]').forEach(button=>button.addEventListener('click',()=>{closeModal();document.getElementById(button.dataset.tool)?.click();}));
       root.querySelector('[data-act="recommend"]')?.addEventListener('click', showRecommendations);
       root.querySelector('[data-act="health"]')?.addEventListener('click', showDataHealth);
       root.querySelector('[data-act="sync"]')?.addEventListener('click', showSync);
       root.querySelector('[data-act="backup"]')?.addEventListener('click', () => CT.storage.exportBackup());
+      let loading=false;
+      const refreshMarket=async()=>{
+        if(loading||!root.isConnected)return;loading=true;
+        try{
+          const feed=await CT.jobMarket.load({force:true});
+          if(root!==activeModal||!root.isConnected)return;
+          const freshness=CT.jobMarket.freshness(feed),checked=new Date().toLocaleString();
+          root.querySelector('[data-today-market-status]').textContent=`${freshness.label}. ${freshness.detail} Checked ${checked}.`;
+          const jobs=CT.jobMarket.bestFit(feed,4);
+          root.querySelector('[data-today-jobs]').innerHTML=jobs.map(({job,role})=>{
+            let url='';try{const parsed=new URL(job.url);if(['https:','http:'].includes(parsed.protocol))url=parsed.href;}catch{}
+            return `<div class="ct3-row"><div><strong>${esc(job.title)}</strong><div class="ct3-muted">${esc(job.company||'')} · ${esc(role?.label||'')} · ${esc(job.location||'UK')}</div></div>${url?`<a class="ct3-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">View listing</a>`:''}</div>`;
+          }).join('')||'<div class="ct3-muted" style="margin-top:8px">No suitable published matches available. Your learning recommendations still work locally.</div>';
+        }catch{if(root===activeModal)root.querySelector('[data-today-market-status]').textContent='Market feed unavailable. Local recommendations remain available.';}
+        finally{loading=false;}
+      };
+      refreshMarket();
+      todayTimer=setInterval(()=>{if(document.visibilityState==='visible')refreshMarket();},300000);
     }});
   }
 
@@ -131,7 +159,7 @@
   }
 
   const commands = [
-    { name: 'Today', hint: 'What needs attention now', action: showToday },
+    { name: "Today's Recommendations", hint: 'Current progress and latest published market data', action: showToday },
     { name: 'Recommendations', hint: 'Best next certification', action: showRecommendations },
     { name: 'Data health', hint: 'Sources and freshness', action: showDataHealth },
     { name: 'Encrypted sync', hint: 'Multi-device vault', action: showSync },
@@ -165,7 +193,7 @@
 
   function addLauncher() {
     if (document.getElementById('ct3-launcher')) return;
-    const button = document.createElement('button'); button.id = 'ct3-launcher'; button.type = 'button'; button.textContent = 'Today · ⌘K'; button.setAttribute('aria-label', 'Open Cert Tracker command palette');
+    const button = document.createElement('button'); button.id = 'ct3-launcher'; button.type = 'button'; button.textContent = "Today's Recommendations"; button.setAttribute('aria-label', "Open Today's Recommendations");button.setAttribute('aria-haspopup','dialog');
     button.addEventListener('click', showToday); document.body.appendChild(button);
   }
 

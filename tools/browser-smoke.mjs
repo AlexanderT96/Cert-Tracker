@@ -30,6 +30,19 @@ try{
   const desktop=await open({viewport:{width:1280,height:900}});
   assert.equal(await desktop.page.locator('.tabs [data-workspace-tab]').count(),6);
   assert.equal(await desktop.page.locator('#ct-mobile-navigation').isVisible(),false);
+  assert.equal(await desktop.page.locator('#ct-command-dock').isVisible(),false,'Retired tool dock must not be visible');
+  const launcher=desktop.page.getByRole('button',{name:"Open Today's Recommendations",exact:true});
+  assert.equal(await launcher.count(),1);await launcher.waitFor({state:'visible'});
+  await launcher.click();
+  const today=desktop.page.locator('[data-today-recommendations]');
+  await today.waitFor();
+  await desktop.page.waitForFunction(()=>document.querySelector('[data-today-market-status]')?.textContent.includes('Checked'));
+  assert.ok((await today.textContent()).includes('Recommendations recalculated'));
+  await today.locator('[data-act="refresh-today"]').click();
+  await desktop.page.waitForFunction(()=>document.querySelector('[data-today-market-status]')?.textContent.includes('Checked'));
+  await desktop.page.screenshot({path:`/tmp/certtracker-${engine}-recommendations.png`,animations:'disabled',timeout:30000});
+  await today.locator('.ct3-close').click();
+  assert.equal(await launcher.evaluate(el=>document.activeElement===el),true,'Closing recommendations restores launcher focus');
   await desktop.page.screenshot({path:`/tmp/certtracker-${engine}-desktop.png`,animations:'disabled',timeout:30000});
   await desktop.context.close();
 
@@ -55,6 +68,10 @@ try{
   await navigationInViewport(page);
   await page.locator('#ct-mobile-more-button').click();
   await page.locator('#ct-mobile-more-layer').waitFor({state:'visible'});
+  await page.getByRole('button',{name:"Today's Recommendations",exact:true}).click();
+  await page.locator('[data-today-recommendations]').waitFor();
+  await page.locator('[data-today-recommendations] .ct3-close').click();
+  await page.locator('#ct-mobile-more-button').click();
   await page.locator('.ct-mobile-more-close').click();
   await page.locator('#ct-mobile-more-layer').waitFor({state:'hidden'});
   await page.locator('#ct-mobile-more-button').click();
