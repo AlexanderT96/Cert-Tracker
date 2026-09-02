@@ -97,9 +97,9 @@
 
   function labelLauncher(root=document){
     const btn=root.querySelector('#ct3-launcher');
-    if(btn&&btn.textContent!=='Today'){
-      btn.textContent='Today';
-      btn.setAttribute('aria-label','Open Today dashboard');
+    if(btn&&btn.textContent!=="Today's Recommendations"){
+      btn.textContent="Today's Recommendations";
+      btn.setAttribute('aria-label',"Open Today's Recommendations");
     }
   }
 

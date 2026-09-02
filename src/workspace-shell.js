@@ -65,7 +65,7 @@
     const layer=document.getElementById('ct-mobile-more-layer');if(!layer)return;
     const settings=CT.personalization.settings?.()||{};
     const tools=[
-      ['ct3-launcher','Today','dashboard'],
+      ['ct3-launcher',"Today's Recommendations",'dashboard'],
       ['ct-intel-launcher','Plan','plan'],
       ['ct31-market-launcher','ROI','market'],
       ['ct-github-sync-launcher','Sync','sync'],
