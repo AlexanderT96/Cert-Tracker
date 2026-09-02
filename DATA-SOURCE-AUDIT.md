@@ -1,3 +1,7 @@
+# Historical source-link audit
+
+Superseded by AUDIT-REMEDIATION.md for v4.9.0. The earlier 94% heuristic below was not factual verification; current UI counts dated fact-field checks separately.
+
 # Certification source audit — 2 September 2026
 
 Release: v4.8.4. Catalogue: 185 stable record IDs.

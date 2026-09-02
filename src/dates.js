@@ -8,7 +8,8 @@
     if (value instanceof Date) return new Date(value.getTime());
     if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
       const [y, m, d] = value.split('-').map(Number);
-      return new Date(y, m - 1, d, 12, 0, 0, 0);
+      const date=new Date(y, m - 1, d, 12, 0, 0, 0);
+      return date.getFullYear()===y&&date.getMonth()===m-1&&date.getDate()===d?date:new Date(NaN);
     }
     return new Date(value);
   }
@@ -52,9 +53,16 @@
 
   function expiryInfo(cert, passDate) {
     if (!passDate) return { status: 'PENDING', days: null, expiry: null };
-    if (cert?.validity === null) return { status: 'NEVER', days: null, expiry: null };
-    if (!cert?.validity) return { status: 'NOEXP', days: null, expiry: null };
-    const expiry = addMonths(passDate, cert.validity);
+    const record=CT.credentials?.record(cert)||{};
+    if(!CT.util.validIsoDate(passDate))return {status:'INVALID',days:null,expiry:null};
+    if (!record.expiry && cert?.validity === null) return { status: 'NEVER', days: null, expiry: null };
+    if (!record.expiry && !cert?.validity) return { status: 'NOEXP', days: null, expiry: null };
+    let expiry = record.expiry?parseLocalDate(record.expiry):addMonths(record.renewedAt||passDate, cert.validity);
+    // CNCF CARE effective dates, without altering the original earned date.
+    const passes=CT.store?.state?.passes||{};
+    const cascades={cka:[['cks','2026-06-18']],kcsa:[['cks','2026-01-01']],kcna:[['cka','2026-01-01'],['ckad','2026-01-01'],['cks','2026-06-18']]};
+    if(!record.expiry)for(const [id,start]of cascades[cert.id]||[]){const date=passes[id];if(date&&date>=start&&date<=localDateStamp()){const candidate=addMonths(date,24);if(candidate>expiry)expiry=candidate;}}
+
     const days = daysUntil(expiry);
     if (Number.isNaN(days)) return { status: 'INVALID', days: null, expiry: null };
     return {

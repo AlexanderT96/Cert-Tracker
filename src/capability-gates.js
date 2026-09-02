@@ -81,7 +81,7 @@
     'cissp':'convergenceEngineer','issap':'solutionsArchitect','asis-psp':'solutionsArchitect','ukcsc-princ':'solutionsArchitect','ukcsc-chart':'principalConvergenceArchitect','csyp':'principalConvergenceArchitect'
   });
 
-  function evidenceRecord(id){const raw=state.capabilityEvidence?.[id];if(!raw)return Object.freeze({level:'NONE',score:0,note:'',updatedAt:null});if(typeof raw==='string')return Object.freeze({level:LEVELS[raw]?raw:'NONE',score:levelScore(raw),note:'',updatedAt:null});const level=LEVELS[raw.level]?raw.level:'NONE';return Object.freeze({level,score:levelScore(level),note:String(raw.note||''),updatedAt:raw.updatedAt||null});}
+  function evidenceRecord(id){const raw=state.capabilityEvidence?.[id]||state.customization?.careerOptions?.evidence?.[id];if(!raw)return Object.freeze({level:'NONE',score:0,note:'',updatedAt:null});if(typeof raw==='string')return Object.freeze({level:LEVELS[raw]?raw:'NONE',score:levelScore(raw),note:'',updatedAt:null});const level=LEVELS[raw.level]?raw.level:'NONE';return Object.freeze({level,score:levelScore(level),note:String(raw.note||''),updatedAt:raw.updatedAt||null});}
   function setEvidence(id,level,note=''){
     if(!EVIDENCE.some(item=>item.id===id))throw new Error(`Unknown capability evidence: ${id}`);
     if(!LEVELS[level])throw new Error(`Unknown evidence maturity: ${level}`);

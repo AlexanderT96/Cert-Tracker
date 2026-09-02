@@ -29,6 +29,7 @@
   }
   function setConfig(config){
     const clean={repo:validateRepo(config?.repo),path:normalisePath(config?.path),branch:validateBranch(config?.branch),autoSync:!!config?.autoSync};
+    const previous=getConfig();if(previous.repo!==clean.repo||previous.branch!==clean.branch||previous.path!==clean.path)for(const key of [COMMON_HASH_KEY,REMOTE_SHA_KEY,REVISION_KEY])localStorage.removeItem(key);
     localStorage.setItem(CONFIG_KEY,JSON.stringify(clean));
     CT.events.emit('github-sync-config-changed',clean);
     return clean;
@@ -83,6 +84,7 @@
     if(!data?.content||!data?.sha)throw new Error('GitHub returned an invalid vault file response.');
     const envelope=JSON.parse(base64ToText(data.content));
     const payload=await CT.sync.decryptPayload(envelope,session?.passphrase);
+    payload.syncMeta={...payload.syncMeta,contentHash:await CT.sync.digest(payload)};
     return {payload,sha:data.sha};
   }
   async function writeRemote(envelope,remoteSha=null){

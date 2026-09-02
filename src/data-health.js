@@ -13,6 +13,21 @@
     return parsed;
   }
 
+
+  function credentialRecord(cert){return global.CertTrackerV3.store?.state?.customization?.credentials?.[cert?.id]||{};}
+  function availability(cert){const status=CT.sourceRegistry?.[cert?.id]?.credentialStatus||(['secot-plus'].includes(cert?.id)?'UNCONFIRMED':null);return {status,eligible:!['RETIRED','IN_DEVELOPMENT','UNCONFIRMED'].includes(status)};}
+  function activeCredential(cert,passes=CT.store?.state?.passes||{}){
+    if(!cert||!passes[cert.id])return false;const row=credentialRecord(cert);
+    if(row.status==='PENDING'||row.status==='ASSOCIATE'||row.status==='EXPIRED')return false;
+    if(cert.requiresAwardConfirmation&&row.status!=='ACTIVE')return false;
+    const info=CT.dates?.expiryInfo(cert,passes[cert.id]);return !!info&&!['EXPIRED','INVALID','PENDING'].includes(info.status);
+  }
+  function eligibility(cert,passes=CT.store?.state?.passes||{}){
+    const a=availability(cert),missing=(cert?.formalPrerequisites||[]).filter(id=>!passes[id]);
+    const external=cert?.requiresExternalPrerequisites&&credentialRecord(cert).eligibilityConfirmed!==true;
+    return {...a,missing,eligible:a.eligible&&!missing.length&&!external,reason:external?'Confirm the active issuer prerequisite chain in Awards & funding':!a.eligible?'Credential '+a.status.toLowerCase().replaceAll('_',' '):missing.length?'Formal prerequisite not recorded':'Check issuer booking requirements'};
+  }
+  CT.credentials=Object.freeze({record:credentialRecord,availability,active:activeCredential,eligibility});
   function vendorSource(cert) {
     const vendor = cert?.vendor || '';
     // Descriptions mention other vendors. Only an explicit issuer is safe.
@@ -21,7 +36,7 @@
 
   function record(cert) {
     const audited = CT.sourceRegistry?.[cert?.id] || null;
-    const verifiedValue = audited?.verifiedAt || cert?.verifiedAt || null;
+    const verifiedValue = cert?.verifiedAt || null;
     const verified = normaliseVerifiedDate(verifiedValue);
     const ageDays = verified ? Math.max(0, Math.floor((Date.now() - verified.getTime()) / 86400000)) : null;
     const embeddedExactSource = cert?.sourceUrl || cert?.officialUrl || null;
@@ -30,7 +45,7 @@
     const sourceLevel = audited?.level || (embeddedExactSource ? 'CERT' : fallbackSource ? 'VENDOR' : 'NONE');
     const provenance = audited ? audited.sourceAudited === false ? 'EXPLICIT_MAPPING' : 'AUDITED_REGISTRY' : embeddedExactSource ? 'CATALOGUE' : fallbackSource ? 'VENDOR_FALLBACK' : 'NONE';
     const sourceCheckedAt = audited?.sourceCheckedAt || audited?.verifiedAt || null;
-    const credentialStatus = audited?.credentialStatus || null;
+    const credentialStatus = availability(cert).status;
 
     let freshness = 'UNKNOWN';
     if (ageDays != null) {
@@ -39,9 +54,12 @@
         : ageDays <= CT.config.freshness.reviewDays ? 'REVIEW' : 'STALE';
     }
 
-    const priceVerified = normaliseVerifiedDate(cert?.priceCheckedAt || cert?.verifiedAt);
+    const priceVerified = normaliseVerifiedDate(cert?.priceCheckedAt);
     const priceAgeDays = priceVerified ? Math.max(0, Math.floor((Date.now() - priceVerified.getTime()) / 86400000)) : null;
-    const confidence = CT.util.clamp(
+    const fields=['identity','availability','eligibility','blueprint','renewal','price'];
+    const fieldChecks=Object.fromEntries(fields.map(key=>{const row=cert?.factChecks?.[key];const date=normaliseVerifiedDate(row?.checkedAt);return [key,!!(date&&row?.source&&Date.now()-date.getTime()<=180*86400000)];}));
+    const verifiedFields=Object.values(fieldChecks).filter(Boolean).length;
+    const confidence = Math.min(Math.round(verifiedFields/fields.length*100),CT.util.clamp(
       100
       - (freshness === 'REVIEW' ? 15 : freshness === 'STALE' ? 35 : freshness === 'UNKNOWN' ? 45 : 0)
       - (sourceLevel === 'VENDOR' ? 10 : sourceLevel === 'NONE' ? 30 : 0)
@@ -49,9 +67,11 @@
       - (priceAgeDays != null && priceAgeDays > 365 ? 10 : 0),
       0,
       100
-    );
+    ));
 
     const issues = [];
+    for(const field of fields)if(!fieldChecks[field])issues.push(`${field}: not independently verified recently`);
+    if(!priceVerified)issues.push('Regional price not independently dated');
     if (!verified) issues.push(verifiedValue ? 'Invalid or future verification date' : 'No verification date');
     if (freshness === 'REVIEW') issues.push('Verification due for review');
     if (freshness === 'STALE') issues.push('Verification is stale');
@@ -65,6 +85,7 @@
     if (cert?.costNum > 0 && priceAgeDays != null && priceAgeDays > 365) issues.push('Price may be stale');
 
     return Object.freeze({
+      fieldChecks,verifiedFields,totalFields:fields.length,
       id: cert?.id,
       name: cert?.name,
       verifiedAt: verifiedValue,
@@ -93,12 +114,13 @@
     const missingSources = rows.filter(row => row.sourceLevel === 'NONE').length;
     const averageConfidence = rows.length ? Math.round(rows.reduce((sum, row) => sum + row.confidence, 0) / rows.length) : 0;
     return Object.freeze({
+      verifiedFacts:rows.reduce((n,r)=>n+r.verifiedFields,0),totalFacts:rows.length*6,priceVerified:rows.filter(r=>r.fieldChecks.price).length,
       total: rows.length,
       fresh: count('FRESH'), review: count('REVIEW'), stale: count('STALE'), unknown: count('UNKNOWN'),
       exactSources, auditedExactSources, vendorSources, missingSources, averageConfidence,
       sourceCoverage: rows.length ? Math.round((rows.length - missingSources) / rows.length * 100) : 0,
       availabilityWarnings: rows.filter(row => row.credentialStatus).length,
-      healthy: rows.filter(row => row.freshness === 'FRESH' && row.sourceLevel !== 'NONE').length
+      healthy: rows.filter(row => row.issues.length === 0).length
     });
   }
 

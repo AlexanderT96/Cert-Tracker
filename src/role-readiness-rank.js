@@ -48,7 +48,7 @@
   const clamp=(v,min=0,max=100)=>Math.min(max,Math.max(min,Number(v)||0));
   const avg=rows=>rows.length?rows.reduce((a,b)=>a+Number(b||0),0)/rows.length:0;
 
-  function evidenceStats(archetype){
+  function evidenceStats(archetype,roleId=null){
     const pillars=CT.marketReadiness.PILLAR_BY_ARCHETYPE[archetype]||[];
     const seen=new Set(),records=[];
     for(const pillar of pillars){
@@ -57,6 +57,8 @@
         records.push({id:item.id,pillar,label:item.label,level:item.record.level,score:item.record.score});
       }
     }
+    const canonical=CT.careerOptions?.byId(roleId);
+    if(canonical){records.length=0;for(const q of CT.careerOptions.assess(canonical).requirements){const level=q.level==='UNKNOWN'?'NONE':q.level;records.push({id:q.id,pillar:canonical.family,label:q.label,level,score:CT.careerOptions.LEVELS[level]||0});}}
     const counts={NONE:0,LAB:0,USED:0,DESIGNED:0,OWNED:0};
     records.forEach(row=>{counts[row.level]=(counts[row.level]||0)+1;});
     const atLeast=level=>records.filter(row=>evidenceMeets(row.level,level)).length;
@@ -76,7 +78,7 @@
 
   function snapshot(role){
     const market=clamp(role?.marketAccess),capability=clamp(role?.capability),floor=Math.min(market,capability);
-    const evidence=evidenceStats(role?.archetype||'architectureConsulting'),leadership=leadershipScore();
+    const evidence=evidenceStats(role?.archetype||'architectureConsulting',role?.id),leadership=leadershipScore();
     // The role's own dual-pillar readiness remains the main signal. Evidence maturity and
     // leadership/ownership tune seniority, but cannot compensate for a weak M or K pillar.
     const score=Math.round(clamp(floor*.55+clamp(role?.score)*.25+evidence.practical*.15+leadership*.05));
@@ -109,7 +111,7 @@
     const idx=LEVEL_ORDER.indexOf(rank.key),nextKey=LEVEL_ORDER[idx+1]||null,next=nextKey?RANKS[nextKey]:null;
     return Object.freeze({
       ...rank,rankIndex:idx+1,score:snap.score,floor:snap.floor,marketAccess:snap.market,capability:snap.capability,practical:snap.evidence.practical,leadership:snap.leadership,
-      archetype:role.archetype,title:titleFor(role.archetype,rank.key),roleId:role.id,roleLabel:role.label,
+      archetype:role.archetype,title:CT.careerOptions?.byId(role.id)?`${rank.key} — ${role.label} evidence level`:titleFor(role.archetype,rank.key),roleId:role.id,roleLabel:role.label,
       evidence:snap.evidence,next:next?Object.freeze({...next,title:titleFor(role.archetype,next.key),gaps:gapsFor(next,snap)}):null,
       achieved:Object.freeze(LEVEL_ORDER.slice(0,idx+1)),
       ladder:Object.freeze(LEVEL_ORDER.map(key=>Object.freeze({key,label:RANKS[key].label,title:titleFor(role.archetype,key),achieved:rankIndex(key)<=idx,current:key===rank.key,description:LEVEL_NARRATIVE[key]})))

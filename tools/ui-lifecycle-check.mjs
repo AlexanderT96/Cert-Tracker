@@ -47,7 +47,7 @@ function fixture({loadFeed}={}){
   sandbox.window=sandbox;vm.createContext(sandbox);
   for(const file of ['src/dual-pillar-ui.js','src/market-dashboard-ui.js'])vm.runInContext(fs.readFileSync(file,'utf8'),sandbox,{filename:file});
   async function settle(){let work=0,idle=0;while(idle<8){await Promise.resolve();if(jobs.length){assert.ok(++work<100,'UI observers did not settle: adapters are rewriting their own DOM');jobs.shift()();idle=0;}else idle++;}}
-  return {CT,profile,feed,state:sandbox.state,ready:()=>ready.forEach(fn=>fn()),settle,get content(){return content;},get writes(){return writes;},get loadCount(){return loadCount;},decorate:node=>node.appendChild(new Element('badge')),changeData:()=>{profile.metrics.market++;low+=1000;(events.get('certtracker:goal-changed')||[]).forEach(fn=>fn());},replaceContent:()=>{const old=content;content=new Element('content');old.replaceWith(content);return old;}};
+  return {CT,profile,feed,state:sandbox.state,ready:()=>ready.forEach(fn=>fn()),settle,get content(){return content;},get writes(){return writes;},get loadCount(){return loadCount;},decorate:node=>node.appendChild(new Element('badge')),changeData:()=>{profile.metrics.market++;low+=1000;feed.provider='Updated fixture';(events.get('certtracker:goal-changed')||[]).forEach(fn=>fn());},replaceContent:()=>{const old=content;content=new Element('content');old.replaceWith(content);return old;}};
 }
 
 const page=fixture();page.ready();await page.settle();
@@ -75,9 +75,11 @@ assert.equal(button.disabled,false,'An unchanged refresh must re-enable its actu
 
 let resolve;
 const delayed=fixture({loadFeed:()=>new Promise(r=>{resolve=r;})});
-const pending=delayed.CT.marketDashboardUI.mount(),old=delayed.replaceContent();
+const pending=delayed.CT.marketDashboardUI.mount(),initial=delayed.content.querySelector('[data-market-dashboard]');
+assert.ok(initial,'Local dashboard must render before the feed resolves');
+const old=delayed.replaceContent();
 resolve(delayed.feed);await pending;
-assert.equal(old.querySelector('[data-market-dashboard]'),null,'A late feed must not render into a detached workspace');
+assert.equal(old.querySelector('[data-market-dashboard]'),initial,'A late feed must not mutate a detached workspace');
 await delayed.settle();
 assert.equal(delayed.content.querySelectorAll('[data-market-dashboard]').length,1);
 // Navigation ordering must settle too: moving every tab to the end on every

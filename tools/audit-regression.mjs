@@ -1,0 +1,71 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import vm from 'node:vm';
+import {webcrypto} from 'node:crypto';
+
+// Isolated production-module tests. Never use real browser state or real sync endpoints.
+const memory=new Map(),localStorage={getItem:k=>memory.get(k)??null,setItem:(k,v)=>memory.set(k,String(v)),removeItem:k=>memory.delete(k)};
+const document={readyState:'loading',addEventListener(){},querySelector(){return null},querySelectorAll(){return []},getElementById(){return null},documentElement:{dataset:{},style:{setProperty(){}}},body:{}};
+const s={console,localStorage,document,crypto:webcrypto,URL,TextEncoder,TextDecoder,Uint8Array,ArrayBuffer,AbortController,addEventListener(){},dispatchEvent(){},setTimeout(){return 0},clearTimeout(){},requestAnimationFrame(){},navigator:{},location:{protocol:'https:',href:'https://example.test/'},btoa:x=>Buffer.from(x,'binary').toString('base64'),atob:x=>Buffer.from(x,'base64').toString('binary')};s.window=s;vm.createContext(s);
+for(const file of ['certs.js','src/cert-extensions.js','src/catalogue-currentness.js','src/catalogue-policy-normalize.js','src/path-defaults.js','src/config.js','src/learning-resources.js','src/learning-resources-normalize.js','src/state-core.js','src/renderer.js','src/dates.js','src/storage.js','src/phase-engine.js','src/source-registry.js','src/source-registry-current.js','src/data-health.js','src/competency-engine.js','src/market-value.js','src/career-framework.js','src/capability-gates.js','src/recommendation-engine.js','src/filter-intelligence.js','src/dual-pillar-depth.js','src/market-readiness.js','src/role-readiness-rank.js','src/job-market.js','src/career-options.js','src/planner.js','src/sync.js','src/github-sync.js'])vm.runInContext(fs.readFileSync(file,'utf8'),s,{filename:file,timeout:15000});
+const run=code=>vm.runInContext(code,s,{timeout:30000});run('renderApp=()=>{};showToast=()=>{};rerenderCurrentTab=()=>{};updateHeaderCount=()=>{};');
+const CT=s.CertTrackerV3,state=CT.store.state,certs=run('CERTS'),cert=id=>certs.find(c=>c.id===id);
+for(const id of ['jsnad','jsnsd','pcpp2','secot-plus']){
+ const c=cert(id),passes=Object.fromEntries((c.deps||[]).map(id=>[id,'2026-01-01']));
+ assert.equal(CT.recommendations.score(c,{passes}).available,false,id+' unavailable');
+}
+run("updateExam('jsnad','2026-09-15')");assert.equal(state.exams.jsnad,undefined);
+assert.equal(CT.credentials.eligibility(cert('fcx')).eligible,false,'Unmodelled prerequisite chain requires explicit checking');
+state.myPath={jsnad:true};state.passes={};state.skipped={};assert.equal(CT.planner.plan().sequence.length,0);
+state.objectiveProgress={};run('save.objectives()');CT.store.setObjective('ccna',80);CT.storage.undoLastChange();assert.equal(state.objectiveProgress.ccna,undefined);
+CT.store.setObjective('ccna',20);CT.store.setObjective('ccna',30);CT.storage.undoLastChange();assert.equal(state.objectiveProgress.ccna,20,'Rapid separate changes must undo one step');
+CT.careerFramework.setContext({current:'network',next:'cyber',target:'securityArchitect'});
+const backup=CT.storage.serializableState();assert.equal(backup.careerContext.current,'network');
+CT.careerFramework.setContext({current:'generalIT'});CT.storage.applyBackup(backup,{silent:true});assert.equal(CT.careerFramework.context().current,'network');
+state.myPath={};run('save.myPath();loadState()');assert.equal(Object.values(state.myPath).filter(Boolean).length,0);
+assert.equal(CT.phases.inPath(cert('ccna')),false);
+assert.equal(CT.storage.validateBackup({version:7,customization:{careerOptions:{evidence:'bad'}}}).ok,false);
+assert.equal(CT.storage.validateBackup({version:7,customization:{careerOptions:{interests:{'career-gis':999}}}}).ok,false);
+assert.equal(CT.storage.validateBackup({version:7,customization:{tabLabels:{dashboard:{bad:true}}}}).ok,false);
+assert.equal(CT.storage.validateBackup({version:7,capabilityEvidence:{invented:{level:'OWNED'}}}).ok,false);
+assert.equal(CT.dates.localDateStamp(CT.dates.parseLocalDate('2026-02-31')),'');
+assert.equal(cert('pcpp2').validity,60);assert.ok(cert('htb-cjca').name.endsWith('Associate'));
+state.passes=Object.fromEntries(certs.map(c=>[c.id,'2026-01-01']));state.capabilityEvidence={};state.customization={};
+assert.equal(CT.credentials.active(cert('cissp')),false,'Exam pass is not a confirmed CISSP award');
+assert.equal(CT.marketReadiness.roles().length,CT.careerOptions.ROLES.length);
+assert.ok(CT.marketReadiness.roles().every(r=>r.status!=='APPLY NOW'&&r.status!=='Compare vacancies'));
+const role=CT.careerOptions.byId('career-gis'),req=CT.careerOptions.requirements(role);
+CT.careerOptions.update({evidence:Object.fromEntries(req.map(q=>[q.id,q.target]))});
+assert.equal(CT.careerOptions.assess(role).readiness,100);
+assert.equal(CT.marketReadiness.roles().find(r=>r.id===role.id).score,100,'Dashboard uses the same evidence');
+assert.equal(state.capabilityEvidence[req[0].id].level,'LAB','Shared canonical evidence persisted');
+CT.storage.undoLastChange();assert.equal(CT.careerOptions.assess(role).readiness,null);
+const shared=Object.fromEntries(req.slice(0,3).map(q=>[q.id,q.target]));assert.equal(CT.careerOptions.assess(role,{evidence:shared}).readiness,50,'Family evidence is not a substitute for role-specific evidence');
+const now=Date.now(),at=new Date(now).toISOString(),feed={status:'live',fetchedAt:at,country:'gb',jobs:[]};
+assert.equal(CT.jobMarket.usable(feed,now),true);assert.equal(CT.jobMarket.usable({...feed,status:'degraded'},now),false);assert.equal(CT.jobMarket.usable(feed,now+900001),false);
+assert.equal(CT.jobMarket.rankJobs({...feed,status:'degraded',jobs:[{id:'x',title:'GIS Analyst',created:at}]}).length,0);
+assert.equal(CT.careerOptions.matchesTitle(role,'Senior Geospatial Analyst'),true);
+assert.equal(CT.careerOptions.matchesTitle(role,'Business Analyst'),false);
+const salaryJobs=[20000,30000,40000,90000].map((v,i)=>({id:String(i),title:'GIS Analyst',created:at,salaryMin:v,salaryMax:v,currency:'GBP',salaryPeriod:'annual'}));
+assert.equal(CT.careerOptions.market(role,{...feed,jobs:salaryJobs},now).salary,35000);
+assert.equal(CT.jobMarket.salaryMid({salaryMin:100,salaryMax:200,currency:'USD',salaryPeriod:'hour'}),0);
+assert.equal(CT.planner.effectiveCost(cert('mcit')),Infinity,'Unconfirmed employer funding cannot become zero');
+state.customization={credentials:{mcit:{funding:'employer'}}};assert.equal(CT.planner.effectiveCost(cert('mcit')),0);
+const stable=CT.storage.serializableState();assert.equal(await CT.sync.digest(stable),await CT.sync.digest({...stable,appVersion:'99',exportedAt:'different',changedAt:'different'}));
+CT.sync.setConfig({endpoint:'https://example.test/vault',username:'test'});CT.sync.connect({password:'isolated',passphrase:'isolated-passphrase'});
+const remote=CT.storage.serializableState();remote.notes={ccna:{text:'remote-only'}};const envelope=await CT.sync.encryptPayload(remote,'isolated-passphrase');let puts=0;
+s.fetch=async(url,options)=>options.method==='GET'?{ok:true,status:200,headers:{get:()=> 'etag-1'},json:async()=>envelope}:{ok:true,status:200,headers:{get:()=> 'etag-2'},...(puts++,{})};
+await assert.rejects(CT.sync.push(),e=>e.code==='SYNC_UNBOUND');assert.equal(puts,0);
+await assert.rejects(CT.sync.smartSync(),e=>e.code==='SYNC_UNBOUND');assert.equal(puts,0);
+assert.deepEqual(JSON.parse(JSON.stringify(await CT.sync.decryptPayload(envelope,'isolated-passphrase'))),JSON.parse(JSON.stringify(remote)));
+await assert.rejects(CT.sync.decryptPayload(envelope,'incorrect-passphrase'));
+state.passes={cka:'2023-01-01',cks:'2026-06-20'};assert.equal(CT.dates.localDateStamp(CT.dates.expiryInfo(cert('cka'),state.passes.cka).expiry),'2028-06-20');
+state.passes={'network-plus':'2025-01-01'};run("updatePass('security-plus','2026-06-01')");assert.equal(state.passes['network-plus'],'2025-01-01','Renewal must preserve original pass date');CT.storage.undoLastChange();assert.equal(state.passes['security-plus'],undefined);
+const health=CT.dataHealth.summary();assert.equal(health.priceVerified,0);assert.ok(health.averageConfidence<10);assert.equal(health.healthy,0);
+
+// Execute the actual feed producer with failed network requests and fake filesystem writes.
+let written;const old={fetchedAt:'2026-09-01T10:00:00Z',jobs:[{id:'cached',source:'fixture',title:'GIS Analyst',created:at,lastSeenAt:at}]};
+const context={vm,fs:{readFileSync:p=>String(p).endsWith('job-market.json')?JSON.stringify(old):fs.readFileSync(p,'utf8'),mkdirSync(){},writeFileSync:(p,v)=>{written=JSON.parse(v)}},path:{resolve:x=>x,dirname:()=>'.'},process:{env:{}},console:{log(){},warn(){}},URLSearchParams,AbortSignal,setTimeout,fetch:async()=>{throw Error('provider outage')}};
+vm.createContext(context);const producer=fs.readFileSync('tools/refresh-job-market.mjs','utf8').replace(/^import .*;$/gm,'');await vm.runInContext(`(async()=>{${producer}})()`,context);
+assert.equal(written.status,'degraded');assert.equal(written.fetchedAt,old.fetchedAt);assert.equal(written.jobs.length,1);assert.ok(written.queries.includes('gis analyst'));
+console.log('Audit regressions passed: eligibility, award state, Undo, backup round-trip, empty path, malformed input, shared readiness, market freshness, salaries and encrypted sync safety.');
