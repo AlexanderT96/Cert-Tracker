@@ -65,8 +65,10 @@ jobs:
         with:
           node-version: '22'
       - name: Install browser engine
-        run: npx --yes playwright@1.55.0 install --with-deps ${{ matrix.browser }}
-      - name: Render application in browser engine
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.55.0
+          npx --no-install playwright install --with-deps ${{ matrix.browser }}
+      - name: Test desktop and mobile navigation and scrolling
         shell: bash
         run: |
           set -euo pipefail
@@ -74,11 +76,11 @@ jobs:
           server=$!
           trap 'kill $server || true' EXIT
           sleep 2
-          timeout 90s npx --yes playwright@1.55.0 screenshot \
-            --browser=${{ matrix.browser }} \
-            --viewport-size="1280,900" \
-            --timeout=60000 \
-            --wait-for-timeout=5000 \
-            http://127.0.0.1:4173/ \
-            /tmp/certtracker-${{ matrix.browser }}.png
-          test -s /tmp/certtracker-${{ matrix.browser }}.png
+          timeout 240s node tools/browser-smoke.mjs ${{ matrix.browser }}
+      - name: Save browser screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-${{ matrix.browser }}
+          path: /tmp/certtracker-${{ matrix.browser }}-*.png
+          if-no-files-found: ignore

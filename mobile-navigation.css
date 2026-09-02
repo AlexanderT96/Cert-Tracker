@@ -168,6 +168,19 @@ html[data-layout="mobile"] .ct-mobile-more-action[aria-current="page"]{
 
 html.ct-mobile-menu-open{overflow:hidden}
 
+/* Keep phone scrolling in normal document flow. Large 3D/blurred surfaces force
+   expensive offscreen raster tiles on mobile; retain their static borders/gradients. */
+html[data-layout="mobile"] .ct-depth-surface{
+  transform:none!important;
+  transform-style:flat!important;
+  will-change:auto!important;
+}
+html[data-layout="mobile"] :is(.header,.tabs,.toolbar,.action-bar,.filter-bar,.command-bar,.card,.ct3-card,.ct-depth-surface,#ct-mobile-navigation,.ct-mobile-more-backdrop){
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+html[data-layout="mobile"] .ct-credential-mark{filter:none!important}
+
 @media(prefers-reduced-motion:reduce){
   #ct-mobile-navigation button::before{transition:none!important}
 }
