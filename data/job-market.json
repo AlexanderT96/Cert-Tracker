@@ -1,11 +1,17 @@
 {
-  "schemaVersion": 1,
-  "provider": "Adzuna",
-  "providerUrl": "https://www.adzuna.co.uk/",
+  "schemaVersion": 2,
+  "provider": "Arbeitnow UK",
+  "providerUrl": "https://www.arbeitnow.co.uk/",
   "country": "gb",
   "fetchedAt": null,
-  "refreshTargetMinutes": 15,
-  "status": "awaiting-provider-credentials",
+  "refreshTargetMinutes": 5,
+  "status": "awaiting-first-refresh",
+  "location": "United Kingdom",
   "queries": [],
+  "lastBatch": [],
+  "providerStatus": [
+    "Arbeitnow UK will run without credentials",
+    "Adzuna broad-market enrichment activates when repository secrets are configured"
+  ],
   "jobs": []
 }
