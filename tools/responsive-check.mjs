@@ -9,8 +9,11 @@ const js=read('src/responsive-layout.js');
 const workspace=read('src/workspace-shell.js');
 const personalization=read('src/personalization.js');
 const sw=read('sw.js');
+const bootstrap=read('src/bootstrap.js');
+const renderer=read('src/renderer.js');
 
 function require(condition,message){if(!condition)errors.push(message);}
+require(!/loadState\(\);\s*renderApp\(\);\s*$/.test(renderer),'Initial render must wait for the complete workspace shell, not flash three legacy tabs.');
 
 for(const asset of ['responsive-layout.css','src/responsive-layout.js','mobile-navigation.css']){
   require(index.includes(asset),`index.html is missing responsive asset ${asset}`);
@@ -33,6 +36,9 @@ require(workspace.includes('dedupeNavigation'),'Workspace shell must actively re
 require(workspace.includes('data-ct-workspace'),'Workspace tabs must share the canonical personalization workspace attribute.');
 require(workspace.includes('ct-mobile-navigation'),'Workspace shell must expose the compact mobile primary navigation.');
 require(workspace.includes('ct-mobile-more-layer'),'Workspace shell must keep secondary tools behind the mobile More sheet.');
+require(bootstrap.includes('else CT.workspaceShell?.decorate()'),'Startup must finish decorating an already-rendered page, including first-load mobile navigation.');
+require(mobileCss.includes('transform-style:flat!important')&&mobileCss.includes('will-change:auto!important'),'Mobile panels must avoid oversized 3D compositor layers.');
+require(css.includes('background-attachment:scroll!important'),'Mobile backgrounds must scroll with the document.');
 require(personalization.includes('[data-workspace-tab=')&&personalization.includes('[data-ct-workspace='),'Personalization must reuse workspace-shell tabs instead of manufacturing duplicate menu buttons.');
 
 if(errors.length){console.error(`Responsive gate failed (${errors.length}):`);errors.forEach(e=>console.error(`- ${e}`));process.exit(1);}

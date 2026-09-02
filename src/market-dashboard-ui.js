@@ -4,6 +4,8 @@
   const CT=global.CertTrackerV3;if(!CT?.marketReadiness||!CT?.jobMarket)return;const esc=CT.util.escapeHtml;
   let lastFeed=null,feedVersion=0;
   const dashboardMarkup=new WeakMap();
+  const dashboardInputs=new WeakMap();let revision=0;
+  for(const name of ['certtracker:career-context-changed','certtracker:capability-evidence-changed','certtracker:goal-changed'])global.addEventListener(name,()=>{revision++;});
   function money(v){return CT.marketReadiness.money(v);}
   function style(){if(document.getElementById('ct-market-dashboard-style'))return;const s=document.createElement('style');s.id='ct-market-dashboard-style';s.textContent=`
     .ct-market-now{margin:0 0 14px;border:1px solid rgba(71,232,208,.24);border-radius:14px;background:linear-gradient(150deg,rgba(7,23,31,.96),rgba(8,32,39,.88));box-shadow:0 16px 38px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.035);padding:15px;position:relative;overflow:hidden}.ct-market-now:after{content:"";position:absolute;inset:auto -12% -70% 32%;height:150%;background:radial-gradient(circle,rgba(71,232,208,.08),transparent 62%);pointer-events:none}.ct-market-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;position:relative;z-index:1}.ct-market-kicker{font:700 10px/1.2 ui-monospace,monospace;letter-spacing:.15em;color:var(--accent,#47e8d0)}.ct-market-value{font:800 clamp(24px,4vw,38px)/1.05 ui-monospace,monospace;margin:5px 0}.ct-market-sub{color:var(--muted,#9eb1bf);font-size:12px;line-height:1.45}.ct-market-meta{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.ct-market-chip{border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:6px 8px;background:rgba(0,0,0,.18);font:700 10px/1.2 ui-monospace,monospace}.ct-market-grid{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:12px;margin-top:13px;position:relative;z-index:1}.ct-market-panel{border:1px solid rgba(255,255,255,.07);border-radius:11px;background:rgba(0,0,0,.15);padding:11px}.ct-market-panel h3{margin:0 0 8px;font-size:12px;letter-spacing:.05em}.ct-market-role,.ct-market-job{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px;padding:9px 0;border-top:1px solid rgba(255,255,255,.06)}.ct-market-role:first-of-type,.ct-market-job:first-of-type{border-top:0}.ct-market-role strong,.ct-market-job strong{display:block;font-size:12px}.ct-market-role small,.ct-market-job small{display:block;color:var(--muted,#9eb1bf);font-size:10px;line-height:1.4;margin-top:3px}.ct-market-status{font:800 9px/1 ui-monospace,monospace;border:1px solid rgba(71,232,208,.25);border-radius:999px;padding:5px 7px;white-space:nowrap;height:max-content}.ct-market-links{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}.ct-market-links a,.ct-market-refresh{font:700 9px/1.2 ui-monospace,monospace;border:1px solid rgba(255,255,255,.1);border-radius:7px;padding:5px 7px;color:inherit;text-decoration:none;background:rgba(0,0,0,.17);cursor:pointer}.ct-market-live{display:flex;justify-content:space-between;gap:9px;align-items:center;margin-bottom:6px}.ct-market-live small{color:var(--muted,#9eb1bf)}
@@ -25,11 +27,14 @@
     if(!lastFeed||force){const version=++feedVersion,feed=await CT.jobMarket.load({force});if(version===feedVersion)lastFeed=feed;}
     // A feed may finish after navigation. Never insert into a detached or replaced workspace.
     if(!lastFeed||state.currentTab!=='dashboard'||document.getElementById('tab-content')!==content)return;
-    const existing=content.querySelector('[data-market-dashboard]'),html=render(lastFeed);
+    const existing=content.querySelector('[data-market-dashboard]'),inputs=JSON.stringify([state,revision,feedVersion]);
+    if(!force&&existing&&dashboardInputs.get(existing)===inputs)return;
+    const html=render(lastFeed);
     // Preserve focus, expanded details and rank badges when observer notifications change no data.
-    if(existing&&dashboardMarkup.get(existing)===html)return;
+    if(existing&&dashboardMarkup.get(existing)===html){dashboardInputs.set(existing,inputs);return;}
     const host=document.createElement('div');host.innerHTML=html;const next=host.firstElementChild;
     dashboardMarkup.set(next,html);
+    dashboardInputs.set(next,inputs);
     if(existing)existing.replaceWith(next);else{const brief=content.querySelector('.ct-dual-brief');if(brief)brief.insertAdjacentElement('afterend',next);else content.prepend(next);}
     bind(next);
   }

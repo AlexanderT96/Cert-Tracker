@@ -138,7 +138,7 @@
       const focus=focusHtml();if(focus&&!content.querySelector('.ct-dashboard-learning-focus'))content.insertAdjacentHTML('afterbegin',focus);
     }
   }
-  function decorate(){ensureActiveTab();renderHeader();renderNavigation();renderWorkspaceContent();CT.personalization.organiseDock?.();syncMobileNavigation();}
+  function decorate(){ensureActiveTab();syncMobileNavigation();renderHeader();renderNavigation();renderWorkspaceContent();CT.personalization.organiseDock?.();}
   function renderApp(){ensureActiveTab();originalRenderApp();decorate();}
   function switchTab(tab){const tabs=availableTabs();if(!tabs.includes(tab))return;state.currentTab=tab;renderApp();}
 

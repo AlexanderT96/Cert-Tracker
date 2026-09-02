@@ -3124,4 +3124,4 @@ function importJSON() {
 
 // ───── INIT ───────────────────────────────────────────────────────────────
 loadState();
-renderApp();
+// bootstrap.js renders once after every workspace module is registered.
