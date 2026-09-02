@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "provider": "Adzuna",
+  "providerUrl": "https://www.adzuna.co.uk/",
+  "country": "gb",
+  "fetchedAt": null,
+  "refreshTargetMinutes": 15,
+  "status": "awaiting-provider-credentials",
+  "queries": [],
+  "jobs": []
+}
