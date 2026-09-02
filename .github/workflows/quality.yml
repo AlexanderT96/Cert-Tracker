@@ -8,6 +8,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -48,6 +52,7 @@ jobs:
 
   cross-browser-smoke:
     name: Smoke / ${{ matrix.browser }}
+    needs: validate
     runs-on: ubuntu-latest
     timeout-minutes: 15
     strategy:
