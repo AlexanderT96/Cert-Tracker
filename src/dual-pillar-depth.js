@@ -176,11 +176,11 @@
     const depths=subjects.map(s=>Number(s.depth||1)),deep=subjects.filter(s=>Number(s.depth||1)>=4).sort((a,b)=>b.depth-a.depth),topSubjects=[...subjects].sort((a,b)=>b.depth-a.depth).slice(0,5);
     const roleFits=topRoleFits(cert),evidenceLevel=expectedEvidence(cert);
     const performanceTasks=uniq([cert.projectRec,...topSubjects.slice(0,3).map((s,i)=>topicTask(s.topic,s.depth,i))]).slice(0,4);
-    const imbalance=tandem.label==='MARKET-HEAVY'
-      ?`Strong credential signal relative to practical depth. Treat the certificate as a door-opener, then deliberately close the capability gap with labs, troubleshooting and role evidence.`
-      :tandem.label==='CAPABILITY-HEAVY'
-        ?`Strong learning value with weaker direct recruiter signal. Keep it when it is a meaningful rung, but pair it with a recognised downstream credential or demonstrable portfolio evidence.`
-        :`Market access and practical learning are sufficiently aligned to develop together.`;
+    const imbalance=tandem.skew>=2
+      ?`Market signal currently exceeds capability depth by ${Math.abs(tandem.skew).toFixed(1)} points. Treat the certificate as a door-opener, then deliberately close the capability gap with labs, troubleshooting and role evidence.`
+      :tandem.skew<=-2
+        ?`Capability depth currently exceeds direct market signal by ${Math.abs(tandem.skew).toFixed(1)} points. Keep it when it is a meaningful rung, but pair it with a recognised downstream credential or demonstrable portfolio evidence.`
+        :`Market access and practical learning are sufficiently aligned to develop together (balance ${tandem.balance}/10).`;
     const marketAccess=card.M>=8
       ?`High market-access value (M${card.M}/10): useful for recruiter searchability, HR filters and credibility in ${roleFits.slice(0,2).map(r=>r.label).join(' / ')} paths.`
       :card.M>=6
@@ -221,7 +221,7 @@
     const ranked=CT.filterIntelligence?.rankRows?CT.filterIntelligence.rankRows(members,{filterId:item.id,label:item.label,horizon:'now'}):members.map(cert=>CT.recommendations.score(cert,{horizon:'now'}));
     const cards=members.map(cert=>CT.careerFramework.scoreCard(cert)),markets=cards.map(x=>x.M),knowledge=cards.map(x=>x.K),weaker=cards.map(x=>Math.min(x.M,x.K));
     const profiles=members.map(cert=>certProfile(cert)),deepSubjects=profiles.reduce((sum,p)=>sum+p.depth.deepCount,0),subjectCount=profiles.reduce((sum,p)=>sum+p.depth.subjects,0);
-    const topCerts=ranked.slice(0,6).map(row=>({id:row.id||row.cert?.id,name:row.name||row.cert?.name,M:row.career?.M,K:row.career?.K,tandem:row.tandem?.label||'',timing:row.career?.T||''}));
+    const topCerts=ranked.slice(0,6).map(row=>({id:row.id||row.cert?.id,name:row.name||row.cert?.name,M:row.career?.M,K:row.career?.K,balance:row.tandem?.balance??0,weakerPillar:row.tandem?.weaker??0,timing:row.career?.T||''}));
     const conversionTasks=uniq(profiles.slice(0,8).flatMap(p=>p.performanceTasks.slice(0,1))).slice(0,5);
     return Object.freeze({
       id:item.id,label:clean(item.label),group:item.group||'',members:Object.freeze(members.map(c=>c.id)),count:members.length,spec,
