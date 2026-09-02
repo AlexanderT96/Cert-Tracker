@@ -1,8 +1,9 @@
 import fs from 'node:fs';
 import vm from 'node:vm';
 
-const source=fs.readFileSync('src/source-registry.js','utf8');
-const sandbox={window:{CertTrackerV3:{}},Object};vm.createContext(sandbox);vm.runInContext(source,sandbox,{timeout:1000});
+const base=fs.readFileSync('src/source-registry.js','utf8');
+const current=fs.readFileSync('src/source-registry-current.js','utf8');
+const sandbox={window:{CertTrackerV3:{}},Object};vm.createContext(sandbox);vm.runInContext(`${base}\n${current}`,sandbox,{timeout:1000});
 const registry=sandbox.window.CertTrackerV3.sourceRegistry||{};
 const urls=[...new Map(Object.entries(registry).map(([id,row])=>[row.url,{id,url:row.url,level:row.level}])).values()];
 const failures=[],warnings=[];
