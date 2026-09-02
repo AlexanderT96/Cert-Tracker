@@ -40,10 +40,13 @@ else{
 }
 
 const recommendation=read('src/recommendation-engine.js'),filterIntelligence=read('src/filter-intelligence.js'),index=read('index.html');
-if(!/now:Object\.freeze\(\{label:'Best to learn now',weights:\{K:\.35/.test(recommendation))errors.push('Primary recommendation model no longer leads with Knowledge ROI.');
+if(!/now:Object\.freeze\(\{label:'Best combined move now',weights:\{K:\.25,M:\.25/.test(recommendation))errors.push('Primary recommendation model no longer weights Market ROI and Knowledge ROI equally.');
+if(!/long:Object\.freeze\(\{label:'Best long-term career investment',weights:\{K:\.30,M:\.30/.test(recommendation))errors.push('Long-horizon recommendation model no longer keeps Market ROI and Knowledge ROI equal.');
+if(!recommendation.includes('tandemProfile')||!recommendation.includes('tandemValue'))errors.push('Primary recommendation model does not reward balanced dual-pillar strength.');
 if(!filterIntelligence.includes('global.nextCoreCert=function'))errors.push('Filter intelligence does not replace legacy next-cert ordering.');
 if(!filterIntelligence.includes('global.orderPhaseCerts=orderPhaseLearningFirst'))errors.push('Filter intelligence does not replace legacy ROI/hour phase ordering.');
 if(!filterIntelligence.includes('pathBias'))errors.push('Alternate filters are still vulnerable to My Path score bias.');
+if(!filterIntelligence.includes('weakerPillar')||!filterIntelligence.includes('tandemBonus'))errors.push('Alternate filters do not reward balanced Market/Knowledge strength.');
 if(!filterIntelligence.includes("freshnessPenalty"))errors.push('Filter recommendations do not account for stale certification data.');
 if(index.indexOf('src/filter-intelligence.js')<index.indexOf('src/recommendation-engine.js'))errors.push('Filter intelligence loads before recommendation engine.');
 if(!index.includes('src/catalogue-currentness.js'))errors.push('Current-program catalogue refresh layer is not loaded.');
@@ -55,4 +58,4 @@ if(byId.fcx&&!/NSE 8/.test(byId.fcx.name))errors.push('Retired FCX label is stil
 if(byId['crowdstrike-ccf']&&byId['crowdstrike-ccf'].code!=='CCFP')errors.push('CrowdStrike entry credential is not current CCFP.');
 
 if(errors.length){console.error(`Filter/catalogue audit failed (${errors.length}):`);errors.forEach(error=>console.error(`- ${error}`));process.exit(1);}
-console.log(`Filter/catalogue audit passed: ${certs.length} certifications, full explicit filter references valid, learning-first ordering enforced.`);
+console.log(`Filter/catalogue audit passed: ${certs.length} certifications, full explicit filter references valid, dual-pillar ordering enforced.`);
