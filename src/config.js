@@ -5,13 +5,13 @@
   const CT = global.CertTrackerV3 = global.CertTrackerV3 || {};
 
   CT.version = Object.freeze({
-    app: '4.5.0',
-    data: 61,
+    app: '4.6.0',
+    data: 62,
     storage: 7,
     backup: 6,
     sync: 2,
     market: 2,
-    intelligence: 3
+    intelligence: 4
   });
 
   CT.config = Object.freeze({
@@ -49,7 +49,7 @@
     'Milestone Systems': 'https://www.milestonesys.com/learn-and-support/learning-and-performance/',
     'LenelS2': 'https://www.lenels2.com/en/training/',
     'Palo Alto Networks': 'https://www.paloaltonetworks.com/services/education/certification',
-    'CrowdStrike': 'https://www.crowdstrike.com/crowdstrike-university/certification/',
+    'CrowdStrike': 'https://www.crowdstrike.com/en-us/crowdstrike-university/crowdstrike-falcon-certification-program/',
     'AWS': 'https://aws.amazon.com/certification/',
     'Amazon Web Services': 'https://aws.amazon.com/certification/',
     'ISC2': 'https://www.isc2.org/certifications',
@@ -82,32 +82,15 @@
   });
 
   CT.util = Object.freeze({
-    isPlainObject(value) { return !!value && typeof value === 'object' && !Array.isArray(value); },
     clamp(value, min, max) { return Math.min(max, Math.max(min, value)); },
-    escapeHtml(value) {
-      return String(value ?? '').replace(/[&<>'"]/g, ch => ({ '&': '&amp;', '>': '&gt;', '<': '&lt;', "'": '&#39;', '"': '&quot;' }[ch]));
-    },
     averageHours(cert) {
-      return Array.isArray(cert?.hours) && cert.hours.length === 2
-        ? (Number(cert.hours[0]) + Number(cert.hours[1])) / 2
-        : 0;
+      const hours = cert?.hours;
+      return Array.isArray(hours) && hours.length >= 2 ? (Number(hours[0]) + Number(hours[1])) / 2 : 0;
     },
-    nowIso() { return new Date().toISOString(); },
-    validIsoDate(value) {
-      if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
-      const d = new Date(`${value}T12:00:00Z`);
-      return Number.isFinite(d.getTime()) && d.toISOString().slice(0, 10) === value;
+    escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;' })[char]);
     },
-    stableStringify(value) {
-      const seen = new WeakSet();
-      function normalise(input) {
-        if (!input || typeof input !== 'object') return input;
-        if (seen.has(input)) throw new TypeError('Cannot stringify circular data.');
-        seen.add(input);
-        if (Array.isArray(input)) return input.map(normalise);
-        return Object.fromEntries(Object.keys(input).sort().map(key => [key, normalise(input[key])]));
-      }
-      return JSON.stringify(normalise(value));
-    }
+    normalise(value) { return String(value ?? '').trim().toLowerCase(); },
+    uniq(items) { return [...new Set(items)]; }
   });
 })(window);
