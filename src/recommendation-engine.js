@@ -1,4 +1,4 @@
-// Cert Tracker — explainable, learning-first, competency-aware, role-aware and experience-gated recommendation engine.
+// Cert Tracker — explainable, dual-pillar, competency-aware, role-aware and experience-gated recommendation engine.
 (function initRecommendationEngine(global) {
   'use strict';
   const CT = global.CertTrackerV3;
@@ -6,12 +6,13 @@
 
   const GOALS = CT.competency.GOALS;
   const TRACK_WEIGHT = Object.freeze({ CORE:26, FOUNDATION:18, 'ROLE-DRIVEN':22, ARCHITECT:24, 'IDENTITY-SEC':18, CONDITIONAL:14, OPTIONAL:5, 'POST-PLAN':-4 });
-  // Knowledge is deliberately the strongest certification-selection input. Market value
-  // remains visible, but is a secondary tie-breaker rather than the curriculum driver.
+  // Market access and job-performance capability are co-equal. M and K therefore carry
+  // the same weight within each horizon; role relevance, timing and readiness sequence
+  // otherwise strong options rather than replacing either primary pillar.
   const HORIZONS = Object.freeze({
-    now:Object.freeze({label:'Best to learn now',weights:{K:.35,C:.30,N:.15,E:.10,M:.10}}),
-    next:Object.freeze({label:'Best learning for the next role',weights:{K:.35,N:.30,E:.15,C:.10,M:.10}}),
-    long:Object.freeze({label:'Best long-term learning investment',weights:{K:.35,E:.35,N:.15,M:.10,C:.05}})
+    now:Object.freeze({label:'Best combined move now',weights:{K:.25,M:.25,C:.20,N:.15,E:.10}}),
+    next:Object.freeze({label:'Best combined move for the next role',weights:{K:.25,M:.25,N:.25,E:.10,C:.10}}),
+    long:Object.freeze({label:'Best long-term career investment',weights:{K:.30,M:.30,E:.25,N:.10,C:.05}})
   });
 
   function currentGoal(){const key=localStorage.getItem(CT.config.goalKey)||'convergence';return GOALS[key]?key:'convergence';}
@@ -23,6 +24,15 @@
   function horizonPoints(card,horizon='now'){const spec=HORIZONS[horizon]||HORIZONS.now;return Math.round(Object.entries(spec.weights).reduce((sum,[key,w])=>sum+Number(card?.[key]||0)*10*w,0));}
   function experiencePoints(gate,horizon){if(!gate)return 0;if(gate.ready)return 12;const penalty=horizon==='long'?-10:horizon==='next'?-45:-80;return penalty+Math.round(gate.score*.12);}
   function curriculumPoints(cert,passes=state.passes){const unlocks=directUnlocks(cert,passes).length;const ladder=unlocks?Math.min(20,6+unlocks*4):0;const continuation=(cert.deps||[]).length?3:0;return ladder+continuation;}
+  function tandemProfile(card){
+    const M=CT.util.clamp(Number(card?.M||0),0,10),K=CT.util.clamp(Number(card?.K||0),0,10);
+    const strength=Number(Math.sqrt(M*K).toFixed(1));
+    const balance=Number((10-Math.abs(M-K)).toFixed(1));
+    const weaker=Number(Math.min(M,K).toFixed(1));
+    const label=M>=8&&K>=8?'DUAL-STRONG':M-K>=2?'MARKET-HEAVY':K-M>=2?'CAPABILITY-HEAVY':M>=6.5&&K>=6.5?'BALANCED':'DEVELOPING';
+    return Object.freeze({M,K,strength,balance,weaker,label});
+  }
+  function tandemPoints(card){const t=tandemProfile(card);return Math.round(t.strength*4+t.weaker*1.5-Math.max(0,8-t.balance));}
 
   function score(cert,options={}){
     const goalKey=options.goal||currentGoal(); const passes=options.passes||state.passes; const phase=CT.phases?.currentPhase?.()||1;
@@ -31,11 +41,11 @@
     const value=CT.marketValue?.marginalContribution(cert,portfolio)||null; const ready=CT.competency.readiness(cert,goalKey); const hours=Math.max(1,ready.remainingHours||CT.util.averageHours(cert));
     const effectivePhase=CT.store.effectivePhase(cert); const phaseDistance=Number(effectivePhase||6)-Number(phase||1); const inPath=CT.phases?.inPath?CT.phases.inPath(cert):!!state.myPath?.[cert.id];
     const career=CT.careerFramework?.scoreCard ? CT.careerFramework.scoreCard(cert) : Object.freeze({M:Number(cert.roi||0),K:Number(cert.roi||0),C:0,N:0,E:0,T:'T2'});
-    const horizon=options.horizon||'now'; const experienceGate=CT.capabilityGates?.gateForCert?.(cert)||null; const portfolioClass=CT.capabilityGates?.portfolioClass?.(cert,career)||'SUPPORTING';
+    const tandem=tandemProfile(career); const horizon=options.horizon||'now'; const experienceGate=CT.capabilityGates?.gateForCert?.(cert)||null; const portfolioClass=CT.capabilityGates?.portfolioClass?.(cert,career)||'SUPPORTING';
     const unlocks=directUnlocks(cert,passes);
     const breakdown={
       track:TRACK_WEIGHT[cert.track]??0,
-      knowledgeValue:Math.round(career.K*4),
+      tandemValue:tandemPoints(career),
       curriculum:curriculumPoints(cert,passes),
       roleValue:horizonPoints(career,horizon),
       timing:timingPoints(career.T),
@@ -55,7 +65,10 @@
     };
     let total=Object.values(breakdown).reduce((sum,n)=>sum+n,0); if(passes?.[cert.id])total=-9999;if(state.skipped?.[cert.id])total=-9998;
     const reasons=[];
-    if(career.K>=8)reasons.push(`High curriculum / practical knowledge value (K${career.K})`);
+    if(tandem.label==='DUAL-STRONG')reasons.push(`Strong dual return: market access M${career.M} + capability K${career.K}`);
+    else if(tandem.label==='MARKET-HEAVY')reasons.push(`Market-heavy (M${career.M}/K${career.K}): useful door-opener, but practical depth must catch up before a major role jump`);
+    else if(tandem.label==='CAPABILITY-HEAVY')reasons.push(`Capability-heavy (K${career.K}/M${career.M}): strong learning rung with weaker direct recruiter signal`);
+    else reasons.push(`Balanced market/capability value (M${career.M}/K${career.K})`);
     if(unlocks.length)reasons.push(`Structured rung unlocking ${unlocks.length} downstream credential${unlocks.length===1?'':'s'}`);
     if(phaseDistance===0)reasons.push('Current-phase learning'); if(cert.employer)reasons.push('Employer-funded learning'); if(cert.gateway)reasons.push('Gateway certification');
     reasons.push(portfolioClass.toLowerCase().replace(/\b\w/g,c=>c.toUpperCase()));
@@ -63,21 +76,20 @@
     if(experienceGate&&!experienceGate.ready)reasons.push(`Experience gate ${experienceGate.score}%: ${experienceGate.label} evidence is not mature enough yet`);else if(experienceGate?.ready)reasons.push(`Experience gate met: ${experienceGate.label}`);
     if(career.T==='T3')reasons.push('Experience-gated: keep as a future curriculum target until practical responsibility catches up');
     if(relevance.percent>=35)reasons.push(`${relevance.percent}% target-competency fit`); if(ready.score>=60)reasons.push(`${ready.score}% exam/study readiness`);
-    if(career.M>=8)reasons.push(`Strong secondary market signal (M${career.M})`);
     if(value?.contributionLabel)reasons.push(`Indicative career-value signal ${value.contributionLabel} after ${value.overlap}% portfolio overlap`);
     if(hours<=40)reasons.push(`~${Math.round(hours)}h remaining effort`);
     if(!dep.satisfied)reasons.push(`Blocked by: ${dep.missing.map(id=>CERTS.find(c=>c.id===id)?.name||id).join(', ')}`);
     if(['STALE','UNKNOWN'].includes(health.freshness))reasons.push('Verify certification data before booking');
-    return Object.freeze({cert,id:cert.id,name:cert.name,score:Math.round(total),available:dep.satisfied&&!passes?.[cert.id]&&!state.skipped?.[cert.id],dependencies:dep,directUnlocks:Object.freeze(unlocks.map(x=>x.id)),relevance,career,health,marketValue:value,readiness:ready,estimatedHours:hours,phaseDistance,effectivePhase,inPath,horizon,portfolioClass,experienceGate,breakdown:Object.freeze(breakdown),reasons:Object.freeze(reasons)});
+    return Object.freeze({cert,id:cert.id,name:cert.name,score:Math.round(total),available:dep.satisfied&&!passes?.[cert.id]&&!state.skipped?.[cert.id],dependencies:dep,directUnlocks:Object.freeze(unlocks.map(x=>x.id)),relevance,career,tandem,health,marketValue:value,readiness:ready,estimatedHours:hours,phaseDistance,effectivePhase,inPath,horizon,portfolioClass,experienceGate,breakdown:Object.freeze(breakdown),reasons:Object.freeze(reasons)});
   }
 
-  function recommend(options={}){const limit=Number(options.limit||5);const includeBlocked=!!options.includeBlocked;const goal=options.goal||currentGoal();const passes=options.passes||state.passes;const horizon=options.horizon||'now';return CERTS.filter(cert=>!passes?.[cert.id]&&!state.skipped?.[cert.id]).map(cert=>score(cert,{goal,passes,horizon})).filter(item=>includeBlocked||item.available).sort((a,b)=>b.score-a.score||b.career.K-a.career.K||b.relevance.percent-a.relevance.percent||b.career.M-a.career.M||a.name.localeCompare(b.name)).slice(0,limit);}
+  function recommend(options={}){const limit=Number(options.limit||5);const includeBlocked=!!options.includeBlocked;const goal=options.goal||currentGoal();const passes=options.passes||state.passes;const horizon=options.horizon||'now';return CERTS.filter(cert=>!passes?.[cert.id]&&!state.skipped?.[cert.id]).map(cert=>score(cert,{goal,passes,horizon})).filter(item=>includeBlocked||item.available).sort((a,b)=>b.score-a.score||b.tandem.weaker-a.tandem.weaker||b.tandem.strength-a.tandem.strength||b.relevance.percent-a.relevance.percent||a.name.localeCompare(b.name)).slice(0,limit);}
   function recommendForHorizon(horizon='now',options={}){if(!HORIZONS[horizon])throw new Error(`Unknown recommendation horizon: ${horizon}`);return recommend({...options,horizon});}
   function recommendationsByHorizon(options={}){return Object.freeze(Object.fromEntries(Object.keys(HORIZONS).map(key=>[key,recommendForHorizon(key,{...options,limit:options.limit||3})])));}
-  function explainTop(options={}){const goal=options.goal||currentGoal();const horizon=options.horizon||'now';const picks=recommend({...options,goal,horizon,limit:2});if(!picks.length)return null;const [top,runnerUp=null]=picks;const opportunityCost=runnerUp?`${top.name} currently scores ${Math.max(0,top.score-runnerUp.score)} points higher than ${runnerUp.name} for ${HORIZONS[horizon]?.label.toLowerCase()||horizon}, with curriculum value weighted ahead of market value.`:'No other currently available certification outranks this learning choice.';return Object.freeze({goal,goalLabel:GOALS[goal].label,horizon,horizonLabel:HORIZONS[horizon]?.label,top,runnerUp,opportunityCost});}
+  function explainTop(options={}){const goal=options.goal||currentGoal();const horizon=options.horizon||'now';const picks=recommend({...options,goal,horizon,limit:2});if(!picks.length)return null;const [top,runnerUp=null]=picks;const opportunityCost=runnerUp?`${top.name} currently scores ${Math.max(0,top.score-runnerUp.score)} points higher than ${runnerUp.name} for ${HORIZONS[horizon]?.label.toLowerCase()||horizon}, with market access and job-performance capability weighted in tandem.`:'No other currently available certification outranks this combined career-and-capability choice.';return Object.freeze({goal,goalLabel:GOALS[goal].label,horizon,horizonLabel:HORIZONS[horizon]?.label,top,runnerUp,opportunityCost});}
   function scenario(goalKey){if(!GOALS[goalKey])throw new Error(`Unknown goal profile: ${goalKey}`);return {goal:goalKey,label:GOALS[goalKey].label,coverage:CT.competency.goalCoverage(goalKey),recommendations:recommend({goal:goalKey,limit:10})};}
 
   if(typeof priorityScore==='function'){const legacyPriority=priorityScore;priorityScore=cert=>{if(cert?.gateway)return 5;if(cert?.track==='CORE')return 4;if(['FOUNDATION','ARCHITECT'].includes(cert?.track))return 4;if(cert?.track==='IDENTITY-SEC')return 3;return legacyPriority(cert);};}
 
-  CT.recommendations=Object.freeze({GOALS,HORIZONS,currentGoal,setGoal,dependencies,directUnlocks,goalRelevance,curriculumPoints,score,recommend,recommendForHorizon,recommendationsByHorizon,explainTop,scenario});
+  CT.recommendations=Object.freeze({GOALS,HORIZONS,currentGoal,setGoal,dependencies,directUnlocks,goalRelevance,curriculumPoints,tandemProfile,tandemPoints,score,recommend,recommendForHorizon,recommendationsByHorizon,explainTop,scenario});
 })(window);
