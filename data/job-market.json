@@ -3,7 +3,7 @@
   "provider": "UK market feed",
   "providerUrl": "https://www.arbeitnow.co.uk/",
   "country": "gb",
-  "fetchedAt": "2026-09-02T10:39:48.959Z",
+  "fetchedAt": "2026-09-02T14:40:10.733Z",
   "refreshTargetMinutes": 5,
   "status": "degraded",
   "location": "United Kingdom",
@@ -58,12 +58,12 @@
     "security solutions engineer"
   ],
   "lastBatch": [
-    "cyber security engineer",
-    "penetration tester",
-    "DevSecOps engineer",
-    "IoT security engineer",
-    "security architect",
-    "security solutions engineer"
+    "systems support engineer",
+    "SOC analyst",
+    "cloud security engineer",
+    "security platform engineer",
+    "convergence security engineer",
+    "technical account manager cyber security"
   ],
   "providerStatus": [
     "Arbeitnow UK unavailable",
