@@ -64,8 +64,11 @@ state.passes={'network-plus':'2025-01-01'};run("updatePass('security-plus','2026
 const health=CT.dataHealth.summary();assert.equal(health.priceVerified,0);assert.ok(health.averageConfidence<10);assert.equal(health.healthy,0);
 
 // Execute the actual feed producer with failed network requests and fake filesystem writes.
-let written;const old={fetchedAt:'2026-09-01T10:00:00Z',jobs:[{id:'cached',source:'fixture',title:'GIS Analyst',created:at,lastSeenAt:at}]};
+let written;const old={schemaVersion:4,lastSuccessfulFetchAt:'2026-09-01T10:00:00.000Z',fetchedAt:'2026-09-01T10:00:00.000Z',jobs:[{id:'cached',source:'fixture',title:'GIS Analyst',created:at,lastSeenAt:at}]};
 const context={vm,fs:{readFileSync:p=>String(p).endsWith('job-market.json')?JSON.stringify(old):fs.readFileSync(p,'utf8'),mkdirSync(){},writeFileSync:(p,v)=>{written=JSON.parse(v)}},path:{resolve:x=>x,dirname:()=>'.'},process:{env:{}},console:{log(){},warn(){}},URLSearchParams,AbortSignal,setTimeout,fetch:async()=>{throw Error('provider outage')}};
 vm.createContext(context);const producer=fs.readFileSync('tools/refresh-job-market.mjs','utf8').replace(/^import .*;$/gm,'');await vm.runInContext(`(async()=>{${producer}})()`,context);
 assert.equal(written.status,'degraded');assert.equal(written.fetchedAt,old.fetchedAt);assert.equal(written.jobs.length,1);assert.ok(written.queries.includes('gis analyst'));
+old.schemaVersion=3;old.status='degraded';old.providerCoverage={successes:0,failures:1};
+await vm.runInContext(`(async()=>{${producer}})()`,context);
+assert.equal(written.lastSuccessfulFetchAt,null,'Legacy failed attempts are not verified successful fetches');assert.equal(written.fetchedAt,null);
 console.log('Audit regressions passed: eligibility, award state, Undo, backup round-trip, empty path, malformed input, shared readiness, market freshness, salaries and encrypted sync safety.');

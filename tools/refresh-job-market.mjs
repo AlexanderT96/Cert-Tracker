@@ -71,10 +71,13 @@ if(appId&&appKey){let received=0;
 }else providerStatus.push('Adzuna credentials not configured');
 
 const before=existing();
+// Old feeds stamped failed attempts as fetchedAt; never promote that to verified history.
+const priorSuccess=before.schemaVersion>=4?isoDate(before.lastSuccessfulFetchAt):before.status==='live'&&before.providerCoverage?.successes>0?isoDate(before.lastSuccessfulFetchAt):null;
+const lastSuccessfulFetchAt=successes?now.toISOString():priorSuccess;
 const jobs=dedupe([...(before.jobs||[]).filter(freshEnough),...fetched]).filter(freshEnough).sort((a,b)=>String(b.created||'').localeCompare(String(a.created||''))).slice(0,500);
 const liveProviders=[...new Set(jobs.map(j=>j.source).filter(Boolean))];
 const feed={
-  schemaVersion:3,lastAttemptAt:now.toISOString(),lastSuccessfulFetchAt:successes?now.toISOString():(before.lastSuccessfulFetchAt||before.fetchedAt||null),providerCoverage:{successes,failures,queries:QUERIES.length},provider:liveProviders.join(' + ')||'UK market feed',providerUrl:'https://www.arbeitnow.co.uk/',country:'gb',fetchedAt:successes?now.toISOString():(before.lastSuccessfulFetchAt||before.fetchedAt||null),refreshTargetMinutes:5,status:successes&&!failures?'live':'degraded',
+  schemaVersion:4,lastAttemptAt:now.toISOString(),lastSuccessfulFetchAt,providerCoverage:{successes,failures,queries:QUERIES.length},provider:liveProviders.join(' + ')||'UK market feed',providerUrl:'https://www.arbeitnow.co.uk/',country:'gb',fetchedAt:lastSuccessfulFetchAt,refreshTargetMinutes:5,status:successes&&!failures?'live':'degraded',
   location:location||'United Kingdom',queries:QUERIES,lastBatch:batch,providerStatus,jobs
 };
 fs.mkdirSync(path.dirname(outPath),{recursive:true});
