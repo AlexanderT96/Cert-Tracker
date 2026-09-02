@@ -6,6 +6,7 @@
   if(!CT?.marketReadiness||!CT?.dualPillarDepth||!CT?.capabilityGates||!CT?.careerFramework)return;
 
   const LEVEL_ORDER=Object.freeze(['R1','R2','R3','R4','R5','R6']);
+  const EVIDENCE_ORDER=Object.freeze(['NONE','LAB','USED','DESIGNED','OWNED']);
   const RANKS=Object.freeze({
     R1:Object.freeze({key:'R1',label:'Beginner / Training Role',short:'BEGINNER',minScore:0,minFloor:0,minPractical:0,minLab:0,minUsed:0,minDesigned:0,minOwned:0,minLeadership:0,description:'Foundation/training stage. Build the vocabulary, safe lab habits and supervised task competence needed to become useful without pretending certification completion equals independent role performance.'}),
     R2:Object.freeze({key:'R2',label:'Intermediate',short:'INTERMEDIATE',minScore:35,minFloor:30,minPractical:20,minLab:2,minUsed:0,minDesigned:0,minOwned:0,minLeadership:0,description:'Independent contributor on common tasks. Can execute routine work, recognise normal failure modes, gather evidence and escalate intelligently.'}),
@@ -39,8 +40,9 @@
     R6:'Own strategy, portfolio investment, risk and multi-team organisational outcomes.'
   });
 
-  const levelIndex=level=>Math.max(0,LEVEL_ORDER.indexOf(level));
-  const meetsLevel=(actual,required)=>levelIndex(actual)>=levelIndex(required);
+  const rankIndex=level=>Math.max(0,LEVEL_ORDER.indexOf(level));
+  const evidenceIndex=level=>Math.max(0,EVIDENCE_ORDER.indexOf(level));
+  const evidenceMeets=(actual,required)=>evidenceIndex(actual)>=evidenceIndex(required);
   const clamp=(v,min=0,max=100)=>Math.min(max,Math.max(min,Number(v)||0));
   const avg=rows=>rows.length?rows.reduce((a,b)=>a+Number(b||0),0)/rows.length:0;
 
@@ -55,7 +57,7 @@
     }
     const counts={NONE:0,LAB:0,USED:0,DESIGNED:0,OWNED:0};
     records.forEach(row=>{counts[row.level]=(counts[row.level]||0)+1;});
-    const atLeast=level=>records.filter(row=>meetsLevel(row.level,level)).length;
+    const atLeast=level=>records.filter(row=>evidenceMeets(row.level,level)).length;
     const practical=records.length?Math.round(avg(records.map(row=>row.score))):0;
     return Object.freeze({
       archetype,pillars:Object.freeze([...pillars]),records:Object.freeze(records.map(Object.freeze)),total:records.length,practical,
@@ -108,7 +110,7 @@
       archetype:role.archetype,title:titleFor(role.archetype,rank.key),roleId:role.id,roleLabel:role.label,
       evidence:snap.evidence,next:next?Object.freeze({...next,title:titleFor(role.archetype,next.key),gaps:gapsFor(next,snap)}):null,
       achieved:Object.freeze(LEVEL_ORDER.slice(0,idx+1)),
-      ladder:Object.freeze(LEVEL_ORDER.map(key=>Object.freeze({key,label:RANKS[key].label,title:titleFor(role.archetype,key),achieved:levelIndex(key)<=idx,current:key===rank.key,description:LEVEL_NARRATIVE[key]})))
+      ladder:Object.freeze(LEVEL_ORDER.map(key=>Object.freeze({key,label:RANKS[key].label,title:titleFor(role.archetype,key),achieved:rankIndex(key)<=idx,current:key===rank.key,description:LEVEL_NARRATIVE[key]})))
     });
   }
 
@@ -129,7 +131,7 @@
     }
     const paths=CT.dualPillarDepth.allPathways().filter(path=>String(path.id).startsWith('pv-'));
     for(const path of paths){const rank=forPathway(path);if(!rank)issues.push(`${path.id}: no rank`);else if(rank.rankIndex<1||rank.rankIndex>6)issues.push(`${path.id}: invalid rank index`);}
-    for(let i=1;i<LEVEL_ORDER.length;i++){const a=RANKS[LEVEL_ORDER[i-1]],b=RANKS[LEVEL_ORDER[i]];if(b.minScore<a.minScore||b.minFloor<a.minFloor||b.minPractical<a.minPractical||b.minUsed<a.minUsed||b.minDesigned<a.minDesigned||b.minOwned<a.minOwned)issues.push(`Rank thresholds are not monotonic at ${b.key}.`);}
+    for(let i=1;i<LEVEL_ORDER.length;i++){const a=RANKS[LEVEL_ORDER[i-1]],b=RANKS[LEVEL_ORDER[i]];if(b.minScore<a.minScore||b.minFloor<a.minFloor||b.minPractical<a.minPractical||b.minLab<a.minLab||b.minUsed<a.minUsed||b.minDesigned<a.minDesigned||b.minOwned<a.minOwned||b.minLeadership<a.minLeadership)issues.push(`Rank thresholds are not monotonic at ${b.key}.`);}
     return Object.freeze({levels:LEVEL_ORDER.length,pathways:paths.length,archetypes:Object.keys(TITLES).length,issues:Object.freeze(issues)});
   }
 
@@ -140,5 +142,5 @@
     wrapped.__rankWrapped=true;global.roleMatches=wrapped;
   }
 
-  CT.roleReadiness=Object.freeze({LEVEL_ORDER,RANKS,TITLES,LEVEL_NARRATIVE,evidenceStats,leadershipScore,snapshot,qualifies,gapsFor,titleFor,rankForRole,forPathway,forFilter,active,all,byArchetype,audit});
+  CT.roleReadiness=Object.freeze({LEVEL_ORDER,EVIDENCE_ORDER,RANKS,TITLES,LEVEL_NARRATIVE,evidenceStats,leadershipScore,snapshot,qualifies,gapsFor,titleFor,rankForRole,forPathway,forFilter,active,all,byArchetype,audit});
 })(window);
