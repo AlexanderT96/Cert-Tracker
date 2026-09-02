@@ -7,13 +7,15 @@
 
   const LEVEL_ORDER=Object.freeze(['R1','R2','R3','R4','R5','R6']);
   const EVIDENCE_ORDER=Object.freeze(['NONE','LAB','USED','DESIGNED','OWNED']);
+  // R1-R6 are neutral readiness levels. Role-specific titles carry the career meaning;
+  // the global ladder deliberately avoids forcing illustrative labels onto every pathway.
   const RANKS=Object.freeze({
-    R1:Object.freeze({key:'R1',label:'Beginner / Training Role',short:'BEGINNER',minScore:0,minFloor:0,minPractical:0,minLab:0,minUsed:0,minDesigned:0,minOwned:0,minLeadership:0,description:'Foundation/training stage. Build the vocabulary, safe lab habits and supervised task competence needed to become useful without pretending certification completion equals independent role performance.'}),
-    R2:Object.freeze({key:'R2',label:'Intermediate',short:'INTERMEDIATE',minScore:35,minFloor:30,minPractical:20,minLab:2,minUsed:0,minDesigned:0,minOwned:0,minLeadership:0,description:'Independent contributor on common tasks. Can execute routine work, recognise normal failure modes, gather evidence and escalate intelligently.'}),
-    R3:Object.freeze({key:'R3',label:'Senior',short:'SENIOR',minScore:55,minFloor:50,minPractical:45,minLab:3,minUsed:2,minDesigned:0,minOwned:0,minLeadership:0,description:'Trusted technical contributor. Handles difficult troubleshooting, understands trade-offs, works across adjacent systems and can guide less experienced engineers.'}),
-    R4:Object.freeze({key:'R4',label:'Manager / Team Leader',short:'LEAD / MANAGER',minScore:68,minFloor:58,minPractical:55,minLab:4,minUsed:3,minDesigned:1,minOwned:1,minLeadership:50,description:'Owns outcomes beyond individual tickets/tasks. Coordinates people or workstreams, makes prioritisation decisions, manages risk/escalation and is accountable for delivery quality.'}),
-    R5:Object.freeze({key:'R5',label:'Architect',short:'ARCHITECT',minScore:78,minFloor:68,minPractical:62,minLab:5,minUsed:4,minDesigned:3,minOwned:1,minLeadership:62,description:'Design authority. Turns requirements and constraints into supportable cross-domain designs, defends technical/commercial trade-offs and owns architecture quality through delivery.'}),
-    R6:Object.freeze({key:'R6',label:'Director',short:'DIRECTOR',minScore:88,minFloor:78,minPractical:72,minLab:6,minUsed:5,minDesigned:5,minOwned:3,minLeadership:80,description:'Strategic leadership. Owns portfolio direction, investment/risk decisions, organisational capability and multi-team outcomes rather than only a single solution or technical domain.'})
+    R1:Object.freeze({key:'R1',label:'Level 1',short:'R1',minScore:0,minFloor:0,minPractical:0,minLab:0,minUsed:0,minDesigned:0,minOwned:0,minLeadership:0,description:'Foundation/training stage. Build the vocabulary, safe lab habits and supervised task competence needed to become useful without pretending certification completion equals independent role performance.'}),
+    R2:Object.freeze({key:'R2',label:'Level 2',short:'R2',minScore:35,minFloor:30,minPractical:20,minLab:2,minUsed:0,minDesigned:0,minOwned:0,minLeadership:0,description:'Independent contributor on common tasks. Can execute routine work, recognise normal failure modes, gather evidence and escalate intelligently.'}),
+    R3:Object.freeze({key:'R3',label:'Level 3',short:'R3',minScore:55,minFloor:50,minPractical:45,minLab:3,minUsed:2,minDesigned:0,minOwned:0,minLeadership:0,description:'Trusted technical contributor. Handles difficult troubleshooting, understands trade-offs, works across adjacent systems and can guide less experienced engineers.'}),
+    R4:Object.freeze({key:'R4',label:'Level 4',short:'R4',minScore:68,minFloor:58,minPractical:55,minLab:4,minUsed:3,minDesigned:1,minOwned:1,minLeadership:50,description:'Owns outcomes beyond individual tickets/tasks. Coordinates people or workstreams, makes prioritisation decisions, manages risk/escalation and is accountable for delivery quality.'}),
+    R5:Object.freeze({key:'R5',label:'Level 5',short:'R5',minScore:78,minFloor:68,minPractical:62,minLab:5,minUsed:4,minDesigned:3,minOwned:1,minLeadership:62,description:'Design-authority stage. Turns requirements and constraints into supportable cross-domain designs, defends technical/commercial trade-offs and owns architecture quality through delivery.'}),
+    R6:Object.freeze({key:'R6',label:'Level 6',short:'R6',minScore:88,minFloor:78,minPractical:72,minLab:6,minUsed:5,minDesigned:5,minOwned:3,minLeadership:80,description:'Strategic-ownership stage. Owns portfolio direction, investment/risk decisions, organisational capability and multi-team outcomes rather than only a single solution or technical domain.'})
   });
 
   const TITLES=Object.freeze({
@@ -98,7 +100,7 @@
     return Object.freeze(gaps);
   }
 
-  function titleFor(archetype,rankKey){return TITLES[archetype]?.[rankKey]||`${RANKS[rankKey]?.label||rankKey} — ${archetype||'technical'} pathway`;}
+  function titleFor(archetype,rankKey){return TITLES[archetype]?.[rankKey]||`${rankKey} — ${archetype||'technical'} pathway`;}
 
   function rankForRole(role){
     if(!role)return null;
