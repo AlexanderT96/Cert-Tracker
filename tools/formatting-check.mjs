@@ -46,7 +46,7 @@ for(const behavior of ['@media(hover:none)','@media(prefers-reduced-motion:reduc
 for(const spacing of ['gap:4px','padding:4px','--hud-cut:10px'])require(hud.includes(spacing),`HUD spacing contract missing ${spacing}`);
 for(const forbidden of ['#ff7ad9','#c084fc','#9b8cff','#ff6ee0','#d946ef','#ec4899'])require(!hud.toLowerCase().includes(forbidden),`Forbidden legacy colour ${forbidden} remains in HUD layer.`);
 require(worker.includes("'./cyberpunk-hud.css'"),'Service worker does not cache the HUD theme asset.');
-require(worker.includes('cert-tracker-assets-v4.4.0'),'Service-worker cache was not advanced for the HUD release.');
+require(worker.includes(`cert-tracker-assets-v${pkg.version}`),'Service-worker cache was not advanced for the HUD release.');
 require(manifest.includes('"background_color":"#030811"')&&manifest.includes('"theme_color":"#08131f"'),'Manifest does not carry the HUD application colours.');
 require(icon.includes('cybernetic five-tier progression core'),'Application icon does not identify the cybernetic progression system.');
 require(config.includes(`app: '${pkg.version}'`),'Visible application version must match package.json.');
@@ -57,7 +57,7 @@ for(const asset of ['chassis-frame.webp','portal.png','tier-bronze.png','tier-si
   require(worker.includes(`'./assets/hud/${asset}'`),`Service worker does not cache assets/hud/${asset}`);
 }
 require(worker.includes("'./mechanical-chassis.css'"),'Service worker does not cache the mechanical chassis layer.');
-require(worker.includes('cert-tracker-assets-v4.4.0'),'Service-worker cache was not advanced for the approved chassis release.');
+require(worker.includes(`cert-tracker-assets-v${pkg.version}`),'Service-worker cache was not advanced for the approved chassis release.');
 const presentationCss=fs.readdirSync('.').filter(file=>file.endsWith('.css')).map(read).join('\n').toLowerCase();
 for(const forbidden of ['#ff7ad9','#c084fc','#9b8cff','#ff6ee0','#d946ef','#ec4899','#d8b0ff','#b03fd0','#ff5d7d','#ff6b8a','#a55ef0','#d0a6ff','rgba(167,139,250','rgba(255,140,225','rgba(255,110,224'])require(!presentationCss.includes(forbidden),`Forbidden legacy presentation colour ${forbidden} remains in CSS.`);
 for(const forbidden of ['#c084fc','#d4d1e8','#d8b0ff','#b03fd0','#ff6ee0','#ff7ad9'])require(!renderer.toLowerCase().includes(forbidden),`Forbidden legacy renderer colour ${forbidden} remains.`);
