@@ -55,12 +55,16 @@ const brief=page.content.querySelector('.ct-dual-brief'),market=page.content.que
 assert.ok(brief&&market,'Both dashboard adapters must mount');
 assert.equal(page.content.children.length,2,'Only one copy of each panel may exist');
 const initialWrites=page.writes;
+let recalculations=0;const currentValue=page.CT.marketReadiness.currentValue;
+page.CT.marketReadiness.currentValue=()=>{recalculations++;return currentValue();};
 page.CT.dualPillarUI.mount();await page.CT.marketDashboardUI.mount();await page.settle();
 assert.equal(page.writes,initialWrites,'Unchanged mounts must not mutate the DOM');
 page.decorate(brief);page.decorate(market);await page.settle();
 assert.equal(page.content.querySelector('.ct-dual-brief'),brief,'Decoration must not recreate the pathway');
 assert.equal(page.content.querySelector('[data-market-dashboard]'),market,'Decoration must preserve market controls and role badges');
+assert.equal(recalculations,0,'Unchanged DOM notifications must not recalculate market readiness');
 page.changeData();await page.settle();
+assert.ok(recalculations>0,'State/context changes must invalidate readiness input caching');
 assert.notEqual(page.content.querySelector('.ct-dual-brief'),brief,'Changed pathway data must render');
 assert.notEqual(page.content.querySelector('[data-market-dashboard]'),market,'Changed market data must render');
 assert.equal(page.content.children.length,2,'Data refresh must not duplicate panels');

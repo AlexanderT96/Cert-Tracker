@@ -37,7 +37,9 @@
     });
   }
 
-  function dashboard(){if(state.currentTab!=='dashboard')return;const market=document.querySelector('[data-market-dashboard]');if(!market)return;syncActiveRank(market);syncRoleBadges(market);}
+  const dashboardInputs=new WeakMap();let revision=0;
+  for(const name of ['certtracker:career-context-changed','certtracker:capability-evidence-changed','certtracker:goal-changed'])global.addEventListener(name,()=>{revision++;});
+  function dashboard(){if(state.currentTab!=='dashboard')return;const market=document.querySelector('[data-market-dashboard]');if(!market)return;const inputs=JSON.stringify([state,revision]);if(dashboardInputs.get(market)===inputs)return;syncActiveRank(market);syncRoleBadges(market);dashboardInputs.set(market,inputs);}
 
   function careerRow({role,rank}){return `<div class="ct-rank-career-row"><div><strong>${esc(role.label)}</strong><small>${esc(rank.title)} · readiness ${rank.score}% · M/K floor ${rank.floor}%${rank.next?` · next blocker: ${esc(rank.next.gaps[0]||rank.next.title)}`:''}</small></div><span class="ct-rank-career-badge">${esc(rank.key)}</span></div>`;}
   function career(){
