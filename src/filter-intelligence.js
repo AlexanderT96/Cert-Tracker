@@ -1,5 +1,5 @@
-// Cert Tracker — filter-wide learning-first ordering and recommendation intelligence.
-// Every pathway/filter uses the same curriculum-first model; market value is a secondary signal.
+// Cert Tracker — filter-wide dual-pillar ordering and recommendation intelligence.
+// Every pathway/filter uses the same market-access + job-performance-capability model.
 (function initFilterIntelligence(global){
   'use strict';
   const CT=global.CertTrackerV3;
@@ -28,23 +28,24 @@
     const goal=goalForFilter(meta.id,meta.label);
     const item=CT.recommendations.score(cert,{goal,passes,horizon});
     // Neutralise the personal My Path bonus/penalty while ranking an explicit alternate filter.
-    // The filter itself is the temporary curriculum scope; saved My Path must not distort it.
+    // The filter itself is the temporary decision scope; saved My Path must not distort it.
     const pathBias=Number(item.breakdown?.path||0);
     const dataConfidence=Number(item.health?.confidence??70);
     const freshnessPenalty=item.health?.freshness==='STALE'?-18:item.health?.freshness==='UNKNOWN'?-10:item.health?.freshness==='REVIEW'?-5:0;
     const sourcePenalty=item.health?.sourceLevel==='NONE'?-8:item.health?.sourceLevel==='VENDOR'?-2:0;
-    const knowledgeBonus=Number(item.career?.K||0)*3;
-    const score=Math.round(item.score-pathBias+freshnessPenalty+sourcePenalty+knowledgeBonus);
+    const weakerPillar=Number(item.tandem?.weaker??Math.min(Number(item.career?.M||0),Number(item.career?.K||0)));
+    const tandemBonus=Math.round(weakerPillar*2);
+    const score=Math.round(item.score-pathBias+freshnessPenalty+sourcePenalty+tandemBonus);
     return Object.freeze({...item,filterGoal:goal,filterScore:score,dataConfidence});
   }
   function compareRank(a,b){
     if(a.available!==b.available)return a.available?-1:1;
     if(a.filterScore!==b.filterScore)return b.filterScore-a.filterScore;
-    if(a.career.K!==b.career.K)return b.career.K-a.career.K;
+    const aw=Number(a.tandem?.weaker||0),bw=Number(b.tandem?.weaker||0);if(aw!==bw)return bw-aw;
+    const as=Number(a.tandem?.strength||0),bs=Number(b.tandem?.strength||0);if(as!==bs)return bs-as;
     const at=timingRank[a.career.T]??9,bt=timingRank[b.career.T]??9;if(at!==bt)return at-bt;
     if(a.career.N!==b.career.N)return b.career.N-a.career.N;
     if(a.career.E!==b.career.E)return b.career.E-a.career.E;
-    if(a.career.M!==b.career.M)return b.career.M-a.career.M;
     return a.estimatedHours-b.estimatedHours||a.name.localeCompare(b.name);
   }
   function rankRows(certs,options={}){return certs.map(cert=>learningRank(cert,options)).sort(compareRank);}
@@ -59,6 +60,8 @@
     return (available[0]||ranked.find(item=>item.available)||ranked[0]||null)?.cert||null;
   }
 
+  // Function name retained for compatibility with existing callers; semantics are now
+  // dual-pillar and filter-aware rather than legacy ROI/hour or knowledge-only ordering.
   function orderPhaseLearningFirst(certs){
     const rows=Array.isArray(certs)?certs.slice():[];if(rows.length<2)return rows;
     const meta=activeFilterMeta(),idSet=new Set(rows.map(cert=>cert.id)),remaining=new Map(),dependents=new Map();
@@ -92,13 +95,13 @@
   }
   global.getFilterDefs=function(){return augmentFilterDefinitions(originalGetFilterDefs());};
 
-  // Replace the legacy ROI/hour sorters. Existing UI code keeps calling the same functions,
-  // but their semantics are now curriculum-first and filter-aware.
+  // Replace legacy ROI/hour sorters. Existing UI code keeps calling the same functions,
+  // but their semantics now reward balanced market access and real capability.
   global.nextCoreCert=function(filterTest){return nextFor(filterTest);};
   global.orderPhaseCerts=orderPhaseLearningFirst;
 
   // Keep role coverage as a market-facing signal, but choose each role's suggested next cert
-  // with the same curriculum-first engine rather than raw cvValue.
+  // using the same dual-pillar engine rather than raw cvValue.
   if(typeof global.roleMatches==='function'){
     global.roleMatches=function(){
       const {filterGroups}=global.getFilterDefs(),P=typeof global.effPasses==='function'?global.effPasses():state.passes;
