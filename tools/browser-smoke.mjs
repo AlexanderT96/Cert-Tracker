@@ -73,6 +73,9 @@ try{
   await navigationInViewport(page);
   assert.equal(await page.locator('.tabs').isVisible(),false,'Desktop tabs must stay hidden on phones');
   assert.equal(await page.locator('.header-title').evaluate(el=>getComputedStyle(el).textShadow),'none');
+  assert.equal(await page.locator('meta[name="apple-mobile-web-app-status-bar-style"]').getAttribute('content'),'black','Standalone iOS must not request an overlay status bar');
+  const headerEffects=await page.locator('.header').evaluate(el=>{const s=getComputedStyle(el);return {clip:s.clipPath,filter:s.filter,backdrop:s.backdropFilter,transform:s.transform,background:s.backgroundColor};});
+  assert.deepEqual(headerEffects,{clip:'none',filter:'none',backdrop:'none',transform:'none',background:'rgb(6, 17, 23)'});
   assert.ok((await page.locator('body').evaluate(el=>getComputedStyle(el).backgroundAttachment)).split(',').every(value=>value.trim()==='scroll'));
   assert.equal(await page.locator('#ct-mobile-navigation').evaluate(el=>getComputedStyle(el).backdropFilter),'none');
   const transforms=await page.locator('.ct-depth-surface').evaluateAll(nodes=>nodes.map(el=>getComputedStyle(el).transform));
