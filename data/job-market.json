@@ -3,7 +3,7 @@
   "provider": "UK market feed",
   "providerUrl": "https://www.arbeitnow.co.uk/",
   "country": "gb",
-  "fetchedAt": "2026-09-02T14:40:10.733Z",
+  "fetchedAt": "2026-09-02T18:04:48.742Z",
   "refreshTargetMinutes": 5,
   "status": "degraded",
   "location": "United Kingdom",
