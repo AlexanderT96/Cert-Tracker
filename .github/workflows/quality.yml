@@ -72,10 +72,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 -m http.server 4173 >/tmp/certtracker-http.log 2>&1 &
+          openssl req -x509 -newkey rsa:2048 -nodes -keyout /tmp/certtracker-smoke.key -out /tmp/certtracker-smoke.crt -days 1 -subj '/CN=localhost' >/dev/null 2>&1
+          node tools/smoke-server.mjs >/tmp/certtracker-https.log 2>&1 &
           server=$!
           trap 'kill $server || true' EXIT
-          sleep 2
+          sleep 1
           timeout 240s node tools/browser-smoke.mjs ${{ matrix.browser }}
       - name: Save browser screenshots
         if: always()

@@ -10,8 +10,10 @@ const workspace=read('src/workspace-shell.js');
 const personalization=read('src/personalization.js');
 const sw=read('sw.js');
 const bootstrap=read('src/bootstrap.js');
+const renderer=read('src/renderer.js');
 
 function require(condition,message){if(!condition)errors.push(message);}
+require(!/loadState\(\);\s*renderApp\(\);\s*$/.test(renderer),'Initial render must wait for the complete workspace shell, not flash three legacy tabs.');
 
 for(const asset of ['responsive-layout.css','src/responsive-layout.js','mobile-navigation.css']){
   require(index.includes(asset),`index.html is missing responsive asset ${asset}`);

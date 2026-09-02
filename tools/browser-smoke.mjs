@@ -7,12 +7,12 @@ assert.ok(browserType,'Unknown browser engine');
 const browser=await browserType.launch({headless:true});
 const errors=[];
 async function open(options){
-  const context=await browser.newContext(options),page=await context.newPage();
+  const context=await browser.newContext({ignoreHTTPSErrors:true,...options}),page=await context.newPage();
   page.setDefaultTimeout(15000);page.setDefaultNavigationTimeout(60000);
   page.on('pageerror',error=>{errors.push(error.message);console.error('Application error:',error.stack||error.message);});
   page.on('console',message=>{if(message.type()==='error'&&message.text().includes('[CertTracker] initial render failed'))errors.push(message.text());});
-  await page.goto('http://localhost:4173/');
-  console.log('Startup modules:',await page.evaluate(()=>({modules:Object.keys(window.CertTrackerV3||{}),alias:!!window.CertTracker})));
+  page.on('requestfailed',request=>console.error('Request failed:',request.url(),request.failure()?.errorText));
+  await page.goto('https://localhost:4173/');
   await page.waitForFunction(()=>!!window.CertTracker?.workspaceShell);
   await page.locator('[data-market-dashboard]').waitFor();
   return{context,page};
@@ -38,7 +38,7 @@ try{
   await page.waitForFunction(()=>document.documentElement.dataset.layout==='mobile');
   await navigationInViewport(page);
   assert.equal(await page.locator('.tabs').isVisible(),false,'Desktop tabs must stay hidden on phones');
-  assert.equal(await page.locator('body').evaluate(el=>getComputedStyle(el).backgroundAttachment),'scroll');
+  assert.ok((await page.locator('body').evaluate(el=>getComputedStyle(el).backgroundAttachment)).split(',').every(value=>value.trim()==='scroll'));
   assert.equal(await page.locator('#ct-mobile-navigation').evaluate(el=>getComputedStyle(el).backdropFilter),'none');
   const transforms=await page.locator('.ct-depth-surface').evaluateAll(nodes=>nodes.map(el=>getComputedStyle(el).transform));
   assert.ok(transforms.every(value=>value==='none'),'Phone panels must not use desktop 3D layers');
