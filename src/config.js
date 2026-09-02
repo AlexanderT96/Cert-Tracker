@@ -82,15 +82,32 @@
   });
 
   CT.util = Object.freeze({
+    isPlainObject(value) { return !!value && typeof value === 'object' && !Array.isArray(value); },
     clamp(value, min, max) { return Math.min(max, Math.max(min, value)); },
-    averageHours(cert) {
-      const hours = cert?.hours;
-      return Array.isArray(hours) && hours.length >= 2 ? (Number(hours[0]) + Number(hours[1])) / 2 : 0;
-    },
     escapeHtml(value) {
-      return String(value ?? '').replace(/[&<>"']/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;' })[char]);
+      return String(value ?? '').replace(/[&<>'"]/g, ch => ({ '&': '&amp;', '>': '&gt;', '<': '&lt;', "'": '&#39;', '"': '&quot;' }[ch]));
     },
-    normalise(value) { return String(value ?? '').trim().toLowerCase(); },
-    uniq(items) { return [...new Set(items)]; }
+    averageHours(cert) {
+      return Array.isArray(cert?.hours) && cert.hours.length === 2
+        ? (Number(cert.hours[0]) + Number(cert.hours[1])) / 2
+        : 0;
+    },
+    nowIso() { return new Date().toISOString(); },
+    validIsoDate(value) {
+      if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+      const d = new Date(`${value}T12:00:00Z`);
+      return Number.isFinite(d.getTime()) && d.toISOString().slice(0, 10) === value;
+    },
+    stableStringify(value) {
+      const seen = new WeakSet();
+      function normalise(input) {
+        if (!input || typeof input !== 'object') return input;
+        if (seen.has(input)) throw new TypeError('Cannot stringify circular data.');
+        seen.add(input);
+        if (Array.isArray(input)) return input.map(normalise);
+        return Object.fromEntries(Object.keys(input).sort().map(key => [key, normalise(input[key])]));
+      }
+      return JSON.stringify(normalise(value));
+    }
   });
 })(window);
