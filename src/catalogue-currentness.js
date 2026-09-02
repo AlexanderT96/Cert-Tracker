@@ -91,4 +91,20 @@
     };
     CERTS.push(cert);byId[cert.id]=cert;
   }
+
+  // Catalogue-wide detail normalisation. The tracker contains many secondary role filters,
+  // so sparse records must not collapse into thin cards just because they are outside My Path.
+  // Missing fields are deliberately labelled as derived guidance, not invented vendor facts.
+  for(const cert of CERTS){
+    const topics=[...(cert.subjects||[]),...(cert.skills||[])].map(x=>String(x).trim()).filter(Boolean);
+    const topicText=[...new Set(topics)].slice(0,6).join(', ')||cert.name||cert.code||'the certification domain';
+    let derived=false;
+    if(!cert.coverage){cert.coverage=`Structured learning coverage is derived from the recorded certification domains: ${topicText}. Use the current official blueprint as the authority for exact weighting and product-version changes.`;derived=true;}
+    if(!cert.prerequisites){cert.prerequisites='No formal prerequisite is recorded in the tracker. Confirm current eligibility and recommended experience with the issuing body before booking.';derived=true;}
+    if(!cert.examFormat){cert.examFormat='Assessment format is programme-dependent. Check the current official certification page for question/lab format, duration, delivery method, passing policy and active exam version before booking.';derived=true;}
+    if(!cert.studyMaterials){cert.studyMaterials='Use the official blueprint/vendor learning path first, then the purpose-fit video, lab and practice resources in the Learning Intelligence panel.';derived=true;}
+    if(!cert.projectRec){cert.projectRec=`Create practical evidence around ${topicText}: document the scenario, implementation or analysis, validation steps, failures encountered and what you would change in production.`;derived=true;}
+    if(!cert.note){cert.note='Supporting learning rung. Judge it by the capability it builds and how it connects to the selected role pathway; market value is secondary. Re-verify current programme status before committing exam fees.';derived=true;}
+    if(derived)cert.detailModel='DERIVED';
+  }
 })();
