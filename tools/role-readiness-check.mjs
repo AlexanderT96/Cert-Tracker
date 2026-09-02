@@ -7,7 +7,7 @@ for(const file of ['src/role-readiness-rank.js','src/role-readiness-ui.js']){
   if(!fs.existsSync(file)){errors.push(`Missing ${file}`);continue;}
   try{execFileSync(process.execPath,['--check',file],{stdio:'pipe'});}catch(error){errors.push(`${file}: syntax check failed: ${error.stderr?.toString()||error.message}`);}
 }
-const rank=read('src/role-readiness-rank.js'),ui=read('src/role-readiness-ui.js'),dual=read('src/dual-pillar-ui.js'),index=read('index.html'),sw=read('sw.js');
+const rank=read('src/role-readiness-rank.js'),ui=read('src/role-readiness-ui.js'),dual=read('src/dual-pillar-ui.js'),index=read('index.html'),tests=read('tests.html'),sw=read('sw.js');
 for(let i=1;i<=6;i++)if(!rank.includes(`label:'Level ${i}'`))errors.push(`Role ladder missing neutral Level ${i} label.`);
 for(const key of ['R1','R2','R3','R4','R5','R6'])if(!rank.includes(`${key}:Object.freeze`))errors.push(`Role ladder missing ${key}.`);
 for(const marker of ['minFloor','minPractical','minUsed','minDesigned','minOwned','minLeadership','evidenceStats','leadershipScore','gapsFor','rankForRole','forPathway','forFilter','active','byArchetype'])if(!rank.includes(marker))errors.push(`Role readiness model missing ${marker}.`);
@@ -22,6 +22,9 @@ if(!ui.includes('Six neutral evidence-gated levels (R1–R6)'))errors.push('Care
 if(!index.includes('src/role-readiness-rank.js')||!index.includes('src/role-readiness-ui.js'))errors.push('Production page does not load both role-readiness layers.');
 if(index.indexOf('src/role-readiness-rank.js')<index.indexOf('src/market-readiness.js'))errors.push('Role readiness loads before market-readiness dependency.');
 if(index.indexOf('src/role-readiness-ui.js')<index.indexOf('src/market-dashboard-ui.js'))errors.push('Role-readiness UI loads before dashboard market surface.');
+for(const file of ['src/filter-intelligence.js','src/dual-pillar-depth.js','src/market-readiness.js','src/role-readiness-rank.js'])if(!tests.includes(file))errors.push(`Browser test page does not load ${file}.`);
+if(tests.indexOf('src/role-readiness-rank.js')<tests.indexOf('src/market-readiness.js'))errors.push('Browser test page loads role readiness before its market-readiness dependency.');
+if(tests.indexOf('src/market-readiness.js')<tests.indexOf('src/dual-pillar-depth.js'))errors.push('Browser test page loads market readiness before its dual-pillar dependency.');
 if(!sw.includes('src/role-readiness-rank.js')||!sw.includes('src/role-readiness-ui.js'))errors.push('Service worker does not cache role-readiness layers.');
 if(errors.length){console.error(`Role readiness gate failed (${errors.length}):`);errors.forEach(error=>console.error(`- ${error}`));process.exit(1);}
 console.log('Role readiness gate passed: six neutral evidence-gated levels, domain-specific titles, dual-pillar floor and mobile/desktop UI coverage enforced.');
