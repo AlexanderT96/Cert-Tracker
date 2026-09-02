@@ -1,0 +1,53 @@
+/* Cert Tracker — graceful fallbacks for current major browser engines.
+   The primary mechanical HUD remains intact where supported. */
+
+/* Safari/WebKit compatibility for blur surfaces. */
+:where(.toolbar,.action-bar,.filter-bar,.command-bar,.ct-map-toolbar,.ct-command-dock,.command-dock){
+  -webkit-backdrop-filter:blur(14px);
+}
+
+/* Engines without color-mix keep readable, deterministic colours rather than dropping rules. */
+.ct-no-color-mix :where(.ct-credential-mark,.badge,.chip,.pill,.tag,.ct3-pill){border-color:var(--border-2)!important}
+.ct-no-color-mix .ct-credential-mark{color:var(--blue-text)!important}
+.ct-no-color-mix :where(.ct-map-tutor-summary,.ct-map-tutor){border-color:var(--border-2)!important;background:var(--surface-2)!important}
+.ct-no-color-mix :where(.ct-map-gate,.badge-gateway){border-color:var(--amber)!important;background:var(--amber-bg)!important;color:var(--amber-text)!important}
+.ct-no-color-mix .ct-map-node-dot{box-shadow:0 0 0 4px rgba(22,217,227,.14)!important}
+.ct-no-color-mix .ct-map-phase-summary{background:var(--surface-2)!important}
+
+/* Older WebKit/Firefox builds that cannot clip polygons get ordinary square mechanical panels. */
+.ct-no-clip-path :where(#app,.header,.tabs,.card,.panel,.section-card,.strategy-card,.learning-card,.customize-card,.cert-card,.cert-item,.phase-card,.roadmap-card,.ct3-card,.ct-map-phase,.ct-map-cert,.ct-map-gate,.banner,.notice,.modal,.popover,.sheet,.cert-row,.dash-hero){
+  clip-path:none!important;
+  -webkit-clip-path:none!important;
+  border-radius:3px!important;
+}
+
+/* No backdrop-filter: use opaque surfaces so text contrast remains strong. */
+.ct-no-backdrop-filter :where(.toolbar,.action-bar,.filter-bar,.command-bar,.ct-map-toolbar,.ct-command-dock,.command-dock){
+  backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:#061117!important;
+}
+
+/* No sticky support: keep controls in document flow rather than overlapping content. */
+.ct-no-sticky :where(.tabs,.ct-map-toolbar){position:relative!important;top:auto!important}
+
+/* No CSS grid is rare in supported browsers, but the app should still remain navigable. */
+.ct-no-grid :where(.dash-grid,.dashboard-grid,.cards-grid,.strategy-grid,.learning-grid,.workspace-grid,.content-grid,.ct-custom-grid,.ct-learning-columns,.ct-map-toolbar){display:flex!important;flex-wrap:wrap!important}
+.ct-no-grid :where(.dash-grid,.dashboard-grid,.cards-grid,.strategy-grid,.learning-grid,.workspace-grid,.content-grid,.ct-custom-grid,.ct-learning-columns)>*{flex:1 1 320px;min-width:0}
+
+/* Browser text/input normalisation. */
+button,input,select,textarea{font:inherit;-webkit-tap-highlight-color:transparent}
+button{-webkit-appearance:none;appearance:none}
+select{max-width:100%}
+img,svg,canvas,video{max-width:100%}
+
+/* Firefox scrollbar styling with WebKit equivalents retained elsewhere. */
+.tabs,.ct-map-viewport,.ct-command-dock,.command-dock{scrollbar-color:var(--border-2) var(--surface);scrollbar-width:thin}
+
+/* Mobile Safari's dynamic viewport; fall back to vh automatically when dvh is unavailable. */
+@supports(height:100dvh){html,body{min-height:100dvh}.ct-map-viewport{max-height:min(72dvh,780px)}}
+
+/* Forced-colours / Windows High Contrast: preserve operability over decoration. */
+@media(forced-colors:active){
+  *{text-shadow:none!important;filter:none!important}
+  :where(button,.btn,input,select,textarea,.card,.panel,.cert-row,.ct-map-cert,.ct-map-gate){forced-color-adjust:auto;border:1px solid CanvasText!important}
+  :where(.ct-credential-mark,.header::before,.header-count::after,.dash-hero::before){filter:none!important}
+}
