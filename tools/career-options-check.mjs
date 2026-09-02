@@ -3,13 +3,15 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 const state={customization:{},passes:{},capabilityEvidence:{}},CT={careerFramework:{context:()=>({current:'test'}),ROLE_PROFILES:{test:{label:'Test background',weights:{networking:1}}}},events:{emit(){}}};
 let saves=0;
-const sandbox={CertTrackerV3:CT,state,save:{customization(){saves++;}},CERTS:[],console};sandbox.window=sandbox;
+const catalogue={};vm.createContext(catalogue);vm.runInContext(['certs.js','src/cert-extensions.js','src/catalogue-currentness.js','src/catalogue-policy-normalize.js'].map(f=>fs.readFileSync(f,'utf8')).join('\n')+'\nglobalThis.catalogue=CERTS;',catalogue);
+const sandbox={CertTrackerV3:CT,state,save:{customization(){saves++;}},CERTS:catalogue.catalogue,console};sandbox.window=sandbox;
 vm.runInNewContext(fs.readFileSync('src/career-options.js','utf8'),sandbox);
 const m=CT.careerOptions;
 assert.equal(Object.keys(m.FAMILIES).length,14);
 assert.ok(m.ROLES.length>=65);
 assert.equal(new Set(m.ROLES.map(r=>r.id)).size,m.ROLES.length);
 for(const r of m.ROLES){assert.ok(m.FAMILIES[r.family]);assert.ok(!m.CONTEXTS[r.id]);assert.equal(m.requirements(r).length,4);assert.equal(m.assess(r).readiness,null);}
+for(const r of m.ROLES)for(const id of r.certs)assert.ok(sandbox.CERTS.some(c=>c.id===id),`${r.id}: unknown credential ${id}`);
 const r=m.ROLES[0],a=m.assess(r);m.update({interests:{[r.id]:100}});assert.equal(m.assess(r).readiness,null);assert.equal(m.assess(r).provisional,false);assert.equal(saves,1);
 const evidence=Object.fromEntries(m.requirements(r).map(q=>[q.id,q.target]));m.update({evidence});assert.equal(m.assess(r).readiness,100);assert.equal(m.assess(r).compatibility,m.assess(r,{interests:{[r.id]:100}}).compatibility);
 assert.equal(m.assess(r,{evidence:Object.fromEntries(m.requirements(r).map(q=>[q.id,'NONE']))}).readiness,0);
