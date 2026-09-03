@@ -2015,7 +2015,7 @@ function renderCertifications() {
 
   const filterBar = `
     <details class="cert-filter-disclosure" ${certFiltersExpanded() ? 'open' : ''} ontoggle="rememberCertFilters(this)">
-    <summary><span>Filters · ${escape(activeFilter.label || 'My Path')}${state.passedOnly ? ' · Passed only' : ''}</span><span class="cert-filter-expand">Expand</span><span class="cert-filter-collapse">Collapse</span></summary>
+    <summary onclick="event.preventDefault();toggleCertFilters(this.parentElement)"><span>Filters · ${escape(activeFilter.label || 'My Path')}${state.passedOnly ? ' · Passed only' : ''}</span><span class="cert-filter-expand">Expand</span><span class="cert-filter-collapse">Collapse</span></summary>
     <div class="cert-filter-bar">
       ${filters.map((f, i) => {
         const chipHtml = renderChip(f);
@@ -2419,6 +2419,11 @@ function rememberCertFilters(element) {
   if (!element.isConnected) return;
   certFiltersPreference=element.open;
   try { localStorage.setItem('ct-cert-filters-expanded',String(element.open)); } catch {}
+}
+function toggleCertFilters(element) {
+  element.open=!element.open;
+  // Persist synchronously; native toggle events may run after a redraw.
+  rememberCertFilters(element);
 }
 function toggleFilterGroup(name) {
   state.openFilterGroups = state.openFilterGroups || {};
