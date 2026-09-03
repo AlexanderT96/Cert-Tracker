@@ -257,20 +257,31 @@ try{
   assert.ok((await focused.page.locator('[data-focused-route]').textContent()).includes('5 recorded complete'));
   assert.equal(await focused.page.evaluate(()=>CertTrackerV3.recommendations.recommend()[0].id),'mcie');
   await focused.page.reload();await navigationInViewport(focused.page);
-  assert.equal(await focused.page.evaluate(()=>Object.keys(state.myPath).length),24);
+  assert.equal(await focused.page.evaluate(()=>Object.keys(state.myPath).length),25);
   assert.equal(await focused.page.evaluate(()=>state.notes.ccna.text),'Preserve route adoption note');
   await focused.page.locator('[data-focused-route] summary').click();
-  assert.equal(await focused.page.locator('[data-focused-route] li').count(),24);
+  assert.equal(await focused.page.locator('[data-focused-route] li').count(),25);
   await focused.page.evaluate(()=>{
     state.myPath=Object.fromEntries(CertTrackerV3.focusedRoute.definition.previousIds.map(id=>[id,true]));
     CertTrackerV3.storage.persistAll();
   });
   await focused.page.reload();await navigationInViewport(focused.page);
-  assert.equal(await focused.page.evaluate(()=>Object.keys(state.myPath).length),24,'Previous focused route upgrades without removing milestones');
+  assert.equal(await focused.page.evaluate(()=>Object.keys(state.myPath).length),25,'Previous focused route upgrades without removing milestones');
   assert.equal(await focused.page.evaluate(()=>state.notes.ccna.text),'Preserve route adoption note');
   assert.ok(await focused.page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Focused route must not overflow mobile');
   await focused.page.locator('[data-mobile-tab="learning"]').click();
   assert.ok(!(await focused.page.locator('#tab-content').textContent()).includes('OT + convergence engineering'));
+  for(const width of [320,390,768,1280]){
+    await focused.page.setViewportSize({width,height:900});
+    await focused.page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+    assert.ok(await focused.page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`Learning layout fits ${width}px`);
+    assert.ok(await focused.page.locator('.ct-learning-phase-head').evaluateAll(heads=>heads.every(head=>{
+      const title=head.firstElementChild.getBoundingClientRect(),counter=head.lastElementChild.getBoundingClientRect();
+      return Math.min(title.right,counter.right)-Math.max(title.left,counter.left)<=1||Math.min(title.bottom,counter.bottom)-Math.max(title.top,counter.top)<=1;
+    })),`Phase headings and counters do not overlap at ${width}px`);
+  }
+  await focused.page.setViewportSize({width:390,height:844});
+  await navigationInViewport(focused.page);
   await focused.page.locator('[data-mobile-tab="roadmap"]').click();
   assert.ok(!(await focused.page.locator('#tab-content').textContent()).includes('Principal / professional capstone'));
   await focused.context.close();

@@ -26,9 +26,9 @@ const save={};
     // progress remain untouched. Remember the upgrade so Undo survives a reload.
     const upgradeKey='ct-focused-route-upgrade-'+route?.id;
     const selected=Object.keys(state.myPath).filter(id=>state.myPath[id]);
-    if(savedPath&&route?.previousIds?.every(id=>state.myPath[id])&&selected.every(id=>route.ids.includes(id))&&route.additions.some(id=>!state.myPath[id])&&!localStorage.getItem(upgradeKey)){
-      CT.storage?.captureUndoPoint('add Azure networking and Windows Server milestones');
-      route.additions.forEach(id=>{state.myPath[id]=true;});
+    if(savedPath&&route?.previousPaths?.some(ids=>ids.length===selected.length&&ids.every(id=>state.myPath[id]))&&!localStorage.getItem(upgradeKey)){
+      CT.storage?.captureUndoPoint('add Linux and any pending focused-route milestones');
+      route.ids.forEach(id=>{state.myPath[id]=true;});
       localStorage.setItem(upgradeKey,'1');localStorage.setItem(C.lastChangeKey,new Date().toISOString());
     }
     state.myPath=pruneCertMap(state.myPath);localStorage.setItem(C.myPathKey,JSON.stringify(state.myPath));localStorage.setItem('cert.myPathVersion',String(CT.version.data));return state;

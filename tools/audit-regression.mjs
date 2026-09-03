@@ -72,8 +72,11 @@ old.schemaVersion=3;old.status='degraded';old.providerCoverage={successes:0,fail
 await vm.runInContext(`(async()=>{${producer}})()`,context);
 assert.equal(written.lastSuccessfulFetchAt,null,'Legacy failed attempts are not verified successful fetches');assert.equal(written.fetchedAt,null);
 // Focused route is a generic preset, never a public record of a user's completions.
-const expected=['a-plus','network-plus','mcit','mcde','arcules-csp','mcie','acp','ccna','security-plus','pcep','az-900','pcap','az-802','az-104','az-700','sc-300','crowdstrike-ccfa','sc-500','ccnp-enterprise','ai-901','ai-103','pcpp1','az-305','ccie-enterprise'];
+const expected=['a-plus','network-plus','mcit','mcde','arcules-csp','mcie','acp','ccna','security-plus','pcep','az-900','pcap','linux-plus','az-802','az-104','az-700','sc-300','crowdstrike-ccfa','sc-500','ccnp-enterprise','ai-901','ai-103','pcpp1','az-305','ccie-enterprise'];
 assert.deepEqual(Array.from(CT.focusedRoute.definition.ids),expected);
+assert.ok(!/CySA\+ DOES|cloud workloads ARE Linux|post-nominal/.test(cert('linux-plus').note),'Linux guidance must not promise unverified renewal or broad role outcomes');
+assert.ok(cert('linux-plus').cost.includes('unverified'),'Unverified price must remain explicitly estimated');
+assert.ok(!cert('linux-plus').factChecks.price,'Blueprint review must not mark pricing verified');
 assert.notEqual(cert('crowdstrike-ccfa').code,cert('crowdstrike-ccf').code);
 state.myPath={ccna:true};state.passes={};state.notes={ccna:{text:'Keep this note'}};state.skipped={};
 CT.storage.persistAll();CT.store.load();assert.deepEqual(Object.keys(state.myPath),['ccna'],'Upgrade preserves saved selections');
@@ -98,12 +101,18 @@ for(const file of ['src/topic-engine.js','src/learning-path-ui.js'])vm.runInCont
 const learning=CT.learningPath.render();assert.ok(!learning.includes('OT + convergence engineering'));assert.ok(learning.includes('LOCKED MILESTONE'));
 assert.ok(!CT.topicEngine.forPhase(4).some(r=>/PLC|SCADA|ISA-95/.test(r.topic.title)));
 const previous=Array.from(CT.focusedRoute.definition.previousIds);
-assert.equal(previous.length,22);assert.equal(expected.length,24);
+assert.equal(previous.length,24);assert.equal(expected.length,25);
 state.myPath=Object.fromEntries(previous.map(id=>[id,true]));state.passes={mcie:'2026-01-01'};state.notes={mcie:{text:'Keep migration note'}};
 CT.storage.persistAll();CT.store.load();assert.equal(CT.focusedRoute.enabled(),true);
 assert.equal(state.passes.mcie,'2026-01-01');assert.equal(state.notes.mcie.text,'Keep migration note');
 assert.ok(previous.every(id=>state.myPath[id]),'No existing milestones removed');
-CT.storage.undoLastChange();CT.store.load();assert.equal(Object.keys(state.myPath).length,22,'Undo must survive reload');
+CT.storage.undoLastChange();CT.store.load();assert.equal(Object.keys(state.myPath).length,24,'Undo must survive reload');
 CT.focusedRoute.apply();state.passes=Object.fromEntries(expected.slice(0,12).map(id=>[id,'2026-01-01']));
+assert.equal(CT.recommendations.recommend()[0].id,'linux-plus');
+assert.ok(CT.topicEngine.recommend({cert:cert('linux-plus')}).some(r=>r.topic.id==='focused-linux-administration'));
+state.passes['linux-plus']='2026-01-01';
 assert.equal(CT.recommendations.recommend()[0].id,'az-802');state.passes['az-802']='2026-01-01';assert.equal(CT.recommendations.recommend()[0].id,'az-104');state.passes['az-104']='2026-01-01';assert.equal(CT.recommendations.recommend()[0].id,'az-700');
+localStorage.removeItem('ct-focused-route-upgrade-'+CT.focusedRoute.definition.id);
+state.myPath=Object.fromEntries(CT.focusedRoute.definition.previousPaths[1].map(id=>[id,true]));
+CT.storage.persistAll();CT.store.load();assert.equal(CT.focusedRoute.enabled(),true,'Older 22-milestone preset also upgrades');
 console.log('Audit regressions passed, including focused route sequence, adoption, Undo, preserved progress, backup, phase gates and completion.');

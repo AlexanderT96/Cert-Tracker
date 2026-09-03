@@ -8,6 +8,19 @@
   const byId=Object.fromEntries(CERTS.map(cert=>[cert.id,cert]));
   const patch=(id,values)=>{if(byId[id])Object.assign(byId[id],values);};
 
+  // Review only the fields supported by the CompTIA-authored XK0-006 objectives.
+  // A retrieved blueprint does not verify today's price, availability or renewal rules.
+  const linuxObjectives='https://abaii.vn/web/content/4406?unique=cdffb30f3a43bdebb950fffb3d98fc707de1f4ce';
+  patch('linux-plus',{
+    cost:'Planning estimate ~£277; current regional checkout price unverified',
+    examFormat:'XK0-006: up to 90 multiple-choice and performance-based questions, 90 minutes. Confirm current booking conditions with CompTIA.',
+    coverage:'System management (23%); services and user management (20%); security (18%); automation, orchestration and scripting (17%); troubleshooting (22%).',
+    prerequisites:'CompTIA recommends 12 months of hands-on Linux server experience, with A+, Network+, Server+ or equivalent knowledge. Tracker dependencies are learning-order guidance, not proof of exam eligibility.',
+    projectRec:'Supporting practice, not an extra credential: administer a Linux VM; diagnose networking and service failures; manage permissions, packages and storage; automate a repeatable task with Bash or Python.',
+    note:'Linux administration supports networking, Azure Linux workloads and operational automation. In the focused route it comes before AZ-802 and AZ-104. Linux+ is a foundation, not proof of senior Linux engineering readiness. No additional certification or automatic cross-renewal is assumed; check current issuer renewal rules before relying on them. Study hours and price are planning estimates.',
+    factChecks:{identity:{source:linuxObjectives,checkedAt:'2026-09-03'},blueprint:{source:linuxObjectives,checkedAt:'2026-09-03'}}
+  });
+
   // Remove remaining knowledge-first / market-secondary copy inherited by sparse records.
   for(const cert of CERTS){
     if(typeof cert.note==='string'){
