@@ -26,12 +26,17 @@ async function navigationInViewport(page){
   assert.equal(await nav.locator('button').count(),5,'Expected Dashboard, Learn, Map, Certs and More');
 }
 async function persistentHealth(page){
-  const button=page.locator('.header .ct3-health');
+  const button=page.locator('#ct-data-help');
   await button.waitFor({state:'visible'});
   assert.equal(await button.count(),1);
   assert.equal((await button.textContent()).trim(),'?');
   assert.equal(await button.getAttribute('aria-label'),'Data accuracy and verification');
   const bounds=await button.boundingBox();assert.ok(bounds.width<=45&&bounds.height<=45,'Health control stays compact');
+  const icon=await button.locator('span').boundingBox();assert.equal(icon.width,26);assert.equal(icon.height,26);
+  assert.ok(bounds.width>=44&&bounds.height>=44,'Small visual retains an accessible tap target');
+  assert.ok(bounds.x>=page.viewportSize().width-52&&bounds.y<=8,'Help is tucked into the viewport top-right');
+  assert.equal(await button.evaluate(el=>getComputedStyle(el).position),'fixed');
+  assert.equal(await button.evaluate(el=>el.parentElement===document.body),true,'Help escapes header clipping and rerenders');
   assert.equal(await button.evaluate(el=>el.closest('.header-sub')===null),true);
   const same=await page.evaluate(async()=>{
     const before=document.querySelector('.ct3-health');
