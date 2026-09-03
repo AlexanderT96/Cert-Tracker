@@ -3,7 +3,7 @@
   async function test(name,fn){try{const value=await fn();const ok=value!==false;results.push({name,status:ok?'PASS':'FAIL',detail:ok?'':'returned false'});}catch(error){results.push({name,status:'FAIL',detail:error?.message||String(error)});}}
   function skip(name,detail){results.push({name,status:'SKIP',detail});}
 
-  await test('Application core loads',()=>window.CertTrackerV3?.version?.app==='4.11.2');
+  await test('Application core loads',()=>window.CertTrackerV3?.version?.app==='4.11.3');
   await test('Renderer state is provided by state-core',()=>window.CertTrackerState?.state===state&&SK.myPath==='ct4-mypath'&&typeof save.passes==='function'&&typeof save.capabilityEvidence==='function'&&typeof save.customization==='function');
   await test('Curated path is separate and frozen',()=>Array.isArray(window.CERT_TRACKER_DEFAULT_PATH)&&Object.isFrozen(window.CERT_TRACKER_DEFAULT_PATH)&&Array.isArray(window.CERT_TRACKER_DEFAULT_ADDITIONS));
   await test('Certification schema has no hard errors',()=>CertTrackerV3.validation.diagnostics.errors.length===0);
@@ -63,7 +63,7 @@
   await test('Retired credentials cannot become recommendations',()=>['jsnad','jsnsd','pcpp2'].every(id=>!CertTrackerV3.recommendations.score(CERTS.find(c=>c.id===id)).available));
   await test('Dashboard and explorer share every role',()=>CertTrackerV3.marketReadiness.roles().length===CertTrackerV3.careerOptions.ROLES.length);
   await test('Career context is part of backup',()=>!!CertTrackerV3.storage.serializableState().careerContext);
-  await test('Missing price checks remain unverified',()=>CertTrackerV3.dataHealth.summary().priceVerified===0);
+  await test('Missing price checks remain unverified',()=>{const s=CertTrackerV3.dataHealth.summary();return s.priceVerified===5&&s.priceVerified<s.total;});
   if(window.crypto?.subtle){
     const fastKdf={iterations:1000};
     await test('Production encrypted vault keeps hardened PBKDF2 default',()=>CertTrackerV3.sync.defaultIterations===250000);
