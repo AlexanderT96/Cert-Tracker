@@ -186,6 +186,11 @@
 
   // Correct legacy records whose programme status or wording changed after the original catalogue was authored.
   const byId = Object.fromEntries(CERTS.map(cert => [cert.id, cert]));
+  if(byId['az-700'])Object.assign(byId['az-700'],{
+    name:'Microsoft Certified: Azure Network Engineer Associate',
+    sourceUrl:'https://learn.microsoft.com/en-us/credentials/certifications/azure-network-engineer-associate/',
+    note:'Cloud-networking specialisation connecting networking foundations with Azure administration, security and architecture. Study after AZ-104; overlap does not imply a fixed reduction in study time. Verify current exam requirements and regional pricing before booking.'
+  });
   if (byId['google-cyber']) {
     byId['google-cyber'].note = 'QUICK-WIN bridge before Security+. Google states that graduates can access additional Security+ training and a discounted exam opportunity; verify the current discount/offer before purchase rather than assuming a fixed percentage. Prioritise the Linux, SIEM, packet-analysis and Python-for-security content and do not let this displace deeper networking/security study.';
   }

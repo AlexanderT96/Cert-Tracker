@@ -22,6 +22,15 @@ const save={};
     const salary=Number(localStorage.getItem(SK.salary));if(Number.isFinite(salary)&&salary>=0)state.currentSalary=salary;const pace=Number(localStorage.getItem(SK.pace2));if(Number.isFinite(pace)&&pace>=0)state.pace2=pace;if(!Number.isFinite(Number(state.plannerSettings.weeklyHours))||Number(state.plannerSettings.weeklyHours)<=0)state.plannerSettings.weeklyHours=state.pace2||6;
     if(state.filter==='passed'){state.filter='all';state.passedOnly=true;localStorage.setItem(SK.filter,'all');localStorage.setItem('cert.passedOnly','1');}
     const savedPath=firstPath();state.myPath=savedPath||{};const defaults=global.CERT_TRACKER_DEFAULT_PATH||[];if(savedPath===null)defaults.forEach(id=>{state.myPath[id]=true;});
+    // Additive upgrade for the previous focused preset only. Custom paths and all
+    // progress remain untouched. Remember the upgrade so Undo survives a reload.
+    const upgradeKey='ct-focused-route-upgrade-'+route?.id;
+    const selected=Object.keys(state.myPath).filter(id=>state.myPath[id]);
+    if(savedPath&&route?.previousIds?.every(id=>state.myPath[id])&&selected.every(id=>route.ids.includes(id))&&route.additions.some(id=>!state.myPath[id])&&!localStorage.getItem(upgradeKey)){
+      CT.storage?.captureUndoPoint('add Azure networking and Windows Server milestones');
+      route.additions.forEach(id=>{state.myPath[id]=true;});
+      localStorage.setItem(upgradeKey,'1');localStorage.setItem(C.lastChangeKey,new Date().toISOString());
+    }
     state.myPath=pruneCertMap(state.myPath);localStorage.setItem(C.myPathKey,JSON.stringify(state.myPath));localStorage.setItem('cert.myPathVersion',String(CT.version.data));return state;
   }
 
