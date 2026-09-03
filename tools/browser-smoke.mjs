@@ -271,6 +271,17 @@ try{
   assert.ok(await focused.page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Focused route must not overflow mobile');
   await focused.page.locator('[data-mobile-tab="learning"]').click();
   assert.ok(!(await focused.page.locator('#tab-content').textContent()).includes('OT + convergence engineering'));
+  for(const width of [320,390,768,1280]){
+    await focused.page.setViewportSize({width,height:900});
+    await focused.page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+    assert.ok(await focused.page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`Learning layout fits ${width}px`);
+    assert.ok(await focused.page.locator('.ct-learning-phase-head').evaluateAll(heads=>heads.every(head=>{
+      const title=head.firstElementChild.getBoundingClientRect(),counter=head.lastElementChild.getBoundingClientRect();
+      return Math.min(title.right,counter.right)-Math.max(title.left,counter.left)<=1||Math.min(title.bottom,counter.bottom)-Math.max(title.top,counter.top)<=1;
+    })),`Phase headings and counters do not overlap at ${width}px`);
+  }
+  await focused.page.setViewportSize({width:390,height:844});
+  await navigationInViewport(focused.page);
   await focused.page.locator('[data-mobile-tab="roadmap"]').click();
   assert.ok(!(await focused.page.locator('#tab-content').textContent()).includes('Principal / professional capstone'));
   await focused.context.close();

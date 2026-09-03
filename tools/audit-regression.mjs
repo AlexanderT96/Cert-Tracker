@@ -74,6 +74,9 @@ assert.equal(written.lastSuccessfulFetchAt,null,'Legacy failed attempts are not 
 // Focused route is a generic preset, never a public record of a user's completions.
 const expected=['a-plus','network-plus','mcit','mcde','arcules-csp','mcie','acp','ccna','security-plus','pcep','az-900','pcap','linux-plus','az-802','az-104','az-700','sc-300','crowdstrike-ccfa','sc-500','ccnp-enterprise','ai-901','ai-103','pcpp1','az-305','ccie-enterprise'];
 assert.deepEqual(Array.from(CT.focusedRoute.definition.ids),expected);
+assert.ok(!/CySA\+ DOES|cloud workloads ARE Linux|post-nominal/.test(cert('linux-plus').note),'Linux guidance must not promise unverified renewal or broad role outcomes');
+assert.ok(cert('linux-plus').cost.includes('unverified'),'Unverified price must remain explicitly estimated');
+assert.ok(!cert('linux-plus').factChecks.price,'Blueprint review must not mark pricing verified');
 assert.notEqual(cert('crowdstrike-ccfa').code,cert('crowdstrike-ccf').code);
 state.myPath={ccna:true};state.passes={};state.notes={ccna:{text:'Keep this note'}};state.skipped={};
 CT.storage.persistAll();CT.store.load();assert.deepEqual(Object.keys(state.myPath),['ccna'],'Upgrade preserves saved selections');

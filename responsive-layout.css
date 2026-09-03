@@ -182,3 +182,11 @@ html[data-pointer="coarse"] :where(button,.btn,a,[role="button"]){touch-action:m
 .ct-map-filter-disclosure>.ct-map-toolbar{margin-top:10px}
 .cert-filter-disclosure:not([open]) .cert-filter-collapse,.cert-filter-disclosure[open] .cert-filter-expand{display:none}
 .cert-filter-disclosure>.cert-filter-bar{margin-top:10px}
+/* Long curriculum headings and counters must share space without compression. */
+.ct-learning-phase-head{flex-wrap:wrap;align-items:flex-start}
+.ct-learning-phase-head>div:first-child{flex:1 1 16rem;min-width:0}
+.ct-learning-phase-head>.ct-learning-chip{flex:0 0 auto;max-width:100%;white-space:normal}
+.ct-learning-phase-title,.ct-learning-phase-sub,[data-focused-route]{overflow-wrap:anywhere}
+[data-focused-route] details>summary{padding-block:10px;line-height:1.5}
+[data-focused-route] ol{padding-inline-start:1.5rem;margin-block:12px}
+[data-focused-route] li{line-height:1.5}
