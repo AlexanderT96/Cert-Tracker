@@ -2014,6 +2014,8 @@ function renderCertifications() {
   };
 
   const filterBar = `
+    <details class="cert-filter-disclosure" ${certFiltersExpanded() ? 'open' : ''} ontoggle="rememberCertFilters(this)">
+    <summary onclick="event.preventDefault();toggleCertFilters(this.parentElement)"><span>Filters · ${escape(activeFilter.label || 'My Path')}${state.passedOnly ? ' · Passed only' : ''}</span><span class="cert-filter-expand">Expand</span><span class="cert-filter-collapse">Collapse</span></summary>
     <div class="cert-filter-bar">
       ${filters.map((f, i) => {
         const chipHtml = renderChip(f);
@@ -2021,7 +2023,7 @@ function renderCertifications() {
         return chipHtml + childrenHtml;
       }).join('')}
       <button class="filter-chip chip-overlay${state.passedOnly ? ' active' : ''}" onclick="togglePassedOnly()" title="Combines with the active pathway">✅ Passed</button>
-    </div>`;
+    </div></details>`;
 
   const blocks = [1, 2, 3, 4, 5, 6].map(ph => {
     let phaseCerts = CERTS.filter(c => certPhase(c) === ph).filter(activeFilter.test);
@@ -2405,6 +2407,24 @@ function renderNotesPanel(cert, certNotes) {
 }
 
 
+let certFiltersPreference;
+function certFiltersExpanded() {
+  if (certFiltersPreference === undefined) {
+    let stored=null;try { stored=localStorage.getItem('ct-cert-filters-expanded'); } catch {}
+    certFiltersPreference=stored==='true'?true:stored==='false'?false:!window.matchMedia('(max-width: 640px)').matches;
+  }
+  return certFiltersPreference;
+}
+function rememberCertFilters(element) {
+  if (!element.isConnected) return;
+  certFiltersPreference=element.open;
+  try { localStorage.setItem('ct-cert-filters-expanded',String(element.open)); } catch {}
+}
+function toggleCertFilters(element) {
+  element.open=!element.open;
+  // Persist synchronously; native toggle events may run after a redraw.
+  rememberCertFilters(element);
+}
 function toggleFilterGroup(name) {
   state.openFilterGroups = state.openFilterGroups || {};
   const wasOpen = state.openFilterGroups[name];
