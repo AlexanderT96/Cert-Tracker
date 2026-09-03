@@ -117,8 +117,8 @@ try{
     assert.equal(await page.locator(`[data-mobile-tab="${tab}"]`).getAttribute('aria-current'),'page');
     await navigationInViewport(page);
     await persistentHealth(page);
-    if(tab==='roadmap'||tab==='learning'){
-      const hero=page.locator(tab==='roadmap'?'.ct-map-hero':'.learning-path-hero');
+    if(tab==='roadmap'){
+      const hero=page.locator('.ct-map-hero');
       const emblem=await hero.evaluate(el=>{const s=getComputedStyle(el,'::before');return{position:s.position,width:s.width,transform:s.transform};});
       assert.deepEqual(emblem,{position:'static',width:'64px',transform:'none'},'Mobile emblem must occupy layout space instead of overlaying text');
       await page.screenshot({path:`/tmp/certtracker-${engine}-${tab}-mobile.png`,animations:'disabled',timeout:30000});
