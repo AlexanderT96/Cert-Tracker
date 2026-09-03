@@ -10,6 +10,7 @@
   const STORAGE = Object.freeze({currentRole:'ct4-career-current-role',nextRole:'ct4-career-next-role',targetRole:'ct4-career-target-role'});
 
   const ROLE_PROFILES = Object.freeze({
+    networkPlatform:Object.freeze({label:'Network, Cloud and Automation Engineer',weights:{networking:1,routing:1,hybridNetwork:.9,azure:.8,cloud:.8,automation:.85,python:.8,apiIntegration:.8,enterpriseInfra:.7,windows:.6,linux:.5,iam:.7,firewall:.6,aiSystems:.5}}),
     generalIT:Object.freeze({label:'General IT / Systems Support',weights:{windows:1,enterpriseInfra:.7,networking:.9,linux:.55,cloud:.55,iam:.45,firewall:.4,automation:.35,vms:.2,physical:.15}}),
     physicalSupport:Object.freeze({label:'Physical Security Systems Support',weights:{vms:1,physical:1,networking:.9,windows:.75,enterpriseInfra:.65,access:.65,firewall:.5,apiIntegration:.35,cloud:.4,automation:.3}}),
     physicalSystemsEngineer:Object.freeze({label:'Physical Security Systems Engineer / Integrator',weights:{vms:1,physical:1,access:.85,accessIdentity:.55,networking:.9,enterpriseInfra:.75,firewall:.55,apiIntegration:.6,architecture:.4,aiSystems:.35}}),
@@ -51,7 +52,7 @@
   const EXPERIENCE_GATED = new Set(['ccie-enterprise','cissp','issap','asis-psp','ukcsc-princ','ukcsc-chart','csyp','pan-netsec-arch','isa-cap','bcs-esa']);
 
   function selected(key, fallback) {const value = localStorage.getItem(STORAGE[key]);return value && ROLE_PROFILES[value] ? value : fallback;}
-  function context() {return Object.freeze({current:selected('currentRole','generalIT'),next:selected('nextRole','cyber'),target:selected('targetRole','convergence')});}
+  function context() {return Object.freeze({current:selected('currentRole','generalIT'),next:selected('nextRole',CT.focusedRoute?.enabled()?'network':'cyber'),target:selected('targetRole',CT.focusedRoute?.enabled()?'networkPlatform':'convergence')});}
   function setContext(update={}) {for(const [field,value]of Object.entries(update))if((STORAGE[field]||STORAGE[`${field}Role`])&&!ROLE_PROFILES[value])throw new Error(`Unknown role profile: ${value}`);CT.storage?.captureUndoPoint('career context');for (const [field,value] of Object.entries(update)) {const storageKey = STORAGE[field] || STORAGE[`${field}Role`];if(storageKey)localStorage.setItem(storageKey,value);}const at=new Date().toISOString();localStorage.setItem(CT.config.lastChangeKey,at);CT.events.emit('career-context-changed', context());CT.events.emit('state-saved',{key:'careerContext',at});return context();}
 
   function profileFit(cert, roleKey) {const role = ROLE_PROFILES[roleKey] || ROLE_PROFILES.generalIT;const comp = CT.competency.competencies(cert); let weighted=0,total=0;Object.entries(role.weights).forEach(([skill,w]) => { total += w; weighted += w * Number(comp[skill] || 0); });return total ? Math.round(weighted / total * 100) : 0;}

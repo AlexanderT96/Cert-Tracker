@@ -46,9 +46,19 @@
     const reasons=[];if(gap>.55)reasons.push(`${Math.round(gap*100)}% learning/evidence gap`);if(current>.45)reasons.push('Strong current-role value');if(next>.45)reasons.push('Strong next-role value');if(synergy>.5&&cert)reasons.push(`Directly reinforces ${cert.name}`);if(topic.evidence&&evidenceNeed>.5)reasons.push('Practical evidence still weak');if(topic.phase===currentPhase)reasons.push(`Phase ${topic.phase} focus`);
     return Object.freeze({topic,score:Math.round(total),mastery:Math.round(m*100),phase:topic.phase,reasons:Object.freeze(reasons),certSynergy:Math.round(synergy*100)});
   }
-  function recommend(options={}){const limit=Math.max(1,Number(options.limit||5));const currentPhase=phase();return TOPICS.map(topic=>score(topic,options)).filter(row=>row.mastery<88&&row.phase<=currentPhase+1).sort((a,b)=>b.score-a.score||a.mastery-b.mastery||a.phase-b.phase||a.topic.title.localeCompare(b.topic.title)).slice(0,limit);}
+  function focusedTopics(){
+    const route=CT.focusedRoute;
+    if(!route?.enabled())return TOPICS;
+    const rows=TOPICS.filter(t=>t.certs.some(id=>route.definition.ids.includes(id))).map(t=>({...t,phase:Math.min(...t.certs.filter(id=>route.definition.ids.includes(id)).map(id=>route.phase(id)))}));
+    rows.push({id:'focused-system-foundations',phase:1,title:'Systems and IP-network foundations',skills:['windows','networking'],certs:['a-plus','network-plus','mcit','mcde','arcules-csp'],why:'Understand the systems underneath security applications before adding advanced platform credentials.',actions:['Trace device, network and service dependencies','Practise DNS and connectivity diagnostics','Understand storage, backup and recovery basics']});
+    rows.push({id:'focused-systems-automation',phase:2,title:'PowerShell, Git and systems fundamentals',skills:['automation','windows'],certs:['pcep','pcap'],why:'Support Python with practical administration, version control and safe changes; no additional exam ladder.',actions:['Version a reusable script in Git','Handle credentials and errors safely','Understand Windows/Linux services, storage, backup and recovery']});
+    rows.push({id:'focused-falcon-administration',phase:3,title:'Falcon endpoint administration',skills:['security','automation'],certs:['crowdstrike-ccfa'],why:'Operate endpoint controls safely alongside the Microsoft platform, without adding responder or hunter exams.',actions:['Practise staged sensor deployment and rollback','Assign host groups, roles and prevention/update policies','Check supported Defender coexistence and audit workflows']});
+    rows.push({id:'focused-ai-applications',phase:5,title:'Python AI applications and agents',skills:['python','apiIntegration'],certs:['ai-103'],why:'Turn Python and Azure knowledge into evaluated, maintainable AI integrations.',actions:['Use Microsoft Foundry with managed credentials','Evaluate grounding, failures and cost','Test API handling and deployment automation']});
+    return rows;
+  }
+  function recommend(options={}){const limit=Math.max(1,Number(options.limit||5));const currentPhase=phase();return focusedTopics().map(topic=>score(topic,options)).filter(row=>row.mastery<88&&row.phase<=currentPhase+1&&(!CT.focusedRoute?.enabled()||!options.cert||row.topic.certs.includes(options.cert.id))).sort((a,b)=>b.score-a.score||a.mastery-b.mastery||a.phase-b.phase||a.topic.title.localeCompare(b.topic.title)).slice(0,limit);}
   function next(options={}){return recommend({...options,limit:1})[0]||null;}
-  function forPhase(phaseNumber,options={}){return TOPICS.filter(t=>t.phase===Number(phaseNumber)).map(topic=>score(topic,options)).sort((a,b)=>b.score-a.score||a.mastery-b.mastery).slice(0,Number(options.limit||3));}
+  function forPhase(phaseNumber,options={}){return focusedTopics().filter(t=>t.phase===Number(phaseNumber)).map(topic=>score(topic,options)).sort((a,b)=>b.score-a.score||a.mastery-b.mastery).slice(0,Number(options.limit||3));}
 
   CT.topicEngine=Object.freeze({TOPICS,score,recommend,next,forPhase,mastery});
 })(window);

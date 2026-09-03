@@ -3,7 +3,7 @@
   async function test(name,fn){try{const value=await fn();const ok=value!==false;results.push({name,status:ok?'PASS':'FAIL',detail:ok?'':'returned false'});}catch(error){results.push({name,status:'FAIL',detail:error?.message||String(error)});}}
   function skip(name,detail){results.push({name,status:'SKIP',detail});}
 
-  await test('Application core loads',()=>window.CertTrackerV3?.version?.app==='4.10.5');
+  await test('Application core loads',()=>window.CertTrackerV3?.version?.app==='4.11.0');
   await test('Renderer state is provided by state-core',()=>window.CertTrackerState?.state===state&&SK.myPath==='ct4-mypath'&&typeof save.passes==='function'&&typeof save.capabilityEvidence==='function'&&typeof save.customization==='function');
   await test('Curated path is separate and frozen',()=>Array.isArray(window.CERT_TRACKER_DEFAULT_PATH)&&Object.isFrozen(window.CERT_TRACKER_DEFAULT_PATH)&&Array.isArray(window.CERT_TRACKER_DEFAULT_ADDITIONS));
   await test('Certification schema has no hard errors',()=>CertTrackerV3.validation.diagnostics.errors.length===0);
@@ -45,7 +45,7 @@
   await test('Curriculum rungs receive explicit classification',()=>{const cert=CERTS.find(c=>c.id==='pcep');return !cert||['CURRICULUM RUNG','CORE CAPABILITY','PRIMARY SPECIALISATION','SUPPORTING','CAPSTONE'].includes(CertTrackerV3.capabilityGates.portfolioClass(cert));});
   await test('Experience-gated recommendations expose role gate status where mapped',()=>{const cert=CERTS.find(c=>c.id==='cissp')||CERTS.find(c=>c.id==='ccie-enterprise');if(!cert)return true;const row=CertTrackerV3.recommendations.score(cert,{horizon:'now'});return !!row.experienceGate&&typeof row.experienceGate.ready==='boolean';});
   await test('Topic engine returns a bounded learning recommendation',()=>{const row=CertTrackerV3.topicEngine.next({cert:CertTrackerV3.recommendations.recommend({limit:1})[0]?.cert});return !row||(row.mastery>=0&&row.mastery<=100&&row.score>=0&&Array.isArray(row.topic.actions));});
-  await test('Visual learning path renders all six phases and role gates',()=>{const html=CertTrackerV3.learningPath.render();return [1,2,3,4,5,6].every(p=>html.includes(`P${p}`))&&html.includes('ROLE GATE')&&html.includes('ccie')===false;});
+  await test('Visual learning path renders all six phases and role gates',()=>{const html=CertTrackerV3.learningPath.render();return [1,2,3,4,5,6].every(p=>html.includes(`P${p}`))&&(CertTrackerV3.focusedRoute.enabled()?html.includes('LOCKED MILESTONE')&&!html.includes('ROLE GATE'):html.includes('ROLE GATE'))&&html.includes('ccie')===false;});
   await test('Professional theme defaults are available',()=>CertTrackerV3.personalization.PRESETS.professional&&CertTrackerV3.personalization.DEFAULTS.preset==='professional');
   await test('Customize remains present in workspace order',()=>CertTrackerV3.personalization.tabOrder().includes('customize'));
   await test('Workspace shell exposes dedicated Learning Path and Customize spaces',()=>!!CertTrackerV3.workspaceShell&&['learning','customize'].every(tab=>CertTrackerV3.workspaceShell.availableTabs().includes(tab)));

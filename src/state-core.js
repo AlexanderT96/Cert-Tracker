@@ -10,7 +10,10 @@ const save={};
   function parse(key,fallback){try{const raw=localStorage.getItem(key);const value=raw==null?fallback:JSON.parse(raw);if(fallback!==null&&typeof fallback==='object'&&((Array.isArray(fallback)&&!Array.isArray(value))||(!Array.isArray(fallback)&&!CT.util.isPlainObject(value))))return fallback;return value;}catch{return fallback;}}
   function firstPath(){const current=parse(C.myPathKey,null);if(CT.util.isPlainObject(current))return current;for(const key of C.legacyMyPathKeys){const value=parse(key,null);if(CT.util.isPlainObject(value))return value;}return null;}
   function pruneCertMap(map){const valid=new Set(CERTS.map(cert=>cert.id));Object.keys(map||{}).forEach(id=>{if(!valid.has(id))delete map[id];});return map||{};}
-  function effectivePhase(cert){const override=Number(state.phaseOverrides?.[cert?.id]);return Number.isInteger(override)&&override>=1&&override<=6?override:Number(basePhases.get(cert?.id)||6);}
+  const route=global.CERT_TRACKER_FOCUSED_ROUTE;
+  function routeEnabled(){const ids=Object.keys(state.myPath||{}).filter(id=>state.myPath[id]);return !!route&&ids.length===route.ids.length&&route.ids.every(id=>state.myPath[id]);}
+  function routePhase(id){return Number(Object.keys(route?.phases||{}).find(p=>route.phases[p].certs.includes(id))||0);}
+  function effectivePhase(cert){if(routeEnabled()&&routePhase(cert?.id))return routePhase(cert.id);const override=Number(state.phaseOverrides?.[cert?.id]);return Number.isInteger(override)&&override>=1&&override<=6?override:Number(basePhases.get(cert?.id)||6);}
   function installPhaseAccessors(){for(const cert of CERTS){const descriptor=Object.getOwnPropertyDescriptor(cert,'phase');if(descriptor?.get?.__certTrackerPhase)return;const getter=function(){return effectivePhase(cert);};getter.__certTrackerPhase=true;Object.defineProperty(cert,'phase',{configurable:true,enumerable:true,get:getter,set(value){const n=Number(value);if(Number.isInteger(n)&&n>=1&&n<=6)state.phaseOverrides[cert.id]=n;}});}}
   installPhaseAccessors();
 
@@ -28,6 +31,24 @@ const save={};
     objective(certId){const value=state.objectiveProgress?.[certId];if(CT.util.isPlainObject(value)){const nums=Object.values(value).map(Number).filter(Number.isFinite);return nums.length?CT.util.clamp(nums.reduce((a,b)=>a+b,0)/nums.length,0,100):0;}return CT.util.clamp(Number(value||0),0,100);},
     setObjective(certId,value,domain=null){if(!CERTS.some(cert=>cert.id===certId))throw new Error('Unknown certification.');if(domain){const current=CT.util.isPlainObject(state.objectiveProgress[certId])?state.objectiveProgress[certId]:{};state.objectiveProgress[certId]={...current,[domain]:CT.util.clamp(Number(value)||0,0,100)};}else state.objectiveProgress[certId]=CT.util.clamp(Number(value)||0,0,100);save.objectives();CT.events.emit('state-saved',{key:'objectives',at:new Date().toISOString()});},
     setPlanner(settings){state.plannerSettings={...state.plannerSettings,...settings};save.planner();CT.events.emit('state-saved',{key:'planner',at:new Date().toISOString()});return state.plannerSettings;}
+  });
+  CT.focusedRoute=Object.freeze({definition:route,enabled:routeEnabled,phase:routePhase,
+    scoped:filter=>routeEnabled()&&(filter||state.filter)==='my-path',
+    position:id=>route?.ids.indexOf(id)??-1,
+    ordered:rows=>rows.slice().sort((a,b)=>(route?.ids.indexOf(a.id)??999)-(route?.ids.indexOf(b.id)??999)),
+    next:(passes=state.passes)=>route?.ids.map(id=>CERTS.find(c=>c.id===id)).find(c=>c&&!passes[c.id])||null,
+    apply(){
+      if(!route||route.ids.some(id=>!CERTS.some(c=>c.id===id)))throw new Error('Focused route catalogue is incomplete.');
+      CT.storage?.captureUndoPoint('apply focused route');
+      state.myPath=Object.fromEntries(route.ids.map(id=>[id,true]));
+      localStorage.setItem(C.goalKey,'network');
+      localStorage.setItem('ct4-career-next-role','network');
+      localStorage.setItem('ct4-career-target-role','networkPlatform');
+      state.filter='my-path';state.openPhase=CT.phases?.currentPhase()||1;
+      // One transaction; preserve passes, dates, notes, skipped flags and evidence.
+      CT.storage.persistAll();CT.events.emit('state-saved',{key:'focused-route',at:new Date().toISOString()});
+      global.renderApp?.();
+    }
   });
   global.loadState=loadState;global.CertTrackerState=CT.store;
 })(window);

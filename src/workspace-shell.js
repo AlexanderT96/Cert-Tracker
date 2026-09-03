@@ -139,7 +139,18 @@
       const focus=focusHtml();if(focus&&!content.querySelector('.ct-dashboard-learning-focus'))content.insertAdjacentHTML('afterbegin',focus);
     }
   }
-  function decorate(){ensureActiveTab();syncMobileNavigation();renderHeader();renderNavigation();renderWorkspaceContent();CT.personalization.organiseDock?.();}
+  function renderFocusedRoute(){
+    const content=document.getElementById('tab-content'),route=CT.focusedRoute;
+    if(!content||!route||!['dashboard','learning'].includes(state.currentTab))return;
+    content.querySelector('[data-focused-route]')?.remove();
+    const active=route.enabled(),def=route.definition,next=route.next(),completed=def.ids.filter(id=>state.passes?.[id]).length;
+    const section=document.createElement('section');section.className='ct3-card';section.dataset.focusedRoute='';
+    section.style.cssText='margin:16px 0;padding:16px;overflow-wrap:anywhere';
+    section.innerHTML=`<h2 class="ct3-title">${active?'Locked My Path':'Focused route ready'}</h2><p>${esc(def.title)} · ${def.ids.length} milestones · ${completed} recorded complete</p><p>${active?`Next: <strong>${esc(next?.name||'All credential milestones recorded')}</strong>. One certification at a time.`:'Apply the focused route to replace your saved selection. Existing passes, dates, notes and practical evidence are retained; no results are automatically awarded.'}</p>${active?'':'<button type="button" data-apply-focused-route>Apply focused route</button>'}<details style="margin-top:14px"><summary style="cursor:pointer;min-height:44px">View locked sequence and supporting skills</summary><ol>${def.ids.map(id=>`<li style="padding:5px 0">${esc(CERTS.find(c=>c.id===id)?.name||id)}${state.passes?.[id]?' — recorded complete':''}</li>`).join('')}</ol><p>Practical PowerShell, Git, APIs, Windows/Linux fundamentals, storage/recovery and deployment automation support the route without adding extra exams. CCFA covers sensors, host groups, roles, policies, exclusions and workflows; practise supported Defender coexistence.</p><p>BriefCam and LenelS2 remain outside this route pending workplace confirmation. No responder, hunter or additional SIEM certification ladder is included.</p><p>CCNP counts as one milestone (ENCOR + ENARSI). CCIE includes its practical lab; the qualifying exam window may require a later ENCOR retake. AZ-305 requires the Azure Administrator Associate certification for the architect award. Check current issuer rules before booking. Completion is not proof of role readiness.</p><p>To customise membership, use the catalogue or Customize tab; changing the selection leaves locked mode. The wider job-market catalogue remains available.</p></details>`;
+    section.querySelector('[data-apply-focused-route]')?.addEventListener('click',()=>route.apply());
+    content.prepend(section);
+  }
+  function decorate(){ensureActiveTab();syncMobileNavigation();renderHeader();renderNavigation();renderWorkspaceContent();renderFocusedRoute();CT.personalization.organiseDock?.();}
   function renderApp(){ensureActiveTab();originalRenderApp();decorate();}
   function switchTab(tab){const tabs=availableTabs();if(!tabs.includes(tab))return;state.currentTab=tab;renderApp();}
 

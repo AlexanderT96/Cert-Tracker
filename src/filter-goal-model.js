@@ -15,6 +15,7 @@
     if(id==='passed')return {goal:'Credentials already earned — convert them into practical evidence',band:'',track:null};
     if(id==='portfolio')return {goal:'Application-based credentials + demonstrable delivery evidence',band:'',track:null};
     if(id==='group-top-earners')return {goal:'High-earning pathways with balanced market signal and real capability',band:'',track:null};
+    if(id==='my-path'&&CT.focusedRoute?.enabled())return {goal:CT.focusedRoute.definition.title,band:'Evidence-based progression; no guaranteed salary',track:null};
     if(id==='my-path')return {goal:'OT / Physical-Cyber Convergence Architect',band:'£80k–£135k+',track:null};
     const item=itemFor(id);
     if(item&&typeof item.test==='function'){

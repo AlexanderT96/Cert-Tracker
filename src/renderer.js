@@ -638,14 +638,14 @@ function renderDashboard() {
       <div class="dash-hero-top">
         <div>
           <div class="dash-hero-eyebrow">the candidate are here</div>
-          <div class="dash-hero-title">Phase ${ph} · ${escape(PHASES[ph].name)}</div>
-          <div class="dash-hero-sub">${(() => { const e = phaseETA(ph); return e ? `pace outlook ≈ ${e}` : escape(PHASES[ph].window); })()} · ${escape(PHASES[ph].layer)}</div>
-          ${PHASES[ph].applyOut ? `<div style="margin-top:8px;padding:8px 10px;background:var(--green-bg);border-left:3px solid var(--green);border-radius:8px;font-size:11px;color:var(--green-text)">📈 <strong>Apply-out trigger:</strong> ${escape(PHASES[ph].applyOut)}</div>` : ''}
-          ${PHASES[ph].artifact ? `<div style="margin-top:6px;padding:8px 10px;background:${state.artifacts[ph] ? 'var(--green-bg)' : 'var(--purple-bg)'};border-left:3px solid ${state.artifacts[ph] ? 'var(--green)' : 'var(--purple)'};border-radius:8px;font-size:11px;color:var(--text);display:flex;gap:8px;align-items:flex-start">
+          <div class="dash-hero-title">Phase ${ph} · ${escape(trackerPhaseSpec(ph).name)}</div>
+          <div class="dash-hero-sub">${(() => { const e = phaseETA(ph); return e ? `pace outlook ≈ ${e}` : escape(trackerPhaseSpec(ph).window); })()} · ${escape(trackerPhaseSpec(ph).layer)}</div>
+          ${trackerPhaseSpec(ph).applyOut ? `<div style="margin-top:8px;padding:8px 10px;background:var(--green-bg);border-left:3px solid var(--green);border-radius:8px;font-size:11px;color:var(--green-text)">📈 <strong>Apply-out trigger:</strong> ${escape(trackerPhaseSpec(ph).applyOut)}</div>` : ''}
+          ${trackerPhaseSpec(ph).artifact ? `<div style="margin-top:6px;padding:8px 10px;background:${state.artifacts[ph] ? 'var(--green-bg)' : 'var(--purple-bg)'};border-left:3px solid ${state.artifacts[ph] ? 'var(--green)' : 'var(--purple)'};border-radius:8px;font-size:11px;color:var(--text);display:flex;gap:8px;align-items:flex-start">
             <input type="checkbox" ${state.artifacts[ph] ? 'checked' : ''} onchange="toggleArtifact(${ph})" style="margin-top:1px;accent-color:var(--green)">
-            <span>🛠 <strong>Artifact gate:</strong> ${escape(PHASES[ph].artifact)} — <em>phase isn't done without it</em></span>
+            <span>🛠 <strong>Artifact gate:</strong> ${escape(trackerPhaseSpec(ph).artifact)} — <em>phase isn't done without it</em></span>
           </div>` : ''}
-          ${PHASES[ph].roles ? `<div class="dash-hero-roles"><span class="hero-roles-label">Now realistic to apply for</span><span class="hero-roles-band">${escape(PHASES[ph].band)}</span><div class="hero-roles-list">${PHASES[ph].roles.map(r => `<span class="role-pill">${escape(r)}</span>`).join('')}</div></div>` : ''}
+          ${trackerPhaseSpec(ph).roles ? `<div class="dash-hero-roles"><span class="hero-roles-label">Now realistic to apply for</span><span class="hero-roles-band">${escape(trackerPhaseSpec(ph).band)}</span><div class="hero-roles-list">${trackerPhaseSpec(ph).roles.map(r => `<span class="role-pill">${escape(r)}</span>`).join('')}</div></div>` : ''}
         </div>
         <div style="text-align:right">
           <div class="big-number" style="font-size:32px">${overallPct}<span style="font-size:16px;color:var(--dim)">%</span></div>
@@ -783,10 +783,10 @@ function renderDashboard() {
           <span class="phase-name ${active ? 'active' : done ? 'done' : 'pending'}">${active ? '▶ ' : done ? '✓ ' : ''}Phase ${p}</span>
           <span class="phase-count">${allPassed}/${all.length}</span>
         </div>
-        <div class="phase-sub">${escape(PHASES[p].name)}</div>
+        <div class="phase-sub">${escape(trackerPhaseSpec(p).name)}</div>
         ${progressBarHTML(pct, color, '5px')}
         <div style="font-size:9px;color:var(--dim);margin-top:3px">Core ${cpPassed}/${core.length}</div>
-        ${PHASES[p].roles ? `<div class="phase-roles"><span class="phase-roles-band">${escape(PHASES[p].band)}</span> ${PHASES[p].roles.slice(0, 3).map(r => escape(r)).join(' · ')}</div>` : ''}
+        ${trackerPhaseSpec(p).roles ? `<div class="phase-roles"><span class="phase-roles-band">${escape(trackerPhaseSpec(p).band)}</span> ${trackerPhaseSpec(p).roles.slice(0, 3).map(r => escape(r)).join(' · ')}</div>` : ''}
       </div>`;
   }).join('');
 
@@ -1877,12 +1877,7 @@ function renderStrategy() {
 // ───── CERTIFICATIONS ─────────────────────────────────────────────────────
 
 // Topological sort respecting deps + ROI/hour ranking + capstones-sink-to-bottom.
-// Within each "ready" layer (certs whose deps are satisfied), order by:
-//   1. Capstones (gateway: true) sink to bottom
-//   2. ROI per hour (efficiency) descending — small time investments with decent ROI surface first
-//   3. Tier (S→A→B→C→D) as tiebreaker
-//   4. Difficulty ascending as final tiebreaker
-// Vendor ladders are respected via cert.deps (LCA → LCP → LCE → LCDA, MCIT → MCIE → MCDE, etc).
+// Legacy fallback; filter-intelligence supplies the active route ordering.
 function orderPhaseCerts(certs) {
   const tierOrder = { 'S': 0, 'A': 1, 'B': 2, 'C': 3, 'D': 4 };
   const idSet = new Set(certs.map(c => c.id));
@@ -2031,7 +2026,7 @@ function renderCertifications() {
     if (searchTest) phaseCerts = phaseCerts.filter(searchTest);
     let certs = orderPhaseCerts(phaseCerts);
     const customOrder = (state.certOrder || {})[ph];
-    if (customOrder && customOrder.length) {
+    if (customOrder && customOrder.length && !window.CertTrackerV3?.focusedRoute?.scoped()) {
       certs = [...certs].sort((a, b) => {
         const ia = customOrder.indexOf(a.id), ib = customOrder.indexOf(b.id);
         return (ia < 0 ? 9999 : ia) - (ib < 0 ? 9999 : ib);
@@ -2039,6 +2034,7 @@ function renderCertifications() {
     }
     // Passed certs rise to the top (stable — preserves relative order within each group)
     certs = [...certs].sort((a, b) => (state.passes[b.id] ? 1 : 0) - (state.passes[a.id] ? 1 : 0));
+    if(window.CertTrackerV3?.focusedRoute?.scoped())certs=window.CertTrackerV3.focusedRoute.ordered(certs);
     if (certs.length === 0) return '';
     const totalCerts = phaseCerts.length;
     const passed = phaseCerts.filter(c => state.passes[c.id]).length;
@@ -2059,9 +2055,9 @@ function renderCertifications() {
           <div class="phase-header-left">
             <span class="phase-num ${numClass}">${ph}</span>
             <div>
-              <div class="phase-header-title">Phase ${ph}: ${escape(PHASES[ph].name)} <span class="phase-stage-tag">${phaseStage(ph)}</span></div>
-              <div class="phase-header-meta">${passed}/${totalCerts} passed · ${(() => { const e = phaseETA(ph); return e ? `≈ ${e}` : escape(PHASES[ph].window); })()}${avgROI ? ` · Avg ROI ${avgROI}` : ''}</div>
-              ${PHASES[ph].roles ? `<div class="phase-header-roles"><span class="phr-band">${escape(PHASES[ph].band)}</span> Opens: ${PHASES[ph].roles.map(r => escape(r)).join(' · ')}</div>` : ''}
+              <div class="phase-header-title">Phase ${ph}: ${escape(trackerPhaseSpec(ph).name)} <span class="phase-stage-tag">${phaseStage(ph)}</span></div>
+              <div class="phase-header-meta">${passed}/${totalCerts} passed · ${(() => { const e = phaseETA(ph); return e ? `≈ ${e}` : escape(trackerPhaseSpec(ph).window); })()}${avgROI ? ` · Avg ROI ${avgROI}` : ''}</div>
+              ${trackerPhaseSpec(ph).roles ? `<div class="phase-header-roles"><span class="phr-band">${escape(trackerPhaseSpec(ph).band)}</span> Opens: ${trackerPhaseSpec(ph).roles.map(r => escape(r)).join(' · ')}</div>` : ''}
             </div>
           </div>
           <span class="phase-toggle">${isOpen ? '−' : '+'}</span>
@@ -2161,6 +2157,7 @@ function renderApplicationGuide(cert) {
 }
 
 function phaseStage(ph) {
+  if(window.CertTrackerV3?.focusedRoute?.scoped())return 'Locked curriculum';
   if (ph <= 2) return 'Entry tier';
   if (ph <= 4) return 'Mid-career';
   return 'Senior tier';
@@ -2434,6 +2431,8 @@ function toggleFilterGroup(name) {
   rerenderCurrentTab();
 }
 
+
+function trackerPhaseSpec(ph) { return window.CertTrackerV3?.focusedRoute?.scoped()?window.CertTrackerV3.focusedRoute.definition.phases[ph]:PHASES[ph]; }
 
 function toggleMyPath(certId) {
   state.myPath = state.myPath || {};

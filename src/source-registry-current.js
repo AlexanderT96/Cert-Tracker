@@ -15,6 +15,8 @@
   // catalogue verifiedAt or priceCheckedAt. CERT may be an official catalogue
   // explicitly naming the credential; VENDOR is only an issuer/programme route.
   const coverage = {
+    'crowdstrike-ccfa':{url:'https://www.crowdstrike.com/content/dam/crowdstrike/marketing/en-us/documents/pdfs/crowdstrike-university/ccfa-certification-guide.pdf',level:'CERT',sourceCheckedAt:'2026-09-03',note:'Official administrator guide; distinct from the practitioner credential. Source check is not a price or full-field verification.'},
+    'ai-103':{url:'https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-apps-and-agents-developer-associate/',level:'CERT',sourceCheckedAt:'2026-09-03',note:'Official certification page. Source identity checked; verify regional price and current exam availability before booking.'},
     "pcep": {
       "url": "https://pythoninstitute.org/pcep",
       "level": "CERT",

@@ -101,8 +101,8 @@ try{
   const dataHealth=desktop.page.locator('[data-cert-data-health]');
   await dataHealth.waitFor();
   const healthText=await dataHealth.textContent();
-  assert.ok(healthText.includes('100%')&&healthText.includes('185/185 linked'));
-  assert.ok(healthText.includes('115 cert-level')&&healthText.includes('70 vendor-level'));
+  assert.ok(healthText.includes('100%')&&healthText.includes('187/187 linked'));
+  assert.ok(healthText.includes('117 cert-level')&&healthText.includes('70 vendor-level'));
   assert.ok(healthText.includes('Credential retired')&&healthText.includes('Credential in development'));
   assert.ok(healthText.includes('Not currently verified')&&healthText.includes('1100'));
   assert.equal(await dataHealth.locator('.ct3-health-table tbody tr').count(),6);
@@ -231,7 +231,7 @@ try{
   await page.locator('[data-cert-data-health]').waitFor();
   await healthSpacing(page);
   await page.screenshot({path:`/tmp/certtracker-${engine}-health-mobile.png`,animations:'disabled',timeout:30000});
-  assert.ok((await page.locator('[data-cert-data-health]').textContent()).includes('185/185 linked'));
+  assert.ok((await page.locator('[data-cert-data-health]').textContent()).includes('187/187 linked'));
   await page.getByRole('dialog',{name:'Certification data health'}).getByRole('button',{name:'Close',exact:true}).click();
   await page.locator('#ct-mobile-more-button').click();
   await page.getByRole('button',{name:"Today's Recommendations",exact:true}).click();
@@ -248,6 +248,25 @@ try{
   console.log(`${engine}: phone reload`);
   await page.reload();await navigationInViewport(page);
   await context.close();
+  const focused=await open({viewport:{width:390,height:844}});
+  await focused.page.evaluate(()=>{
+    state.myPath={ccna:true};state.passes=Object.fromEntries(['a-plus','network-plus','mcit','mcde','arcules-csp'].map(id=>[id,'2026-01-01']));
+    state.notes={ccna:{text:'Preserve route adoption note'}};CertTrackerV3.storage.persistAll();renderApp();
+  });
+  await focused.page.getByRole('button',{name:'Apply focused route',exact:true}).click();
+  assert.ok((await focused.page.locator('[data-focused-route]').textContent()).includes('5 recorded complete'));
+  assert.equal(await focused.page.evaluate(()=>CertTrackerV3.recommendations.recommend()[0].id),'mcie');
+  await focused.page.reload();await navigationInViewport(focused.page);
+  assert.equal(await focused.page.evaluate(()=>Object.keys(state.myPath).length),22);
+  assert.equal(await focused.page.evaluate(()=>state.notes.ccna.text),'Preserve route adoption note');
+  await focused.page.locator('[data-focused-route] summary').click();
+  assert.equal(await focused.page.locator('[data-focused-route] li').count(),22);
+  assert.ok(await focused.page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Focused route must not overflow mobile');
+  await focused.page.locator('[data-mobile-tab="learning"]').click();
+  assert.ok(!(await focused.page.locator('#tab-content').textContent()).includes('OT + convergence engineering'));
+  await focused.page.locator('[data-mobile-tab="roadmap"]').click();
+  assert.ok(!(await focused.page.locator('#tab-content').textContent()).includes('Principal / professional capstone'));
+  await focused.context.close();
   assert.deepEqual(errors,[],'Application errors during browser smoke tests');
   console.log(`${engine}: desktop and phone startup, all primary tabs, scrolling, More and reload passed.`);
 }finally{await browser.close();}

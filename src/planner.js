@@ -23,7 +23,8 @@
     const chosen=[]; let usedHours=0,usedBudget=0; const maxHours=horizonHours(cfg); let passes={...(state.passes||{})};
 
     for (let step=0;step<cfg.maxCerts;step++) {
-      const pool=CERTS.filter(cert=>CT.credentials.eligibility(cert,passes).eligible&&!completed.has(cert.id)&&!state.skipped?.[cert.id]&&(!state.myPath||state.myPath[cert.id]));
+      const lockedNext=CT.focusedRoute?.enabled()?CT.focusedRoute.next(passes):null;
+      const pool=CERTS.filter(cert=>(!CT.focusedRoute?.enabled()||cert.id===lockedNext?.id)&&CT.credentials.eligibility(cert,passes).eligible&&!completed.has(cert.id)&&!state.skipped?.[cert.id]&&(!state.myPath||state.myPath[cert.id]));
       const feasible=pool.filter(cert=>(cert.deps||[]).every(id=>completed.has(id)));
       const ranked=feasible.map(cert=>{
         const rec=CT.recommendations.score(cert,{goal,passes,horizon:'now'});

@@ -9,6 +9,30 @@
   const existing = new Set(CERTS.map(cert => cert.id));
   const additions = [
     {
+      id:'crowdstrike-ccfa',name:'CrowdStrike Certified Falcon Administrator',code:'CCFA',phase:3,track:'ROLE-DRIVEN',gateway:false,tier:'B',vendor:'CrowdStrike',validity:36,
+      cost:'Verify regional exam and training prices',costNum:0,cvValue:0,employer:false,free:false,cpe:0,cpePeriod:0,difficulty:6,roi:7,hours:[40,80],
+      coverage:'Falcon administration: sensors, hosts/groups, users/roles, policies, exclusions, dashboards and workflows.',
+      prerequisites:'CrowdStrike recommends six months of production Falcon experience and University access. CCFP is not a mandatory prerequisite.',
+      studyMaterials:'Official CCFA examination guide and CrowdStrike University administrator training; authorised Falcon environment.',
+      subjects:['Sensor deployment','Host groups','Prevention and update policies','Roles and API access','Exclusions and indicators','Dashboards and workflows'],skills:['Endpoint security','Administration','Automation','Identity'],
+      examFormat:'60 questions in 90 minutes; verify the active guide before booking.',
+      projectRec:'Practise staged sensor deployment, policy assignment, least-privilege roles and rollback in an authorised environment. Check vendor-supported Defender coexistence before deploying together.',
+      note:'Administrator credential only: responder, hunter and SIEM certifications are not prerequisites. Study hours, difficulty and ROI are planning estimates, not issuer facts. Not interchangeable with CCFP.',
+      sourceUrl:'https://www.crowdstrike.com/content/dam/crowdstrike/marketing/en-us/documents/pdfs/crowdstrike-university/ccfa-certification-guide.pdf',deps:[]
+    },
+    {
+      id:'ai-103',name:'Microsoft Certified: Azure AI Apps and Agents Developer Associate',code:'AI-103',phase:5,track:'ROLE-DRIVEN',gateway:false,tier:'B',vendor:'Microsoft',validity:12,
+      cost:'Microsoft role-based exam; verify regional pricing',costNum:0,cvValue:0,employer:false,free:false,cpe:0,cpePeriod:0,difficulty:7,roi:7,hours:[80,140],
+      coverage:'Develop AI applications and agents with Python and Microsoft Foundry, including generative AI, vision, language and information extraction.',
+      prerequisites:'Python and Azure familiarity are expected. The route places this after PCAP, Azure administration and AI fundamentals; those are study preparation, not claimed formal prerequisites.',
+      studyMaterials:'Microsoft Learn AI-103 study guide, training and Microsoft Foundry documentation.',
+      subjects:['Python AI applications','Microsoft Foundry','Agents','Generative AI','Computer vision','Language and information extraction'],skills:['Python','Azure AI','APIs','AI development'],
+      examFormat:'Microsoft associate-level certification exam; check current availability and exam policies before booking.',
+      projectRec:'Develop and evaluate a small authorised AI application with managed credentials, grounded responses, failure handling and cost limits.',
+      note:'Developer-focused AI rung. Estimated hours, difficulty and ROI are planning estimates. AI-103 does not require adding a separate data-science certification ladder.',
+      sourceUrl:'https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-apps-and-agents-developer-associate/',deps:[]
+    },
+    {
       id:'briefcam-tech', name:'BriefCam Technical Certification / Training', code:'BRIEFCAM-TECH', phase:1, track:'ROLE-DRIVEN', gateway:false, tier:'D', vendor:'Milestone Systems / BriefCam',
       validity:18, cost:'Vendor / partner training', costNum:0, cvValue:1200, verifiedAt:'2026-09', employer:false, free:false, cpe:0, cpePeriod:0, difficulty:4, roi:7, hours:[20,40],
       coverage:'Technical installation, configuration, administration and troubleshooting of BriefCam video analytics; useful for video analytics, forensic search, alerting and VMS integration.', prerequisites:'Vendor prerequisites vary by course delivery. Practical VMS, Windows and IP-video experience is useful.',
