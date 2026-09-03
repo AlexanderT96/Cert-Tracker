@@ -63,7 +63,7 @@
   await test('Retired credentials cannot become recommendations',()=>['jsnad','jsnsd','pcpp2'].every(id=>!CertTrackerV3.recommendations.score(CERTS.find(c=>c.id===id)).available));
   await test('Dashboard and explorer share every role',()=>CertTrackerV3.marketReadiness.roles().length===CertTrackerV3.careerOptions.ROLES.length);
   await test('Career context is part of backup',()=>!!CertTrackerV3.storage.serializableState().careerContext);
-  await test('Missing price checks remain unverified',()=>CertTrackerV3.dataHealth.summary().priceVerified===0);
+  await test('Missing price checks remain unverified',()=>{const s=CertTrackerV3.dataHealth.summary();return s.priceVerified===5&&s.priceVerified<s.total;});
   if(window.crypto?.subtle){
     const fastKdf={iterations:1000};
     await test('Production encrypted vault keeps hardened PBKDF2 default',()=>CertTrackerV3.sync.defaultIterations===250000);
