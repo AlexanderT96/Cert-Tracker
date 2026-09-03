@@ -44,7 +44,8 @@ async function persistentHealth(page){
 }
 try{
   console.log(`${engine}: desktop first load`);
-  const desktop=await open({viewport:{width:1280,height:900}});
+  // Deterministic routed refresh fixtures; the phone context below still exercises the service worker.
+  const desktop=await open({viewport:{width:1280,height:900},serviceWorkers:'block'});
   await persistentHealth(desktop.page);
   await desktop.page.evaluate(()=>renderApp());
   await desktop.page.locator('[data-workspace-tab="strategy"]').waitFor();
