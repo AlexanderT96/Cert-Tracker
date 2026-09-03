@@ -8,15 +8,15 @@ on:
       - 'tools/refresh-job-market.mjs'
       - '.github/workflows/job-market-refresh.yml'
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '7 * * * *'
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: job-market-refresh
-  cancel-in-progress: true
+  group: tracker-data-publish
+  cancel-in-progress: false
 
 jobs:
   refresh:
@@ -24,9 +24,11 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
       - name: Refresh UK market feed and rotating role searches
         env:
           ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
@@ -43,4 +45,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/job-market.json
           git commit -m "chore: refresh live UK job market"
-          git push
+          git pull --rebase origin main
+          git push origin HEAD:main

@@ -1,0 +1,48 @@
+name: Full Tracker Audit
+on:
+  schedule:
+    - cron: '17 6 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['tools/full-audit.mjs', '.github/workflows/full-audit.yml']
+permissions:
+  contents: write
+concurrency:
+  group: tracker-data-publish
+  cancel-in-progress: false
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check catalogue and tracker logic
+        run: npm test
+      - name: Refresh market within provider budget
+        env:
+          ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
+          ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
+          JOB_MARKET_LOCATION: ${{ vars.JOB_MARKET_LOCATION }}
+        run: node tools/refresh-job-market.mjs
+      - name: Inspect catalogue, learning and career sources
+        run: node tools/full-audit.mjs
+      - name: Publish audit evidence without changing catalogue facts
+        run: |
+          git add data/tracker-audit.json data/job-market.json
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'chore: publish full tracker audit evidence'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tracker-audit
+          path: data/tracker-audit.json

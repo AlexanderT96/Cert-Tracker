@@ -13,12 +13,12 @@ for(const marker of ['bestFit','liveBand','providerSearch','roleForJob','rankJob
 if(!jobs.includes('x.seniorityGap<=1'))errors.push('Live job list is not suppressing vacancies more than one seniority rank above current readiness.');
 if(!jobs.includes('x.seniorityGap<=0'))errors.push('Best-fit job matching does not require current seniority readiness.');
 for(const marker of ['CAREER EVIDENCE / ILLUSTRATIVE BANDS','ACTIVE ROLE / ILLUSTRATIVE BAND','ACTIVE ROLE FILTER','CURRENT PATHWAY STATE','NEXT CERTIFICATION GAPS','PRACTICAL EVIDENCE GAPS','RECENT MATCHING JOB SAMPLE','RECENT ACTIVE-ROLE JOB SAMPLE','IN PROGRESS','Indeed search','Reed search','Adzuna search'])if(!ui.includes(marker))errors.push(`Primary dashboard market surface missing ${marker}`);
-if(!workflow.includes("cron: '*/5 * * * *'"))errors.push("Automated market refresh is not scheduled at GitHub Actions' five-minute minimum interval.");
+if(!workflow.includes("cron: '7 * * * *'"))errors.push("Automated market refresh must use the quota-limited hourly schedule.");
 for(const secret of ['secrets.ADZUNA_APP_ID','secrets.ADZUNA_APP_KEY'])if(!workflow.includes(secret))errors.push(`Workflow missing optional aggregator secret reference ${secret}`);
 if(/ADZUNA_APP_(?:ID|KEY)\s*[:=]\s*['\"][^$]/.test(workflow))errors.push('Job provider credential appears hard-coded in workflow.');
-if(!refresh.includes('www.arbeitnow.co.uk/api/job-board-api'))errors.push('No-key live UK fallback feed is missing.');
-if(!refresh.includes('index%8===bucket'))errors.push('Adzuna market refresh does not rotate broad role-query batches.');
+if(refresh.includes('www.arbeitnow.co.uk'))errors.push('Unavailable UK provider endpoint must not return.');
+if(!refresh.includes('cursor%QUERIES.length'))errors.push('Adzuna market refresh does not rotate broad role-query batches.');
 if(!refresh.includes("sort_by:'date'"))errors.push('Market refresh is not prioritising fresh listings.');
-if(!refresh.includes('refreshTargetMinutes:5'))errors.push('Generated feed does not advertise a five-minute refresh target.');
+if(!refresh.includes('refreshTargetMinutes:60'))errors.push('Generated feed does not advertise a hourly refresh target.');
 if(!ui.includes('not sent to the jobs provider'))errors.push('Dashboard does not disclose local-only best-fit matching.');
-if(errors.length){console.error(`Market readiness gate failed (${errors.length}):`);errors.forEach(e=>console.error(`- ${e}`));process.exit(1);}console.log('Market readiness gate passed: active-filter role depth, six-level seniority gating, current-value modelling, privacy-preserving best-fit jobs and five-minute automation are enforced.');
+if(errors.length){console.error(`Market readiness gate failed (${errors.length}):`);errors.forEach(e=>console.error(`- ${e}`));process.exit(1);}console.log('Market readiness gate passed: active-filter role depth, six-level seniority gating, current-value modelling, privacy-preserving best-fit jobs and quota-limited hourly automation are enforced.');

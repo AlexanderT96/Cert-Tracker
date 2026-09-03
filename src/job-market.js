@@ -3,14 +3,14 @@
   'use strict';
   const CT=global.CertTrackerV3;if(!CT?.marketReadiness)return;
   let cache=null,loading=null,loadedAt=0;
-  function usable(feed,now=Date.now()){const age=now-Date.parse(feed?.lastSuccessfulFetchAt||feed?.fetchedAt);return !!feed&&!feed.refreshError&&['live','ready','ok'].includes(feed.status)&&Number.isFinite(age)&&age>=-60000&&age<=900000;}
+  function usable(feed,now=Date.now()){const age=now-Date.parse(feed?.lastSuccessfulFetchAt||feed?.fetchedAt);return !!feed&&!feed.refreshError&&['live','ready','ok'].includes(feed.status)&&Number.isFinite(age)&&age>=-60000&&age<=(feed.refreshTargetMinutes===60?5400000:900000);}
   function recentJob(job){const at=Date.parse(job?.created),seen=Date.parse(job?.lastSeenAt||job?.created),now=Date.now();return Number.isFinite(at)&&Number.isFinite(seen)&&now-at>=-60000&&now-at<=14*86400000&&now-seen>=-60000&&now-seen<=86400000;}
   const FEED='data/job-market.json';
   function freshness(feed,now=Date.now()){
     const at=Date.parse(feed?.fetchedAt||''),age=now-at;
     const source=Number.isFinite(at)?`Source updated ${new Date(at).toLocaleString()}. `:'No verified source timestamp. ';
     if(feed?.refreshError||!feed||['unavailable','awaiting-provider-credentials'].includes(feed.status))return{label:'Unavailable / cached data',detail:source+'A current provider feed could not be verified.'};
-    if(!Number.isFinite(at)||age< -60000||age>15*60000)return{label:'Stale or unverified market data',detail:source+'Do not treat these listings as live.'};
+    if(!Number.isFinite(at)||age< -60000||age>(feed?.refreshTargetMinutes===60?90:15)*60000)return{label:'Stale or unverified market data',detail:source+'Do not treat these listings as live.'};
     if(!['live','ready','ok'].includes(feed.status))return{label:'Partial market feed',detail:source+'Provider coverage is degraded; listings may be incomplete.'};
     return{label:'Recent published market data',detail:source+'Listings are provider snapshots, not real-time guarantees.'};
   }
