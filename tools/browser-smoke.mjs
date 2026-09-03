@@ -47,6 +47,31 @@ async function persistentHealth(page){
   assert.equal(same,true,'Header updates must not remove or replace the data-health control');
   await button.waitFor({state:'visible'});
 }
+async function healthSpacing(page){
+  const issues=await page.locator('.ct3-panel').evaluate(panel=>{
+    const problems=[],audit=panel.querySelector('[data-full-audit]'),link=audit.querySelector('a.ct3-btn');
+    const before=link.previousElementSibling.getBoundingClientRect(),button=link.getBoundingClientRect(),after=link.nextElementSibling.getBoundingClientRect();
+    if(button.top-before.bottom<10||after.top-button.bottom<10)problems.push('Audit action overlaps or crowds neighbouring text');
+    if(panel.scrollWidth>panel.clientWidth+1)problems.push('Dialog overflows horizontally');
+    for(const el of panel.querySelectorAll('.ct3-btn'))if(el.getClientRects().length&&getComputedStyle(el).display==='inline')problems.push('Padded inline button');
+    const tabs=panel.querySelector('[role=tablist]').getBoundingClientRect(),heading=audit.querySelector('h3').getBoundingClientRect();
+    if(heading.top<tabs.bottom+8)problems.push('Tabs crowd section heading');
+    return problems;
+  });
+  assert.deepEqual(issues,[],'Dialog spacing and overlap regression');
+  await dialogControls(page);
+}
+async function dialogControls(page){
+  const overlaps=await page.locator('.ct3-panel').evaluate(panel=>{
+    const issues=[];
+    for(const group of panel.querySelectorAll('.ct3-actions,.ct3-row,.ct3-head')){
+      const children=[...group.children].filter(el=>el.getClientRects().length).map(el=>({text:el.textContent.slice(0,55),box:el.getBoundingClientRect()}));
+      for(let i=0;i<children.length;i++)for(let j=i+1;j<children.length;j++){const a=children[i].box,b=children[j].box;if(Math.min(a.right,b.right)-Math.max(a.left,b.left)>1&&Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)>1)issues.push(children[i].text+' / '+children[j].text);}
+    }
+    return issues;
+  });
+  assert.deepEqual(overlaps,[],'Dialog actions, headings and rows must not overlap');
+}
 try{
   console.log(`${engine}: desktop first load`);
   // Deterministic routed refresh fixtures; the phone context below still exercises the service worker.
@@ -63,6 +88,7 @@ try{
   await launcher.click();
   const today=desktop.page.locator('[data-today-recommendations]');
   await today.waitFor();
+  await dialogControls(desktop.page);
   await desktop.page.waitForFunction(()=>document.querySelector('[data-today-market-status]')?.textContent.includes('Checked'));
   assert.ok((await today.textContent()).includes('Recommendations recalculated'));
   await today.locator('[data-act="refresh-today"]').click();
@@ -82,11 +108,13 @@ try{
   assert.equal(await dataHealth.locator('.ct3-health-table tbody tr').count(),6);
   assert.ok(healthText.includes('Unchecked does not mean incorrect'));
   await desktop.page.waitForFunction(()=>document.querySelector('[data-full-audit-results]')?.textContent.includes('Pages retrieved'));
+  for(const width of [320,390,768,1280]){await desktop.page.setViewportSize({width,height:900});await healthSpacing(desktop.page);}
   assert.ok((await dataHealth.locator('[data-full-audit-results]').textContent()).includes('Changed pages'));
   const connectionsTab=desktop.page.getByRole('tab',{name:'Account Connections',exact:true});
   await connectionsTab.click();
   const connections=desktop.page.locator('#ct3-connections-panel');
   assert.equal(await connections.isVisible(),true);
+  await dialogControls(desktop.page);
   assert.equal(await dataHealth.isVisible(),false);
   assert.equal(await connections.locator('input').count(),0,'No credential fields in public tracker');
   assert.ok((await connections.textContent()).includes('not an OAuth connection'));
@@ -175,6 +203,8 @@ try{
   await page.locator('[data-today-recommendations]').waitFor();
   await page.locator('[data-today-recommendations] [data-act="health"]').click();
   await page.locator('[data-cert-data-health]').waitFor();
+  await healthSpacing(page);
+  await page.screenshot({path:`/tmp/certtracker-${engine}-health-mobile.png`,animations:'disabled',timeout:30000});
   assert.ok((await page.locator('[data-cert-data-health]').textContent()).includes('185/185 linked'));
   await page.getByRole('dialog',{name:'Certification data health'}).getByRole('button',{name:'Close',exact:true}).click();
   await page.locator('#ct-mobile-more-button').click();

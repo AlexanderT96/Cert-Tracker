@@ -26,6 +26,25 @@
     #ct-data-help{position:fixed!important;top:calc(4px + env(safe-area-inset-top,0px))!important;right:calc(4px + env(safe-area-inset-right,0px))!important;z-index:9997;display:grid!important;place-items:center;width:44px!important;height:44px!important;min-width:44px!important;min-height:44px!important;margin:0!important;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important;text-shadow:none!important;filter:none!important;transform:none!important;animation:none!important;border-radius:50%!important;cursor:pointer;color:#9eb1bf!important}#ct-data-help>span{display:grid;place-items:center;width:26px;height:26px;border:1px solid rgba(158,177,191,.35);border-radius:50%;background:#08131b;font:600 14px/1 ui-sans-serif,system-ui,sans-serif}#ct-data-help:is(:hover,:focus-visible)>span{color:#d7f8ff;border-color:#68c4cf}#ct-data-help:focus-visible{outline:2px solid #68c4cf!important;outline-offset:-4px}.ct3-btn:disabled{opacity:.6;cursor:wait}.ct3-refresh-status{white-space:pre-line;line-height:1.5}.ct3-health-counters{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:8px;margin:12px 0}.ct3-health-counter{padding:10px;border:1px solid var(--border,#456);border-radius:6px}.ct3-health-counter strong{display:block}.ct3-health-counter span{font-size:12px}.ct3-health-table{width:100%;border-collapse:collapse;font-size:12px}.ct3-health-table :is(th,td){padding:8px 4px;border-bottom:1px solid var(--border,#456);text-align:left;overflow-wrap:anywhere}
     .ct3-notice{padding:10px 12px;border:1px solid rgba(255,255,255,.1);border-radius:10px;background:rgba(255,255,255,.04);font-size:12px;color:#cbc5e6;margin:10px 0}.ct3-link{color:#b9adff;text-decoration:none}.ct3-link:hover{text-decoration:underline}
     @media(max-width:640px){.ct3-grid{grid-template-columns:1fr}.ct3-backdrop{padding:4vh 10px 18px}.ct3-body{max-height:78vh}#ct3-launcher{right:12px;bottom:12px}}
+    /* Links styled as buttons must participate in line layout at their full
+       padded height; inline anchors otherwise paint over adjacent paragraphs. */
+    .ct3-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;box-sizing:border-box;max-width:100%;white-space:normal;overflow-wrap:anywhere;line-height:1.4;text-align:center;text-decoration:none;vertical-align:middle}
+    .ct3-head>div,.ct3-row>div,.ct3-card,.ct3-field{min-width:0}
+    .ct3-close{flex:0 0 auto;min-width:44px;min-height:44px}
+    .ct3-title,.ct3-sub,.ct3-body{overflow-wrap:anywhere}
+    .ct3-body :is(p,ul,ol){line-height:1.55}
+    .ct3-body p{margin:12px 0}
+    .ct3-body h3{line-height:1.35}
+    .ct3-body .ct3-actions{gap:10px;margin:12px 0}
+    .ct3-body [role=tabpanel]{padding-top:8px}
+    .ct3-body [role=tabpanel][hidden]{display:none}
+    [data-full-audit]{display:grid;gap:14px;margin-bottom:20px}
+    [data-full-audit]>:is(h3,p){margin:0}
+    [data-full-audit]>a.ct3-btn{justify-self:start}
+    #ct3-connections-panel>.ct3-card{margin:16px 0}
+    .ct3-health-counter{min-width:0;line-height:1.45}.ct3-health-counter strong{margin-bottom:4px}
+    .ct3-body details{margin:14px 0}.ct3-body summary{line-height:1.45;cursor:pointer}
+    @media(max-width:480px){.ct3-head{padding:14px;align-items:flex-start}.ct3-body{padding:14px}.ct3-row{flex-wrap:wrap;gap:8px}.ct3-body [role=tablist]{display:grid;grid-template-columns:1fr}.ct3-body [role=tablist]>.ct3-btn{width:100%}.ct3-pill{white-space:normal;max-width:100%}}
     @media(prefers-reduced-motion:no-preference){#ct3-launcher,.ct3-btn{transition:.15s ease}}
   `;
 
