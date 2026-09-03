@@ -87,9 +87,14 @@
     const subjects=certs.flatMap(c=>CT.learningResources.profile(c).subjects.map(s=>({cert:c,subject:s,advice:tutorAdvice(c,s)}))),tutors=subjects.filter(x=>x.advice),deep=subjects.filter(x=>x.subject.depth>=4),done=certs.filter(c=>state.passes?.[c.id]).length;
     return `<div class="ct-map-phase-summary"><span><b>${done}/${certs.length}</b> certifications complete</span><span><b>${subjects.length}</b> subject branches</span><span><b>${deep.length}</b> D4/D5 depth areas</span><span><b>${tutors.length}</b> tutor checkpoints / escalation points</span></div>`;
   }
+  let mapFiltersPreference;
+  function mapFiltersExpanded(){
+    if(mapFiltersPreference===undefined){let saved=null;try{saved=localStorage.getItem('ct-map-filters-expanded');}catch{}mapFiltersPreference=saved==='true'?true:saved==='false'?false:!global.matchMedia('(max-width: 640px)').matches;}
+    return mapFiltersPreference;
+  }
   function navigation(rows){
     const filters=filterOptions(),certs=sortCerts(rows),filterHtml=filters.map(x=>`<option value="${esc(x.id)}"${x.id===state.filter?' selected':''}>${esc(x.label)}</option>`).join(''),certHtml=certs.map(c=>`<option value="${esc(c.id)}">P${CT.store.effectivePhase(c)} · ${esc(c.code||c.name)}${c.code?` · ${esc(c.name)}`:''}</option>`).join('');
-    return `<div class="ct-map-toolbar"><div class="ct-map-tool"><label>Path filter</label><select data-map-filter>${filterHtml}</select></div><div class="ct-map-tool grow"><label>Jump to certification</label><select data-map-jump-cert><option value="">Choose certification…</option>${certHtml}</select></div><div class="ct-map-tool"><label>Jump to phase / gate</label><select data-map-jump-phase><option value="">Choose…</option>${[1,2,3,4,5,6].map(p=>`<option value="phase:${p}">Phase ${p}</option><option value="gate:${p}">Phase ${p} gate</option>`).join('')}</select></div><div class="ct-map-zoom-group" role="group" aria-label="Roadmap zoom controls"><button type="button" data-map-zoom-out aria-label="Zoom out">−</button><output data-map-zoom-readout aria-live="polite">100%</output><button type="button" data-map-zoom-in aria-label="Zoom in">+</button><button type="button" data-map-zoom-fit>Fit</button><button type="button" data-map-zoom-reset>Reset</button></div><button type="button" class="ct-map-home" data-map-home>Map start</button></div>`;
+    return `<details class="cert-filter-disclosure ct-map-filter-disclosure" ${mapFiltersExpanded()?'open':''}><summary><span>Path filters · ${esc(filters.find(x=>x.id===state.filter)?.label||'My Path')}</span><span class="cert-filter-expand">Expand</span><span class="cert-filter-collapse">Collapse</span></summary><div class="ct-map-toolbar"><div class="ct-map-tool"><label>Path filter</label><select data-map-filter>${filterHtml}</select></div><div class="ct-map-tool grow"><label>Jump to certification</label><select data-map-jump-cert><option value="">Choose certification…</option>${certHtml}</select></div><div class="ct-map-tool"><label>Jump to phase / gate</label><select data-map-jump-phase><option value="">Choose…</option>${[1,2,3,4,5,6].map(p=>`<option value="phase:${p}">Phase ${p}</option><option value="gate:${p}">Phase ${p} gate</option>`).join('')}</select></div><div class="ct-map-zoom-group" role="group" aria-label="Roadmap zoom controls"><button type="button" data-map-zoom-out aria-label="Zoom out">−</button><output data-map-zoom-readout aria-live="polite">100%</output><button type="button" data-map-zoom-in aria-label="Zoom in">+</button><button type="button" data-map-zoom-fit>Fit</button><button type="button" data-map-zoom-reset>Reset</button></div><button type="button" class="ct-map-home" data-map-home>Map start</button></div></details>`;
   }
   function render(){
     const s=scope(),rows=s.certs,scopeIds=new Set(rows.map(c=>c.id)),done=rows.filter(c=>state.passes?.[c.id]).length;
@@ -102,6 +107,13 @@
   }
   function reveal(root,selector){const target=root.querySelector(selector);if(!target)return;if(target.tagName==='DETAILS')target.open=true;target.scrollIntoView({behavior:'smooth',block:'center',inline:'center'});target.classList.add('ct-map-flash');setTimeout(()=>target.classList.remove('ct-map-flash'),1400);}
   function bind(root=document){
+    const disclosure=root.querySelector?.('.ct-map-filter-disclosure');
+    if(disclosure&&!disclosure.dataset.bound){
+      disclosure.dataset.bound='true';
+      const remember=()=>{if(!disclosure.isConnected)return;mapFiltersPreference=disclosure.open;try{localStorage.setItem('ct-map-filters-expanded',String(disclosure.open));}catch{}};
+      disclosure.querySelector('summary').addEventListener('click',event=>{event.preventDefault();disclosure.open=!disclosure.open;remember();});
+      disclosure.addEventListener('toggle',remember);
+    }
     root.querySelectorAll?.('[data-cert-open]').forEach(button=>button.addEventListener('click',()=>{const cert=CERTS.find(c=>c.id===button.dataset.certOpen);if(!cert)return;state.searchQuery=cert.name;state.currentTab='certifications';global.renderApp?.();}));
     root.querySelector?.('[data-map-filter]')?.addEventListener('change',e=>{const id=e.target.value;if(typeof global.setFilter==='function')global.setFilter(id);else{state.filter=id;save.filter?.();global.renderApp?.();}});
     root.querySelector?.('[data-map-jump-cert]')?.addEventListener('change',e=>{if(e.target.value)reveal(root,`#ct-map-cert-${CSS.escape(e.target.value)}`);});

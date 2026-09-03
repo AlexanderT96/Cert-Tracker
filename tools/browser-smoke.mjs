@@ -186,6 +186,17 @@ try{
     await navigationInViewport(page);
     await persistentHealth(page);
     if(tab==='roadmap'){
+      const filters=page.locator('.ct-map-filter-disclosure'),summary=filters.locator('summary');
+      assert.equal(await filters.evaluate(el=>el.open),false,'Map filters start collapsed on phones');
+      const selected=await page.evaluate(()=>state.filter);
+      await summary.click();assert.equal(await filters.locator('[data-map-filter]').isVisible(),true);
+      await page.evaluate(()=>rerenderCurrentTab());
+      assert.equal(await filters.evaluate(el=>el.open),true,'Map filter expansion survives rerender');
+      await summary.focus();await summary.press('Enter');
+      assert.equal(await filters.locator('[data-map-filter]').isVisible(),false);
+      assert.equal(await page.evaluate(()=>state.filter),selected,'Collapsing map controls preserves path');
+      await page.reload();await page.locator('[data-mobile-tab="roadmap"]').click();
+      assert.equal(await filters.evaluate(el=>el.open),false,'Map collapse survives reload');
       const hero=page.locator('.ct-map-hero');
       const emblem=await hero.evaluate(el=>{const s=getComputedStyle(el,'::before');return{position:s.position,width:s.width,transform:s.transform};});
       assert.deepEqual(emblem,{position:'static',width:'64px',transform:'none'},'Mobile emblem must occupy layout space instead of overlaying text');
