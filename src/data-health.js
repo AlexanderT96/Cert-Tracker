@@ -115,6 +115,7 @@
     const averageConfidence = rows.length ? Math.round(rows.reduce((sum, row) => sum + row.confidence, 0) / rows.length) : 0;
     return Object.freeze({
       verifiedFacts:rows.reduce((n,r)=>n+r.verifiedFields,0),totalFacts:rows.length*6,priceVerified:rows.filter(r=>r.fieldChecks.price).length,
+      fieldTotals:Object.fromEntries(['identity','availability','eligibility','blueprint','renewal','price'].map(key=>[key,rows.filter(row=>row.fieldChecks[key]).length])),
       total: rows.length,
       fresh: count('FRESH'), review: count('REVIEW'), stale: count('STALE'), unknown: count('UNKNOWN'),
       exactSources, auditedExactSources, vendorSources, missingSources, averageConfidence,
