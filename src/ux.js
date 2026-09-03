@@ -23,7 +23,7 @@
      .ct3-body:has(#award-cert) label{display:grid;gap:6px;margin:12px 0}.ct3-body:has(#award-cert) :is(select,input:not([type=checkbox])){width:100%;min-height:44px;background:var(--surface,#08131f);color:var(--text,#fff);border:1px solid var(--border,#456);padding:8px}
     .ct3-search{width:100%;box-sizing:border-box;background:#0f0b22;border:0;border-bottom:1px solid rgba(255,255,255,.1);color:#fff;padding:15px 18px;font:500 16px IBM Plex Sans,sans-serif;outline:none}.ct3-command{width:100%;text-align:left;border:0;background:transparent;color:#fff;padding:11px 18px;cursor:pointer;display:flex;justify-content:space-between;gap:10px}.ct3-command:hover,.ct3-command.active{background:rgba(255,255,255,.065)}.ct3-command small{color:#9891ba}
     .ct3-health{display:inline-flex;align-items:center;gap:6px;margin-left:8px;vertical-align:middle}.ct3-dot{width:7px;height:7px;border-radius:50%;background:#72d5a1}.ct3-dot.warn{background:#e5bd6d}.ct3-dot.bad{background:#e8798f}
-    .header>div:first-child{min-width:0}.header .ct3-health{display:flex!important;flex-wrap:wrap;justify-content:flex-start;max-width:100%;margin:10px 0 0!important;min-height:44px;gap:6px 12px;text-align:left;white-space:normal;letter-spacing:normal;font-size:11px!important;line-height:1.5!important;transform:none!important;animation:none!important}.ct3-health-title{flex-basis:100%;font-weight:700}.ct3-health-stat{display:inline-block}.ct3-health-counters{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:8px;margin:12px 0}.ct3-health-counter{padding:10px;border:1px solid var(--border,#456);border-radius:6px}.ct3-health-counter strong{display:block}.ct3-health-counter span{font-size:12px}.ct3-health-table{width:100%;border-collapse:collapse;font-size:12px}.ct3-health-table :is(th,td){padding:8px 4px;border-bottom:1px solid var(--border,#456);text-align:left;overflow-wrap:anywhere}
+    .header .ct3-health-host{display:grid;grid-template-columns:minmax(0,1fr) 44px;align-items:center;gap:0 10px;min-width:0}.ct3-health-host .header-title{grid-column:1;grid-row:1}.ct3-health-host .header-sub{grid-column:1/-1;grid-row:2}.header .ct3-health{display:grid!important;place-items:center;grid-column:2;grid-row:1;width:44px!important;height:44px!important;min-width:44px!important;min-height:44px!important;margin:0!important;padding:0!important;border-radius:50%!important;font-size:22px!important;line-height:1!important;transform:none!important;animation:none!important}.ct3-btn:disabled{opacity:.6;cursor:wait}.ct3-refresh-status{white-space:pre-line;line-height:1.5}.ct3-health-counters{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:8px;margin:12px 0}.ct3-health-counter{padding:10px;border:1px solid var(--border,#456);border-radius:6px}.ct3-health-counter strong{display:block}.ct3-health-counter span{font-size:12px}.ct3-health-table{width:100%;border-collapse:collapse;font-size:12px}.ct3-health-table :is(th,td){padding:8px 4px;border-bottom:1px solid var(--border,#456);text-align:left;overflow-wrap:anywhere}
     .ct3-notice{padding:10px 12px;border:1px solid rgba(255,255,255,.1);border-radius:10px;background:rgba(255,255,255,.04);font-size:12px;color:#cbc5e6;margin:10px 0}.ct3-link{color:#b9adff;text-decoration:none}.ct3-link:hover{text-decoration:underline}
     @media(max-width:640px){.ct3-grid{grid-template-columns:1fr}.ct3-backdrop{padding:4vh 10px 18px}.ct3-body{max-height:78vh}#ct3-launcher{right:12px;bottom:12px}}
     @media(prefers-reduced-motion:no-preference){#ct3-launcher,.ct3-btn{transition:.15s ease}}
@@ -129,13 +129,61 @@
     }});
   }
 
-  function showDataHealth() {
+  let healthCheckRunning=false,healthCheckReport='No manual checks run this session.';
+  function dataHealthBody() {
     const s = CT.dataHealth.summary();
     const queue = CT.dataHealth.reviewQueue();
     const labels={identity:'Credential identity',availability:'Availability',eligibility:'Prerequisites / eligibility',blueprint:'Syllabus / blueprint',renewal:'Renewal / validity',price:'Regional price'};
     const counters=`<div class="ct3-health-counters">${[['Not currently verified',s.totalFacts-s.verifiedFacts],['Missing source links',s.missingSources],['Certification-level sources',s.exactSources],['Vendor-level sources',s.vendorSources],['Availability warnings',s.availabilityWarnings],['Records requiring review',queue.length],['Records with no flagged issues',s.healthy]].map(([label,value])=>`<div class="ct3-health-counter"><strong>${value}</strong><span>${label}</span></div>`).join('')}</div><table class="ct3-health-table"><caption>Recorded checks by field (within 180 days)</caption><thead><tr><th scope="col">Field</th><th scope="col">Verified</th><th scope="col">Not verified</th></tr></thead><tbody>${Object.entries(labels).map(([key,label])=>`<tr><th scope="row">${label}</th><td>${s.fieldTotals[key]}/${s.total}</td><td>${s.total-s.fieldTotals[key]}</td></tr>`).join('')}</tbody></table><div class="ct3-notice">Catalogue record dates: ${s.fresh} recent · ${s.review} due for review · ${s.stale} stale · ${s.unknown} unknown. These date counters do not establish factual accuracy. Verification coverage is ${s.verifiedFacts}/${s.totalFacts} recorded checks, not a measured accuracy score. Unchecked does not mean incorrect.</div>`;
-    const body = `<div data-cert-data-health><div class="ct3-grid"><div class="ct3-card"><h3>Recorded verification coverage</h3><div class="ct3-big">${s.verifiedFacts}/${s.totalFacts}</div><div class="ct3-muted">${s.verifiedFacts}/${s.totalFacts} dated field checks · ${s.priceVerified} prices verified</div></div><div class="ct3-card"><h3>Source coverage</h3><div class="ct3-big">${s.sourceCoverage}%</div><div class="ct3-muted">${s.total - s.missingSources}/${s.total} linked · ${s.exactSources} cert-level · ${s.vendorSources} vendor-level</div></div></div><div class="ct3-notice" style="margin-top:12px">Coverage means an official source is linked, not that every detail is verified. Verification counts identity, availability, eligibility, blueprint, renewal and regional price separately. Unknown fields are not verified. This is not a probability of correctness. Cert-level sources identify the credential; vendor-level sources still need exact-track verification. Source checks do not refresh price-verification dates.</div>${counters}<div class="ct3-card" style="margin-top:12px"><h3>Review queue · ${queue.length}</h3><div class="ct3-muted">${s.availabilityWarnings} credential-availability warnings</div>${queue.map(row => `<div class="ct3-row"><div><strong>${esc(row.name)}</strong><div class="ct3-muted">${esc(row.issues.join(' · '))}</div>${row.sourceNote ? `<div class="ct3-muted">${esc(row.sourceNote)}</div>` : ''}<div class="ct3-muted">Source checked: ${esc(row.sourceCheckedAt || 'not independently checked')} · Record dated: ${esc(row.verifiedAt || 'unknown')}</div>${row.sourceUrl ? `<a class="ct3-link" href="${esc(row.sourceUrl)}" target="_blank" rel="noopener">Official source</a>` : ''}</div><span class="ct3-pill">${esc(row.freshness)} · ${row.confidence}%</span></div>`).join('') || '<div class="ct3-muted">No records require review.</div>'}</div><div class="ct3-actions"><button class="ct3-btn" id="ct3-health-export">Export audit CSV</button></div></div>`;
-    modal({ title: 'Certification data health', subtitle: 'Freshness is explicit; unknown data is never silently treated as current', body, onMount(root) { root.querySelector('#ct3-health-export').addEventListener('click', CT.dataHealth.exportAudit); }});
+    const body = `<div data-cert-data-health><div class="ct3-actions"><button class="ct3-btn primary" id="ct3-health-refresh"${healthCheckRunning?' disabled':''}>Refresh checks</button></div><p class="ct3-muted">Rechecks the loaded catalogue, verification dates, saved-data validity and recommendations; downloads the latest market snapshot and checks for an app update. This does not independently verify issuer facts or sync your private vault.</p><div class="ct3-notice ct3-refresh-status" role="status" id="ct3-health-refresh-status">${esc(healthCheckRunning?'Checking…':healthCheckReport)}</div><div class="ct3-grid"><div class="ct3-card"><h3>Recorded verification coverage</h3><div class="ct3-big">${s.verifiedFacts}/${s.totalFacts}</div><div class="ct3-muted">${s.verifiedFacts}/${s.totalFacts} dated field checks · ${s.priceVerified} prices verified</div></div><div class="ct3-card"><h3>Source coverage</h3><div class="ct3-big">${s.sourceCoverage}%</div><div class="ct3-muted">${s.total - s.missingSources}/${s.total} linked · ${s.exactSources} cert-level · ${s.vendorSources} vendor-level</div></div></div><div class="ct3-notice" style="margin-top:12px">Coverage means an official source is linked, not that every detail is verified. Verification counts identity, availability, eligibility, blueprint, renewal and regional price separately. Unknown fields are not verified. This is not a probability of correctness. Cert-level sources identify the credential; vendor-level sources still need exact-track verification. Source checks do not refresh price-verification dates.</div>${counters}<div class="ct3-card" style="margin-top:12px"><h3>Review queue · ${queue.length}</h3><div class="ct3-muted">${s.availabilityWarnings} credential-availability warnings</div>${queue.map(row => `<div class="ct3-row"><div><strong>${esc(row.name)}</strong><div class="ct3-muted">${esc(row.issues.join(' · '))}</div>${row.sourceNote ? `<div class="ct3-muted">${esc(row.sourceNote)}</div>` : ''}<div class="ct3-muted">Source checked: ${esc(row.sourceCheckedAt || 'not independently checked')} · Record dated: ${esc(row.verifiedAt || 'unknown')}</div>${row.sourceUrl ? `<a class="ct3-link" href="${esc(row.sourceUrl)}" target="_blank" rel="noopener">Official source</a>` : ''}</div><span class="ct3-pill">${esc(row.freshness)} · ${row.confidence}%</span></div>`).join('') || '<div class="ct3-muted">No records require review.</div>'}</div><div class="ct3-actions"><button class="ct3-btn" id="ct3-health-export">Export audit CSV</button></div></div>`;
+    return body;
+  }
+  function bindHealthPanel(root){
+    root.querySelector('#ct3-health-export').addEventListener('click',CT.dataHealth.exportAudit);
+    root.querySelector('#ct3-health-refresh').addEventListener('click',refreshHealthChecks);
+  }
+  function showDataHealth(){
+    modal({title:'Certification data health',subtitle:'Sources, recorded verification and current checks',body:dataHealthBody(),onMount:bindHealthPanel});
+  }
+  async function checkPublishedVersion(){
+    const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),5000);
+    try{
+      const response=await fetch('src/config.js?health-check='+Date.now(),{cache:'no-store',credentials:'same-origin',signal:controller.signal});
+      if(!response.ok)throw Error('Unavailable');
+      const version=(await response.text()).match(/app:\s*['"]([0-9.]+)['"]/);
+      if(!version)throw Error('No version');
+      return version[1]===CT.version.app?'App version: '+CT.version.app+' matches published metadata.':'App update available: '+version[1]+'. Save your changes and reopen/reload to load the latest catalogue.';
+    }catch{return 'App version check unavailable; using loaded '+CT.version.app+'.';}finally{clearTimeout(timer);}
+  }
+  async function refreshHealthChecks(){
+    if(healthCheckRunning)return;
+    healthCheckRunning=true;
+    const button=activeModal?.querySelector('#ct3-health-refresh');
+    if(button)button.disabled=true;
+    const status=activeModal?.querySelector('#ct3-health-refresh-status');if(status)status.textContent='Checking…';
+    const lines=[];
+    try{
+      const schema=CT.validation.validateCertData();
+      lines.push('Catalogue structure: '+schema.errors.length+' errors · '+schema.warnings.length+' warnings.');
+      const saved=CT.storage.validateBackup(CT.storage.serializableState());
+      lines.push('Saved-data structure: '+(saved.ok?'valid':saved.errors.length+' issues')+'.');
+      const picks=CT.recommendations.recommend({limit:3}),roles=CT.marketReadiness.roles();
+      lines.push('Recalculated '+picks.length+' next-step suggestions and '+roles.length+' role assessments.');
+      badgeSummary=CT.dataHealth.summary();badgeSummaryDay=new Date().toISOString().slice(0,10);
+      lines.push('Recorded verification: '+badgeSummary.verifiedFacts+'/'+badgeSummary.totalFacts+' fields. Source links: '+(badgeSummary.total-badgeSummary.missingSources)+'/'+badgeSummary.total+'.');
+      const [market,version]=await Promise.allSettled([CT.jobMarket.load({force:true}),checkPublishedVersion()]);
+      if(market.status==='fulfilled'){
+        const feed=market.value,fresh=CT.jobMarket.freshness(feed);
+        lines.push('Market: '+fresh.label+'. '+fresh.detail);
+        lines.push('Published listings: '+(feed.jobs?.length||0)+' · usable recent listings: '+(CT.jobMarket.usable(feed)?feed.jobs.filter(CT.jobMarket.recentJob).length:0)+'.');
+      }else lines.push('Market refresh unavailable; no new provider data confirmed.');
+      lines.push(version.status==='fulfilled'?version.value:'App version check unavailable.');
+    }catch{lines.push('Some checks could not finish. No verification dates or private vault data were changed.');}
+    finally{
+      healthCheckRunning=false;
+      healthCheckReport='Checks run '+new Date().toLocaleString()+'\n'+lines.join('\n')+'\nIssuer facts not independently reverified; existing verification dates are preserved.';
+      const root=activeModal;if(root?.querySelector('[data-cert-data-health]')){root.querySelector('.ct3-body').innerHTML=dataHealthBody();bindHealthPanel(root);root.querySelector('#ct3-health-refresh').focus({preventScroll:true});}
+    }
   }
 
   function showDiagnostics() {
@@ -221,14 +269,13 @@
   function addHealthBadge() {
     const host = document.querySelector('.header-sub')?.parentElement;
     if (!host) return;
+    host.classList.add('ct3-health-host');
     const day=new Date().toISOString().slice(0,10);
     if(!badgeSummary||badgeSummaryDay!==day){badgeSummary=CT.dataHealth.summary();badgeSummaryDay=day;}
     const health=badgeSummary;
     let badge=host.querySelector('.ct3-health');
-    if(!badge){badge=document.createElement('button');badge.className='ct3-health ct3-btn';badge.type='button';badge.setAttribute('aria-haspopup','dialog');badge.addEventListener('click',showDataHealth);host.appendChild(badge);}
-    const incomplete=health.verifiedFacts<health.totalFacts;
-    const markup=`<span class="ct3-health-title"><span class="ct3-dot ${incomplete||health.availabilityWarnings?'warn':''}" aria-hidden="true"></span> Data accuracy &amp; verification</span><span class="ct3-health-stat">Sources ${health.total-health.missingSources}/${health.total}</span><span class="ct3-health-stat">Checks ${health.verifiedFacts}/${health.totalFacts}</span><span class="ct3-health-stat">Availability alerts ${health.availabilityWarnings}</span><span class="ct3-health-stat">View all counters</span>`;
-    if(badge.innerHTML!==markup)badge.innerHTML=markup;
+    if(!badge){badge=document.createElement('button');badge.className='ct3-health ct3-btn';badge.type='button';badge.setAttribute('aria-haspopup','dialog');badge.setAttribute('aria-label','Data accuracy and verification');badge.title='Data accuracy and verification';badge.addEventListener('click',showDataHealth);host.insertBefore(badge,host.querySelector('.header-sub'));}
+    if(badge.textContent!=='?')badge.textContent='?';
   }
   let badgeSummary=null,badgeSummaryDay='',initialised=false;
 
