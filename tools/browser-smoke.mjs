@@ -29,9 +29,9 @@ async function persistentHealth(page){
   const button=page.locator('.header .ct3-health');
   await button.waitFor({state:'visible'});
   assert.equal(await button.count(),1);
-  assert.ok((await button.textContent()).includes('Sources 185/185'));
-  const totals=await page.evaluate(()=>{const s=CertTrackerV3.dataHealth.summary();return `${s.verifiedFacts}/${s.totalFacts}`;});
-  assert.ok((await button.textContent()).includes('Checks '+totals));
+  assert.equal((await button.textContent()).trim(),'?');
+  assert.equal(await button.getAttribute('aria-label'),'Data accuracy and verification');
+  const bounds=await button.boundingBox();assert.ok(bounds.width<=45&&bounds.height<=45,'Health control stays compact');
   assert.equal(await button.evaluate(el=>el.closest('.header-sub')===null),true);
   const same=await page.evaluate(async()=>{
     const before=document.querySelector('.ct3-health');
@@ -44,7 +44,8 @@ async function persistentHealth(page){
 }
 try{
   console.log(`${engine}: desktop first load`);
-  const desktop=await open({viewport:{width:1280,height:900}});
+  // Deterministic routed refresh fixtures; the phone context below still exercises the service worker.
+  const desktop=await open({viewport:{width:1280,height:900},serviceWorkers:'block'});
   await persistentHealth(desktop.page);
   await desktop.page.evaluate(()=>renderApp());
   await desktop.page.locator('[data-workspace-tab="strategy"]').waitFor();
@@ -74,6 +75,21 @@ try{
   assert.ok(healthText.includes('Not currently verified')&&healthText.includes('1100'));
   assert.equal(await dataHealth.locator('.ct3-health-table tbody tr').count(),6);
   assert.ok(healthText.includes('Unchecked does not mean incorrect'));
+  const beforeChecks=await desktop.page.evaluate(async()=>({hash:await CertTrackerV3.sync.digest(CertTrackerV3.storage.serializableState()),facts:JSON.stringify(CERTS.map(c=>c.factChecks))}));
+  let refreshRequests=0;
+  await desktop.page.route('**/data/job-market.json?*',route=>{refreshRequests++;return route.fulfill({json:{status:'live',fetchedAt:new Date().toISOString(),jobs:[],providerStatus:['Test fixture']}});});
+  await dataHealth.locator('#ct3-health-refresh').click();
+  await desktop.page.waitForFunction(()=>document.querySelector('#ct3-health-refresh-status')?.textContent.includes('Checks run')&&!document.querySelector('#ct3-health-refresh').disabled);
+  const refreshed=await dataHealth.locator('#ct3-health-refresh-status').textContent();
+  assert.ok(refreshed.includes('Recent published market data')&&refreshed.includes('matches published metadata'));
+  assert.ok(refreshed.includes('Catalogue structure:')&&refreshed.includes('Saved-data structure: valid')&&refreshed.includes('70 role assessments'));
+  assert.equal(refreshRequests,1,'Manual check refreshes the feed once');
+  assert.deepEqual(await desktop.page.evaluate(async()=>({hash:await CertTrackerV3.sync.digest(CertTrackerV3.storage.serializableState()),facts:JSON.stringify(CERTS.map(c=>c.factChecks))})),beforeChecks,'Checks must not mutate private state or verification records');
+  await desktop.page.unroute('**/data/job-market.json?*');
+  await desktop.page.route('**/data/job-market.json?*',route=>route.abort());
+  await dataHealth.locator('#ct3-health-refresh').click();
+  await desktop.page.waitForFunction(()=>document.querySelector('#ct3-health-refresh-status')?.textContent.includes('Unavailable / cached data')&&!document.querySelector('#ct3-health-refresh').disabled);
+  await desktop.page.unroute('**/data/job-market.json?*');
   await desktop.page.getByRole('dialog',{name:'Certification data health'}).getByRole('button',{name:'Close',exact:true}).click();
   await desktop.page.screenshot({path:`/tmp/certtracker-${engine}-desktop.png`,animations:'disabled',timeout:30000});
   await desktop.page.locator('[data-workspace-tab="strategy"]').click();
