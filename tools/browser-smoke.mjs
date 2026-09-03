@@ -191,6 +191,21 @@ try{
       assert.deepEqual(emblem,{position:'static',width:'64px',transform:'none'},'Mobile emblem must occupy layout space instead of overlaying text');
       await page.screenshot({path:`/tmp/certtracker-${engine}-${tab}-mobile.png`,animations:'disabled',timeout:30000});
     }
+    if(tab==='certifications'){
+      const disclosure=page.locator('.cert-filter-disclosure'),summary=disclosure.locator('summary');
+      assert.equal(await disclosure.getAttribute('open'),null,'Phone filters default collapsed');
+      assert.equal(await disclosure.locator('.cert-filter-bar').isVisible(),false);
+      const filter=await page.evaluate(()=>state.filter);
+      await summary.click();await disclosure.locator('.cert-filter-bar').waitFor({state:'visible'});
+      await page.evaluate(()=>rerenderCurrentTab());
+      assert.equal(await disclosure.evaluate(el=>el.open),true,'Expansion survives rerenders');
+      await summary.focus();await summary.press('Enter');
+      await page.waitForFunction(()=>localStorage.getItem('ct-cert-filters-expanded')==='false');
+      assert.equal(await disclosure.locator('.cert-filter-bar').isVisible(),false);
+      assert.equal(await page.evaluate(()=>state.filter),filter,'Collapsing does not clear selection');
+      await page.reload();await page.locator('[data-mobile-tab="certifications"]').click();
+      assert.equal(await disclosure.evaluate(el=>el.open),false,'Collapsed preference survives reload');
+    }
     assert.equal(await page.locator('.ct-dual-brief').count(),tab==='dashboard'?1:0);
   }
   console.log(`${engine}: scrolling and More menu`);

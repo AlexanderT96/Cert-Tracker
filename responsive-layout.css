@@ -170,3 +170,13 @@ html[data-pointer="coarse"] :where(.card,.panel,.cert-card,.cert-item,.ct-map-ce
 html[data-pointer="coarse"] :where(button,.btn,a,[role="button"]){touch-action:manipulation}
 
 @media(prefers-reduced-motion:reduce){html[data-layout="mobile"] .tabs,html[data-layout="mobile"] .ct-command-dock,html[data-layout="mobile"] .ct-map-viewport{scroll-behavior:auto!important}}
+/* Native disclosure keeps the catalogue reachable without a screen of filters. */
+.cert-filter-disclosure{margin:12px 0 16px;min-width:0}
+.cert-filter-disclosure>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;padding:12px 14px;border:1px solid #23505a;border-radius:8px;background:#081820;color:#d7edf1;cursor:pointer;list-style:none;line-height:1.4}
+.cert-filter-disclosure>summary::-webkit-details-marker{display:none}
+.cert-filter-disclosure>summary>span:first-child{min-width:0;overflow-wrap:anywhere}
+.cert-filter-disclosure>summary:focus-visible{outline:2px solid #00dce6;outline-offset:3px}
+.cert-filter-disclosure .cert-filter-expand,.cert-filter-disclosure .cert-filter-collapse{flex-shrink:0;font-size:12px;color:#72d9df}
+.cert-filter-disclosure:not([open])>.cert-filter-bar{display:none!important}
+.cert-filter-disclosure:not([open]) .cert-filter-collapse,.cert-filter-disclosure[open] .cert-filter-expand{display:none}
+.cert-filter-disclosure>.cert-filter-bar{margin-top:10px}
