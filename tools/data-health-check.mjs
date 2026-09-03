@@ -14,6 +14,9 @@ assert.equal(summary.exactSources,115);
 assert.equal(summary.vendorSources,70);
 assert.equal(summary.averageConfidence,Math.round(summary.verifiedFacts/summary.totalFacts*100));
 assert.equal(summary.priceVerified,0);
+assert.equal(Object.keys(summary.fieldTotals).length,6);
+assert.equal(Object.values(summary.fieldTotals).reduce((n,v)=>n+v,0),summary.verifiedFacts);
+assert.equal(summary.fieldTotals.price,summary.priceVerified);
 assert.ok(summary.averageConfidence<10,'Unverified facts cannot inherit linked-source confidence');
 for(const cert of certs){
   assert.ok(CT.sourceRegistry[cert.id],`${cert.id}: explicit mapping required`);

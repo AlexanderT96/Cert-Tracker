@@ -104,6 +104,9 @@ html[data-layout="mobile"] .ct-learning-gate{margin-left:0!important}
 
 /* Roadmap remains a real pan-able canvas rather than being crushed to phone width. */
 html[data-layout="mobile"] .ct-map-hero{display:grid!important;grid-template-columns:1fr!important;gap:8px!important}
+/* Emblems occupy a real grid row: generic card padding must not put text beneath them. */
+html[data-layout="mobile"] :is(.ct-map-hero,.learning-path-hero){display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:12px!important;padding:14px!important}
+html[data-layout="mobile"] :is(.ct-map-hero,.learning-path-hero)::before{position:static!important;inset:auto!important;transform:none!important;width:64px!important;height:64px!important;justify-self:start;pointer-events:none}
 html[data-layout="mobile"] .ct-map-scope{min-width:0!important;width:100%!important;text-align:left!important}
 html[data-layout="mobile"] .ct-map-toolbar{
   position:sticky!important;top:calc(env(safe-area-inset-top) + 48px)!important;z-index:50!important;

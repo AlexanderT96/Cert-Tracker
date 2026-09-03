@@ -25,9 +25,30 @@ async function navigationInViewport(page){
   assert.ok(box&&box.y>=0&&box.y+box.height<=viewport.height+1,'Mobile navigation must remain inside the visible viewport');
   assert.equal(await nav.locator('button').count(),5,'Expected Dashboard, Learn, Map, Certs and More');
 }
+async function persistentHealth(page){
+  const button=page.locator('.header .ct3-health');
+  await button.waitFor({state:'visible'});
+  assert.equal(await button.count(),1);
+  assert.ok((await button.textContent()).includes('Sources 185/185'));
+  const totals=await page.evaluate(()=>{const s=CertTrackerV3.dataHealth.summary();return `${s.verifiedFacts}/${s.totalFacts}`;});
+  assert.ok((await button.textContent()).includes('Checks '+totals));
+  assert.equal(await button.evaluate(el=>el.closest('.header-sub')===null),true);
+  const same=await page.evaluate(async()=>{
+    const before=document.querySelector('.ct3-health');
+    updateHeaderCount();updateHeaderCount();
+    await new Promise(resolve=>setTimeout(resolve,300));
+    return before===document.querySelector('.ct3-health')&&before.isConnected;
+  });
+  assert.equal(same,true,'Header updates must not remove or replace the data-health control');
+  await button.waitFor({state:'visible'});
+}
 try{
   console.log(`${engine}: desktop first load`);
   const desktop=await open({viewport:{width:1280,height:900}});
+  await persistentHealth(desktop.page);
+  await desktop.page.evaluate(()=>renderApp());
+  await desktop.page.locator('[data-workspace-tab="strategy"]').waitFor();
+  await persistentHealth(desktop.page);
   assert.equal(await desktop.page.locator('.tabs [data-workspace-tab]').count(),6);
   assert.equal(await desktop.page.locator('#ct-mobile-navigation').isVisible(),false);
   assert.equal(await desktop.page.locator('#ct-command-dock').isVisible(),false,'Retired tool dock must not be visible');
@@ -50,6 +71,9 @@ try{
   assert.ok(healthText.includes('100%')&&healthText.includes('185/185 linked'));
   assert.ok(healthText.includes('115 cert-level')&&healthText.includes('70 vendor-level'));
   assert.ok(healthText.includes('Credential retired')&&healthText.includes('Credential in development'));
+  assert.ok(healthText.includes('Not currently verified')&&healthText.includes('1100'));
+  assert.equal(await dataHealth.locator('.ct3-health-table tbody tr').count(),6);
+  assert.ok(healthText.includes('Unchecked does not mean incorrect'));
   await desktop.page.getByRole('dialog',{name:'Certification data health'}).getByRole('button',{name:'Close',exact:true}).click();
   await desktop.page.screenshot({path:`/tmp/certtracker-${engine}-desktop.png`,animations:'disabled',timeout:30000});
   await desktop.page.locator('[data-workspace-tab="strategy"]').click();
@@ -75,6 +99,7 @@ try{
   console.log(`${engine}: phone first load`);
   const {context,page}=await open({viewport:{width:430,height:932},deviceScaleFactor:3,hasTouch:true,...(engine==='firefox'?{}:{isMobile:true})});
   await page.waitForFunction(()=>document.documentElement.dataset.layout==='mobile');
+  await persistentHealth(page);
   await navigationInViewport(page);
   assert.equal(await page.locator('.tabs').isVisible(),false,'Desktop tabs must stay hidden on phones');
   assert.equal(await page.locator('.header-title').evaluate(el=>getComputedStyle(el).textShadow),'none');
@@ -91,6 +116,13 @@ try{
     await page.waitForFunction(tab=>state.currentTab===tab,tab);
     assert.equal(await page.locator(`[data-mobile-tab="${tab}"]`).getAttribute('aria-current'),'page');
     await navigationInViewport(page);
+    await persistentHealth(page);
+    if(tab==='roadmap'||tab==='learning'){
+      const hero=page.locator(tab==='roadmap'?'.ct-map-hero':'.learning-path-hero');
+      const emblem=await hero.evaluate(el=>{const s=getComputedStyle(el,'::before');return{position:s.position,width:s.width,transform:s.transform};});
+      assert.deepEqual(emblem,{position:'static',width:'64px',transform:'none'},'Mobile emblem must occupy layout space instead of overlaying text');
+      await page.screenshot({path:`/tmp/certtracker-${engine}-${tab}-mobile.png`,animations:'disabled',timeout:30000});
+    }
     assert.equal(await page.locator('.ct-dual-brief').count(),tab==='dashboard'?1:0);
   }
   console.log(`${engine}: scrolling and More menu`);
