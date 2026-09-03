@@ -212,6 +212,7 @@
   }
 
   function pathwaySpec(item){
+    if(item.id==='my-path'&&CT.focusedRoute?.enabled())return Object.freeze({...ARCHETYPES.cloudEngineering,archetype:'cloudEngineering',mission:'Build deep networking expertise, supported by secure systems, Azure, Python automation and AI applications. Extend physical-security platform experience into broader engineering work.',responsibilities:['Routing, switching and systematic network troubleshooting','Secure Azure, identity and endpoint deployment','Python/PowerShell automation, APIs and practical integration','Reliable systems, monitoring, recovery and technical collaboration']});
     const role=CT.careerOptions?.byId(item.id);if(role){const f=CT.careerOptions.FAMILIES[role.family],base=ARCHETYPES[f.archetype]||ARCHETYPES.architectureConsulting;return Object.freeze({...base,archetype:f.archetype,mission:role.mission,responsibilities:f.tasks.map(t=>t[1]),evidence:CT.careerOptions.requirements(role).map(t=>t.label)});}
     const mapped=PATHWAY_MAP[item.id],key=mapped?.[0]||categoryForLabel(item.label),base=ARCHETYPES[key]||ARCHETYPES.architectureConsulting;
     return Object.freeze({...base,archetype:key,mission:mapped?.[1]||base.mission});
@@ -230,7 +231,7 @@
       topCerts:Object.freeze(topCerts),conversionTasks:Object.freeze(conversionTasks),
       responsibilities:Object.freeze(spec.responsibilities),evidence:Object.freeze(spec.evidence),
       roleReadinessRule:'A pathway is not role-ready because its certifications are complete. Market access must be strong enough to win the opportunity and practical evidence must be strong enough to perform after hire.',
-      sequenceRule:'Order certifications by dependencies, balanced M/K value, pathway relevance, timing and evidence gaps. Do not optimise for badge count, salary signal or curriculum depth in isolation.'
+      sequenceRule:CT.focusedRoute?.scoped(item.id)?'Follow the locked sequence, one next milestone at a time. Scores do not reorder it. Practical evidence remains separate from certification completion.':'Order certifications by dependencies, balanced M/K value, pathway relevance, timing and evidence gaps. Do not optimise for badge count, salary signal or curriculum depth in isolation.'
     });
   }
 

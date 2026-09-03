@@ -5,13 +5,13 @@
   if (!CT?.store) throw new Error('state-core.js must load before phase-engine.js');
 
   function hasConfiguredPath(){return !!state.myPath&&Object.keys(state.myPath).some(id=>state.myPath[id]);}
-  function inPath(cert){return !!cert&&!state.skipped?.[cert.id]&&!!state.myPath?.[cert.id];}
+  function inPath(cert){return !!cert&&(!state.skipped?.[cert.id]||CT.focusedRoute?.enabled())&&!!state.myPath?.[cert.id];}
   function effectivePhase(cert){return CT.store.effectivePhase(cert);}
   function phaseCerts(phase){return CERTS.filter(cert=>effectivePhase(cert)===phase&&inPath(cert));}
-  function artifactRequired(phase){return !!(typeof PHASES!=='undefined'&&PHASES?.[phase]?.artifact);}
+  function artifactRequired(phase){return !CT.focusedRoute?.enabled()&&!!(typeof PHASES!=='undefined'&&PHASES?.[phase]?.artifact);}
   function artifactDone(phase){return !artifactRequired(phase)||!!state.artifacts?.[phase];}
   function phaseState(phase){
-    const certs=phaseCerts(phase);const gates=certs.filter(cert=>cert.track==='CORE'||cert.gateway);const required=gates.length?gates:certs.filter(cert=>cert.track==='FOUNDATION');
+    const certs=phaseCerts(phase);const gates=certs.filter(cert=>cert.track==='CORE'||cert.gateway);const required=CT.focusedRoute?.enabled()?certs:gates.length?gates:certs.filter(cert=>cert.track==='FOUNDATION');
     const passed=required.filter(cert=>!!state.passes?.[cert.id]);const complete=required.every(cert=>!!state.passes?.[cert.id])&&artifactDone(phase);
     return Object.freeze({phase,certs,required,passed,artifactRequired:artifactRequired(phase),artifactDone:artifactDone(phase),complete,percent:required.length?Math.round(passed.length/required.length*100):(artifactDone(phase)?100:0)});
   }

@@ -48,9 +48,10 @@
     if(a.career.E!==b.career.E)return b.career.E-a.career.E;
     return a.estimatedHours-b.estimatedHours||a.name.localeCompare(b.name);
   }
-  function rankRows(certs,options={}){return certs.map(cert=>learningRank(cert,options)).sort(compareRank);}
+  function rankRows(certs,options={}){const rows=certs.map(cert=>learningRank(cert,options));return CT.focusedRoute?.scoped(options.filterId)?rows.sort((a,b)=>CT.focusedRoute.position(a.id)-CT.focusedRoute.position(b.id)):rows.sort(compareRank);}
 
   function nextFor(test,options={}){
+    if(CT.focusedRoute?.scoped(options.filterId)){const next=CT.focusedRoute.next();return next&&(!test||test(next))?next:null;}
     let candidates=CERTS.filter(cert=>!state.passes?.[cert.id]&&!state.skipped?.[cert.id]);
     if(typeof test==='function')candidates=candidates.filter(cert=>{try{return !!test(cert);}catch{return false;}});
     if(!candidates.length)return null;
@@ -63,6 +64,7 @@
   // Function name retained for compatibility with existing callers; semantics are now
   // dual-pillar and filter-aware rather than legacy ROI/hour or knowledge-only ordering.
   function orderPhaseLearningFirst(certs){
+    if(CT.focusedRoute?.scoped())return CT.focusedRoute.ordered(certs);
     const rows=Array.isArray(certs)?certs.slice():[];if(rows.length<2)return rows;
     const meta=activeFilterMeta(),idSet=new Set(rows.map(cert=>cert.id)),remaining=new Map(),dependents=new Map();
     rows.forEach(cert=>{remaining.set(cert.id,(cert.deps||[]).filter(id=>idSet.has(id)).length);dependents.set(cert.id,[]);});

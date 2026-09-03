@@ -71,4 +71,30 @@ assert.equal(written.status,'degraded');assert.equal(written.fetchedAt,old.fetch
 old.schemaVersion=3;old.status='degraded';old.providerCoverage={successes:0,failures:1};
 await vm.runInContext(`(async()=>{${producer}})()`,context);
 assert.equal(written.lastSuccessfulFetchAt,null,'Legacy failed attempts are not verified successful fetches');assert.equal(written.fetchedAt,null);
-console.log('Audit regressions passed: eligibility, award state, Undo, backup round-trip, empty path, malformed input, shared readiness, market freshness, salaries and encrypted sync safety.');
+// Focused route is a generic preset, never a public record of a user's completions.
+const expected=['a-plus','network-plus','mcit','mcde','arcules-csp','mcie','acp','ccna','security-plus','pcep','az-900','pcap','az-104','sc-300','crowdstrike-ccfa','sc-500','ccnp-enterprise','ai-901','ai-103','pcpp1','az-305','ccie-enterprise'];
+assert.deepEqual(Array.from(CT.focusedRoute.definition.ids),expected);
+assert.notEqual(cert('crowdstrike-ccfa').code,cert('crowdstrike-ccf').code);
+state.myPath={ccna:true};state.passes={};state.notes={ccna:{text:'Keep this note'}};state.skipped={};
+CT.storage.persistAll();CT.store.load();assert.deepEqual(Object.keys(state.myPath),['ccna'],'Upgrade preserves saved selections');
+CT.focusedRoute.apply();assert.equal(CT.focusedRoute.enabled(),true);assert.equal(Object.keys(state.passes).length,0,'Preset must not fabricate passes');
+assert.equal(state.notes.ccna.text,'Keep this note');
+CT.storage.undoLastChange();assert.deepEqual(Object.keys(state.myPath),['ccna'],'Apply is reversible');
+CT.focusedRoute.apply();
+state.passes=Object.fromEntries(expected.slice(0,5).map(id=>[id,'2026-01-01']));
+assert.equal(CT.recommendations.recommend()[0].id,'mcie');
+assert.equal(CT.recommendations.recommend().length,1);
+assert.equal(CT.filterIntelligence.nextFor(c=>state.myPath[c.id]).id,'mcie');
+assert.equal(CT.phases.phaseState(1).required.length,7);
+state.skipped.mcie=true;assert.equal(CT.phases.phaseState(1).complete,false);assert.equal(CT.recommendations.recommend()[0].id,'mcie','Do not jump past skipped locked milestones');
+state.skipped={};state.passes.mcie='2026-01-02';assert.equal(CT.recommendations.recommend()[0].id,'acp');
+const routeBackup=CT.storage.serializableState();CT.storage.applyBackup(routeBackup,{silent:true});
+assert.equal(state.passes.mcie,'2026-01-02');assert.equal(CT.focusedRoute.enabled(),true);
+state.phaseOverrides['ccie-enterprise']=1;assert.equal(CT.store.effectivePhase(cert('ccie-enterprise')),6);
+state.passes=Object.fromEntries(expected.map(id=>[id,'2026-01-01']));assert.equal(CT.phases.pathStatus().complete,true);assert.equal(CT.recommendations.recommend().length,0);
+// Every later milestone must remain reachable without an excluded study dependency.
+for(let i=0;i<expected.length;i++)for(const dep of cert(expected[i]).deps||[])assert.ok(expected.indexOf(dep)>=0&&expected.indexOf(dep)<i,expected[i]+' dependency '+dep);
+for(const file of ['src/topic-engine.js','src/learning-path-ui.js'])vm.runInContext(fs.readFileSync(file,'utf8'),s,{filename:file});
+const learning=CT.learningPath.render();assert.ok(!learning.includes('OT + convergence engineering'));assert.ok(learning.includes('LOCKED MILESTONE'));
+assert.ok(!CT.topicEngine.forPhase(4).some(r=>/PLC|SCADA|ISA-95/.test(r.topic.title)));
+console.log('Audit regressions passed, including focused route sequence, adoption, Undo, preserved progress, backup, phase gates and completion.');

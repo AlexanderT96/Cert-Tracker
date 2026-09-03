@@ -1,27 +1,17 @@
-// Cert Tracker v4.2 — curated generic default path configuration.
-// Ordered around coherent learning ladders rather than badge/market-value density.
-// This file contains no personalised career context.
-(function initDefaultPath(global) {
+// Generic focused curriculum. No personal progress or automatic exam passes.
+(function(global){
   'use strict';
-  global.CERT_TRACKER_DEFAULT_PATH = Object.freeze([
-    // Phase 1 — foundations + physical-security depth
-    'a-plus','network-plus','mcit','mcde','arcules-csp','mcie','acp','briefcam-tech','ccna','google-cyber','security-plus','az-900','sc-900','ai-901',
-    // Phase 2 — enterprise networking + network security + systems
-    'ccnp-enterprise','az-802','pan-apprentice','pan-practitioner','pan-netsec-pro','pan-ngfw-eng','linux-plus','cysa-plus','iec-62443-cfs','itil-4-foundation','cismp',
-    // Phase 3 — cloud + identity + automation + SecOps
-    'pcep','pcap','az-104','sc-300','sc-200','ccsk','secai-plus','iec-62443-cra','pan-cloudsec-pro',
-    // Phase 4 — OT / convergence engineering + architecture foundations
-    'pcpp1','sc-500','iec-62443-cds','iec-62443-cms','iec-62443-expert','isa-cap-associate','isa95-fund','gicsp','bcs-arch-found','bcs-arch-solution','bcs-arch-security','bcs-esa','isa-apm',
-    // Phase 5 — adaptive architecture + expert branches
-    'cissp','ccsp','sc-100','az-305','pan-netsec-arch','sabsa-found','cczt','crisc','ukcsc-princ','pcpp2','ccie-enterprise','asis-psp',
-    // Phase 6 — professional / principal capstones
-    'issap','ukcsc-chart','csyp','isa-cap'
-  ]);
-
-  // Only genuinely new learning-first records are auto-added on a data-version upgrade.
-  // Existing user choices for older records are never silently re-enabled.
-  global.CERT_TRACKER_DEFAULT_ADDITIONS = Object.freeze([
-    'briefcam-tech','ai-901','az-802','sc-500','ccnp-enterprise','ccie-enterprise',
-    'isa-cap-associate','isa-cap','isa-apm','isa95-fund','bcs-arch-found','bcs-arch-solution','bcs-arch-security'
-  ]);
+  const groups=[
+    ['Systems and physical-security foundations',['a-plus','network-plus','mcit','mcde','arcules-csp','mcie','acp'],'Windows, DNS, storage, recovery and IP-video integration'],
+    ['Networking and programming foundations',['ccna','security-plus','pcep','az-900','pcap'],'Routing, switching, security fundamentals and reusable Python'],
+    ['Azure, identity and endpoint security',['az-104','sc-300','crowdstrike-ccfa','sc-500'],'Administer and secure platforms; Falcon deployment and policy management'],
+    ['Professional networking and AI foundations',['ccnp-enterprise','ai-901'],'ENCOR + ENARSI routing depth; practical AI foundations'],
+    ['Automation, AI applications and cloud design',['ai-103','pcpp1','az-305'],'Python applications, Microsoft Foundry and resilient Azure design'],
+    ['Expert networking capstone',['ccie-enterprise'],'Expert practical networking; qualify and book only when ready']
+  ];
+  const ids=Object.freeze(groups.flatMap(g=>g[1]));
+  const phases=Object.freeze(Object.fromEntries(groups.map(([title,certs,sub],i)=>[i+1,Object.freeze({title,name:title,sub,layer:sub,window:'Self-paced',certs:Object.freeze(certs),artifact:null,roles:null,applyOut:null})])));
+  global.CERT_TRACKER_FOCUSED_ROUTE=Object.freeze({id:'network-platform-v1',title:'Network, cloud and automation engineering',ids,phases});
+  global.CERT_TRACKER_DEFAULT_PATH=ids;
+  global.CERT_TRACKER_DEFAULT_ADDITIONS=Object.freeze([]);
 })(window);
