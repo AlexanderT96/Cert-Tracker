@@ -21,3 +21,8 @@ await vm.runInContext(`(async()=>{${producer}})()`,context);assert.equal(request
 const hosted={location:{hostname:'alexandert96.github.io'},CertTrackerV3:{marketReadiness:{}}};hosted.window=hosted;
 vm.runInNewContext(fs.readFileSync('src/job-market.js','utf8'),hosted);
 assert.equal(hosted.CertTrackerV3.jobMarket.FEED,'https://raw.githubusercontent.com/AlexanderT96/Cert-Tracker-Public/main/data/job-market.json','Hosted snapshots must not wait for Pages rebuilds');
+const worker={self:{addEventListener(){}},caches:{open:async()=>({match:async()=>undefined})},fetch:async()=>new Response('Not published',{status:404}),Response,AbortSignal};
+vm.createContext(worker);vm.runInContext(fs.readFileSync('sw.js','utf8'),worker);
+assert.equal((await vm.runInContext('networkFirst("https://example.test/data/tracker-audit.json")',worker)).status,404,'Missing reports retain their HTTP status instead of service-worker errors');
+worker.fetch=async()=>{throw Error('Offline');};
+assert.equal((await vm.runInContext('networkFirst("https://example.test/data/tracker-audit.json")',worker)).status,503,'Offline reports return a handled HTTP failure');
