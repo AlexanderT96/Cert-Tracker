@@ -316,11 +316,12 @@
   }
 
   function addHealthBadge() {
-    const host = document.body;
+    const host = document.querySelector('.header > div:first-child');
     if (!host) return;
     const day=new Date().toISOString().slice(0,10);
     if(!badgeSummary||badgeSummaryDay!==day){badgeSummary=CT.dataHealth.summary();badgeSummaryDay=day;}
-    let badge=host.querySelector('.ct3-health');
+    let badge=document.getElementById('ct-data-help');
+    if(badge&&badge.parentElement!==host)host.appendChild(badge);
     if(!badge){badge=document.createElement('button');badge.id='ct-data-help';badge.className='ct3-health';badge.type='button';badge.setAttribute('aria-haspopup','dialog');badge.setAttribute('aria-label','Data accuracy and verification');badge.title='Data accuracy and verification';badge.addEventListener('click',showDataHealth);const icon=document.createElement('span');icon.textContent='?';icon.setAttribute('aria-hidden','true');badge.appendChild(icon);host.appendChild(badge);}
   }
   let badgeSummary=null,badgeSummaryDay='',initialised=false;

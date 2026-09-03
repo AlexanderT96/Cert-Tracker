@@ -190,3 +190,12 @@ html[data-pointer="coarse"] :where(button,.btn,a,[role="button"]){touch-action:m
 [data-focused-route] details>summary{padding-block:10px;line-height:1.5}
 [data-focused-route] ol{padding-inline-start:1.5rem;margin-block:12px}
 [data-focused-route] li{line-height:1.5}
+/* Help belongs to the title row, not the device viewport/status-bar corner. */
+.header>div:first-child{display:grid;grid-template-columns:minmax(0,1fr) 44px;column-gap:8px;align-items:center;min-width:0}
+.header-title{grid-column:1;grid-row:1}
+.header-sub{grid-column:1/-1;grid-row:2}
+.header #ct-data-help{position:static!important;inset:auto!important;grid-column:2;grid-row:1;align-self:center;z-index:auto}
+.header #ct-data-help>span{width:22px;height:22px;border:0;background:transparent;font-size:18px;color:var(--muted,#8faab5)}
+html[data-layout="mobile"] .header{padding:14px 16px!important}
+html[data-layout="mobile"] .header>div:first-child{width:100%}
+html[data-layout="mobile"] .header-title{white-space:normal;overflow-wrap:anywhere}

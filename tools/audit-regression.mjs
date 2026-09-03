@@ -61,7 +61,7 @@ assert.deepEqual(JSON.parse(JSON.stringify(await CT.sync.decryptPayload(envelope
 await assert.rejects(CT.sync.decryptPayload(envelope,'incorrect-passphrase'));
 state.passes={cka:'2023-01-01',cks:'2026-06-20'};assert.equal(CT.dates.localDateStamp(CT.dates.expiryInfo(cert('cka'),state.passes.cka).expiry),'2028-06-20');
 state.passes={'network-plus':'2025-01-01'};run("updatePass('security-plus','2026-06-01')");assert.equal(state.passes['network-plus'],'2025-01-01','Renewal must preserve original pass date');CT.storage.undoLastChange();assert.equal(state.passes['security-plus'],undefined);
-const health=CT.dataHealth.summary();assert.equal(health.priceVerified,0);assert.ok(health.averageConfidence<10);assert.equal(health.healthy,0);
+const health=CT.dataHealth.summary();assert.equal(health.priceVerified,5);assert.ok(health.averageConfidence<10);assert.equal(health.healthy,0);
 
 // Execute the actual feed producer with failed network requests and fake filesystem writes.
 let written;const old={schemaVersion:4,lastSuccessfulFetchAt:'2026-09-01T10:00:00.000Z',fetchedAt:'2026-09-01T10:00:00.000Z',jobs:[{id:'cached',source:'fixture',title:'GIS Analyst',created:at,lastSeenAt:at}]};
@@ -74,6 +74,11 @@ assert.equal(written.lastSuccessfulFetchAt,null,'Legacy failed attempts are not 
 // Focused route is a generic preset, never a public record of a user's completions.
 const expected=['a-plus','network-plus','mcit','mcde','arcules-csp','mcie','acp','ccna','security-plus','pcep','az-900','pcap','linux-plus','az-802','az-104','az-700','sc-300','crowdstrike-ccfa','sc-500','ccnp-enterprise','ai-901','ai-103','pcpp1','az-305','ccie-enterprise'];
 assert.deepEqual(Array.from(CT.focusedRoute.definition.ids),expected);
+assert.equal(cert('ai-901').code,'AI-901');assert.equal(cert('pcep').validity,60);assert.equal(cert('pcap').validity,60);
+assert.equal(cert('ccna').costNum,0);assert.ok(!/825|pass rate|DEC 2026/.test(cert('ccna').note+cert('ccna').examFormat));
+assert.equal(cert('mcie').name,'XProtect Certified Integration Engineer');assert.equal(cert('mcie').code,'XCIE');
+assert.ok(CT.learningResources.overallStack(cert('ai-901'))[0].label.startsWith('Official credential'));
+assert.ok(CT.learningResources.overallStack(cert('ai-901')).filter(r=>/results|search/.test(r.url)).every(r=>r.verified===false&&r.label.startsWith('Unreviewed search')));
 assert.ok(!/CySA\+ DOES|cloud workloads ARE Linux|post-nominal/.test(cert('linux-plus').note),'Linux guidance must not promise unverified renewal or broad role outcomes');
 assert.ok(cert('linux-plus').cost.includes('unverified'),'Unverified price must remain explicitly estimated');
 assert.ok(!cert('linux-plus').factChecks.price,'Blueprint review must not mark pricing verified');

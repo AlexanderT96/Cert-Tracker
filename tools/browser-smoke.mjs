@@ -32,11 +32,12 @@ async function persistentHealth(page){
   assert.equal((await button.textContent()).trim(),'?');
   assert.equal(await button.getAttribute('aria-label'),'Data accuracy and verification');
   const bounds=await button.boundingBox();assert.ok(bounds.width<=45&&bounds.height<=45,'Health control stays compact');
-  const icon=await button.locator('span').boundingBox();assert.equal(icon.width,26);assert.equal(icon.height,26);
+  const icon=await button.locator('span').boundingBox();assert.equal(icon.width,22);assert.equal(icon.height,22);
   assert.ok(bounds.width>=44&&bounds.height>=44,'Small visual retains an accessible tap target');
-  assert.ok(bounds.x>=page.viewportSize().width-52&&bounds.y<=8,'Help is tucked into the viewport top-right');
-  assert.equal(await button.evaluate(el=>getComputedStyle(el).position),'fixed');
-  assert.equal(await button.evaluate(el=>el.parentElement===document.body),true,'Help escapes header clipping and rerenders');
+  const title=await page.locator('.header-title').boundingBox();
+  assert.ok(bounds.x>title.x+title.width&&Math.abs(bounds.y+bounds.height/2-(title.y+title.height/2))<=12,'Help aligns with the mobile title row');
+  assert.equal(await button.evaluate(el=>getComputedStyle(el).position),'static');
+  assert.equal(await button.evaluate(el=>el.parentElement===document.querySelector('.header>div:first-child')),true,'Help stays in the header title row across rerenders');
   assert.equal(await button.evaluate(el=>el.closest('.header-sub')===null),true);
   const same=await page.evaluate(async()=>{
     const before=document.querySelector('.ct3-health');
