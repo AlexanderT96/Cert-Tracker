@@ -98,6 +98,11 @@ try{
   assert.ok(refreshed.includes('Recent published market data')&&refreshed.includes('matches published metadata'));
   assert.ok(refreshed.includes('Catalogue structure:')&&refreshed.includes('Saved-data structure: valid')&&refreshed.includes('70 role assessments'));
   assert.equal(refreshRequests,1,'Manual check refreshes the feed once');
+  await connectionsTab.click();
+  await connections.locator('#ct3-connections-check').click();
+  await desktop.page.waitForFunction(()=>document.querySelector('[data-connection-market-status]')?.textContent.includes('Recent successful provider snapshot'));
+  assert.ok((await connections.locator('[data-connection-market-status]').textContent()).includes('not your account sign-in status'));
+  await desktop.page.getByRole('tab',{name:'Accuracy & checks',exact:true}).click();
   assert.deepEqual(await desktop.page.evaluate(async()=>({hash:await CertTrackerV3.sync.digest(CertTrackerV3.storage.serializableState()),facts:JSON.stringify(CERTS.map(c=>c.factChecks))})),beforeChecks,'Checks must not mutate private state or verification records');
   await desktop.page.unroute('**/data/job-market.json?*');
   await desktop.page.route('**/data/job-market.json?*',route=>route.abort());

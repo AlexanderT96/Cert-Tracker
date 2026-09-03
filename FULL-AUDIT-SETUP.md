@@ -40,4 +40,6 @@ Job cards include linked Jobs by Adzuna attribution. Logo: Adzuna, via https://c
 
 The Run full audit link opens GitHub's authenticated workflow interface. It does not put a privileged token in the public app. Market refresh and source audit workflows share a publishing lock, do not cancel in-progress writes, and rebase only their generated-data commit before pushing. Tests never read a private vault.
 
+The hosted app reads generated JSON directly from the public main branch, because GitHub Actions bot commits do not trigger branch-based Pages rebuilds. Refreshing data therefore does not require republishing the app. Local previews use same-origin data fixtures. No credentials or private tracker state accompany these public requests.
+
 The previous weekly reachability workflow remains manually available; daily Full Tracker Audit replaces its schedule. A failed provider or blocked issuer is a report finding, not a fabricated verification success.

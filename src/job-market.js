@@ -5,7 +5,9 @@
   let cache=null,loading=null,loadedAt=0;
   function usable(feed,now=Date.now()){const age=now-Date.parse(feed?.lastSuccessfulFetchAt||feed?.fetchedAt);return !!feed&&!feed.refreshError&&['live','ready','ok'].includes(feed.status)&&Number.isFinite(age)&&age>=-60000&&age<=(feed.refreshTargetMinutes===60?5400000:900000);}
   function recentJob(job){const at=Date.parse(job?.created),seen=Date.parse(job?.lastSeenAt||job?.created),now=Date.now();return Number.isFinite(at)&&Number.isFinite(seen)&&now-at>=-60000&&now-at<=14*86400000&&now-seen>=-60000&&now-seen<=86400000;}
-  const FEED='data/job-market.json';
+  // Bot commits do not trigger Pages builds. Read the current public repository
+  // snapshot on the hosted app; local previews retain same-origin fixtures.
+  const FEED=global.location?.hostname==='alexandert96.github.io'?'https://raw.githubusercontent.com/AlexanderT96/Cert-Tracker-Public/main/data/job-market.json':'data/job-market.json';
   function freshness(feed,now=Date.now()){
     const at=Date.parse(feed?.fetchedAt||''),age=now-at;
     const source=Number.isFinite(at)?`Source updated ${new Date(at).toLocaleString()}. `:'No verified source timestamp. ';

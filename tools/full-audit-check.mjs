@@ -18,3 +18,6 @@ const context={vm,fs:{readFileSync:p=>String(p).endsWith('job-market.json')?JSON
 vm.createContext(context);const producer=fs.readFileSync('tools/refresh-job-market.mjs','utf8').replace(/^import .*;$/gm,'');
 await vm.runInContext(`(async()=>{${producer}})()`,context);assert.equal(requests,3);assert.equal(written.status,'live');const first=written.lastSuccessfulFetchAt;
 await vm.runInContext(`(async()=>{${producer}})()`,context);assert.equal(requests,3,'Manual runs must share the hourly budget');assert.equal(written.lastSuccessfulFetchAt,first,'Quota skips cannot renew timestamps');assert.equal(written.refreshTargetMinutes,60);
+const hosted={location:{hostname:'alexandert96.github.io'},CertTrackerV3:{marketReadiness:{}}};hosted.window=hosted;
+vm.runInNewContext(fs.readFileSync('src/job-market.js','utf8'),hosted);
+assert.equal(hosted.CertTrackerV3.jobMarket.FEED,'https://raw.githubusercontent.com/AlexanderT96/Cert-Tracker-Public/main/data/job-market.json','Hosted snapshots must not wait for Pages rebuilds');
