@@ -37,6 +37,7 @@ require(workspace.includes('data-ct-workspace'),'Workspace tabs must share the c
 require(workspace.includes('ct-mobile-navigation'),'Workspace shell must expose the compact mobile primary navigation.');
 require(workspace.includes('ct-mobile-more-layer'),'Workspace shell must keep secondary tools behind the mobile More sheet.');
 require(bootstrap.includes('else CT.workspaceShell?.decorate()'),'Startup must finish decorating an already-rendered page, including first-load mobile navigation.');
+require(bootstrap.includes("document.addEventListener('DOMContentLoaded',()=>setTimeout(start,0)"),'Full dashboard rendering must yield until after document readiness.');
 require(mobileCss.includes('transform-style:flat!important')&&mobileCss.includes('will-change:auto!important'),'Mobile panels must avoid oversized 3D compositor layers.');
 require(css.includes('background-attachment:scroll!important'),'Mobile backgrounds must scroll with the document.');
 require(mobileCss.includes('#tab-content{min-height:0!important;contain:none!important}'),'Mobile tab content must not retain an oversized composited scroll layer.');
