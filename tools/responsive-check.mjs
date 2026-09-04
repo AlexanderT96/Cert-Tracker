@@ -39,6 +39,11 @@ require(workspace.includes('ct-mobile-more-layer'),'Workspace shell must keep se
 require(bootstrap.includes('else CT.workspaceShell?.decorate()'),'Startup must finish decorating an already-rendered page, including first-load mobile navigation.');
 require(mobileCss.includes('transform-style:flat!important')&&mobileCss.includes('will-change:auto!important'),'Mobile panels must avoid oversized 3D compositor layers.');
 require(css.includes('background-attachment:scroll!important'),'Mobile backgrounds must scroll with the document.');
+require(mobileCss.includes('#tab-content{min-height:0!important;contain:none!important}'),'Mobile tab content must not retain an oversized composited scroll layer.');
+require(mobileCss.includes('clip-path:none!important'),'Tall mobile cards must avoid iOS clipped-layer paint gaps.');
+require(workspace.includes('global.CertTrackerTabNavigation=true'),'Workspace navigation must mark tab changes so stale scroll offsets are not restored.');
+require(workspace.includes("typeof global.renderTabContent==='function'"),'Workspace tabs must update content without rebuilding the entire application shell.');
+require(renderer.includes('window.CertTrackerTabNavigation ? 0 : window.scrollY'),'Tab changes must reset scroll while in-place updates preserve reading position.');
 require(personalization.includes('[data-workspace-tab=')&&personalization.includes('[data-ct-workspace='),'Personalization must reuse workspace-shell tabs instead of manufacturing duplicate menu buttons.');
 
 if(errors.length){console.error(`Responsive gate failed (${errors.length}):`);errors.forEach(e=>console.error(`- ${e}`));process.exit(1);}
