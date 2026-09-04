@@ -180,6 +180,8 @@ try{
   await desktop.page.locator('[data-workspace-tab="strategy"]').click();
   await desktop.page.locator('.career-explorer').waitFor();
   assert.equal(await desktop.page.locator('.ct-dual-brief').count(),0);
+  const roleIconAudit=await desktop.page.evaluate(()=>{const icons=[...document.querySelectorAll('.career-card h3 .ct-job-icon')];return {cards:document.querySelectorAll('.career-card').length,icons:icons.length,unique:new Set(icons.map(x=>x.dataset.roleIcon)).size};});
+  assert.deepEqual(roleIconAudit,{cards:70,icons:70,unique:70},'Every career option must have a distinct theme emblem');
   await desktop.page.locator('[data-career-search]').fill('GIS');
   await desktop.page.waitForFunction(()=>{
     const shown=[...document.querySelectorAll('[data-shortlist]')].map(el=>el.dataset.shortlist);
@@ -207,6 +209,7 @@ try{
   const {context,page}=await open({viewport:{width:430,height:932},deviceScaleFactor:3,hasTouch:true,...(engine==='firefox'?{}:{isMobile:true})});
   await page.waitForFunction(()=>document.documentElement.dataset.layout==='mobile');
   await persistentHealth(page);
+  assert.ok(await page.locator('#ct-mobile-navigation').count()===1,'Mobile navigation remains singular');
   await navigationInViewport(page);
   assert.equal(await page.locator('.tabs').isVisible(),false,'Desktop tabs must stay hidden on phones');
   assert.equal(await page.locator('.header-title').evaluate(el=>getComputedStyle(el).textShadow),'none');
@@ -227,6 +230,7 @@ try{
     await navigationInViewport(page);
     await persistentHealth(page);
     if(tab==='roadmap'){
+      assert.equal(await page.locator('.ct-map-scope .ct-job-icon').count(),1,'Active roadmap filter must use a theme emblem');
       const filters=page.locator('.ct-map-filter-disclosure'),summary=filters.locator('summary');
       assert.equal(await filters.evaluate(el=>el.open),false,'Map filters start collapsed on phones');
       const selected=await page.evaluate(()=>state.filter);
