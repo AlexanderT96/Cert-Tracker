@@ -8,7 +8,7 @@ const browser=await browserType.launch({headless:true});
 const errors=[];
 async function open(options){
   const context=await browser.newContext({ignoreHTTPSErrors:true,...options}),page=await context.newPage();
-  page.setDefaultTimeout(15000);page.setDefaultNavigationTimeout(60000);
+  page.setDefaultTimeout(15000);page.setDefaultNavigationTimeout(120000);
   page.on('pageerror',error=>{errors.push(error.message);console.error('Application error:',error.stack||error.message);});
   page.on('console',message=>{if(message.type()==='error'&&message.text().includes('[CertTracker] initial render failed'))errors.push(message.text());});
   page.on('requestfailed',request=>console.error('Request failed:',request.url(),request.failure()?.errorText));
