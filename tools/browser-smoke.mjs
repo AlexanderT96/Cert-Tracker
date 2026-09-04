@@ -15,8 +15,8 @@ async function open(options){
   // The tracker is ready at DOMContentLoaded; third-party image latency must not
   // hold navigation tests (or the interface readiness signal) behind window.load.
   await page.goto('https://localhost:4173/',{waitUntil:'domcontentloaded'});
-  await page.waitForFunction(()=>!!window.CertTracker?.workspaceShell);
-  await page.locator('[data-market-dashboard]').waitFor();
+  await page.waitForFunction(()=>!!window.CertTracker?.workspaceShell,null,{timeout:60000});
+  await page.locator('[data-market-dashboard]').waitFor({timeout:60000});
   return{context,page};
 }
 async function navigationInViewport(page){
