@@ -123,6 +123,12 @@
 .ct-line-icon{width:16px;height:16px;min-width:16px;display:inline-grid;place-items:center;color:var(--muted);vertical-align:-3px;margin-right:6px}
 .ct-line-icon svg{width:16px;height:16px;display:block;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .banner .ct-line-icon{color:currentColor;opacity:.9;margin-right:1px}
+.ct-job-icon{--ct-job-accent:var(--cyan);width:22px;height:22px;min-width:22px;display:inline-grid;place-items:center;color:var(--ct-job-accent);border:1px solid color-mix(in srgb,var(--ct-job-accent) 38%,var(--border));background:linear-gradient(145deg,color-mix(in srgb,var(--ct-job-accent) 12%,var(--surface-2)),var(--surface));clip-path:polygon(4px 0,100% 0,100% calc(100% - 4px),calc(100% - 4px) 100%,0 100%,0 4px);box-shadow:inset 0 0 8px color-mix(in srgb,var(--ct-job-accent) 8%,transparent)}
+.ct-job-icon svg{width:16px;height:16px;display:block;fill:none;stroke:currentColor;stroke-width:1.55;stroke-linecap:round;stroke-linejoin:round}.ct-job-icon .ct-role-sig{fill:currentColor;stroke:none}
+.ct-job-icon-infrastructure,.ct-job-icon-cloud,.ct-job-icon-software{--ct-job-accent:#68c5ff}.ct-job-icon-network,.ct-job-icon-data{--ct-job-accent:#16e7df}.ct-job-icon-defence,.ct-job-icon-offensive{--ct-job-accent:#ff6b7c}.ct-job-icon-identity,.ct-job-icon-governance{--ct-job-accent:#b69cff}.ct-job-icon-appsec,.ct-job-icon-leadership{--ct-job-accent:#ffbd59}.ct-job-icon-physical,.ct-job-icon-industrial{--ct-job-accent:#72e5ae}.ct-job-icon-customer,.ct-job-icon-contexts{--ct-job-accent:#86a7b5}.ct-job-icon-path{--ct-job-accent:#00f1e6}
+.filter-chip{display:inline-flex!important;align-items:center!important;gap:7px!important}.filter-chip .ct-job-icon{width:20px;height:20px;min-width:20px}.filter-chip .ct-job-icon svg{width:14px;height:14px}.filter-group-toggle .ct-job-icon{opacity:.82}.filter-chip.active .ct-job-icon{color:#031316;background:var(--cyan);border-color:var(--cyan)}
+.ct-map-scope strong,.cert-filter-disclosure>summary>span:first-child{display:flex;align-items:center;gap:7px}.ct-map-scope .ct-job-icon{width:24px;height:24px;min-width:24px}.ct-filter-summary-icon{display:inline-grid;vertical-align:middle;margin-right:6px}
+.role-match-name,.career-card h3{display:flex;align-items:center;gap:8px}.career-card h3 .ct-job-icon{width:26px;height:26px;min-width:26px}
 .cbm-svg,.cbm-check{filter:none!important;text-shadow:none!important;box-shadow:none!important}
 .ct-command-dock #ct3-launcher{letter-spacing:.01em!important}
 
