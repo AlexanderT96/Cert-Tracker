@@ -26,6 +26,8 @@
   }
 
   function bannerKey(banner){
+    if(banner.dataset.ctNotificationKey)return banner.dataset.ctNotificationKey;
+
     // Reuse the legacy event IDs when available so dismissal stays stable as the
     // day-count changes. This also keeps old/new notification behaviour compatible.
     const close=banner.querySelector('.banner-x');
@@ -36,7 +38,7 @@
 
     // PERSONAL_DEADLINES do not have an individual close ID. Their first token is a
     // changing "123d ·" countdown, so remove it and key the stable label/date instead.
-    let text=normalizedText(banner)
+    const text=normalizedText(banner)
       .replace(/^[^\p{L}\p{N}]*/u,'')
       .replace(/^\d+d\s*·\s*/,'')
       .trim();
