@@ -19,10 +19,28 @@
     try{localStorage.setItem(STORAGE_KEY,JSON.stringify(values.slice(-120)));}catch{}
   }
 
-  function fingerprint(banner){
+  function normalizedText(banner){
     const clone=banner.cloneNode(true);
     clone.querySelectorAll('button').forEach(button=>button.remove());
-    return (clone.textContent||'').replace(/\s+/g,' ').trim().slice(0,500);
+    return (clone.textContent||'').replace(/\s+/g,' ').trim();
+  }
+
+  function bannerKey(banner){
+    // Reuse the legacy event IDs when available so dismissal stays stable as the
+    // day-count changes. This also keeps old/new notification behaviour compatible.
+    const close=banner.querySelector('.banner-x');
+    const onclick=close?.getAttribute('onclick')||'';
+    const eventMatch=onclick.match(/dismissEvent\(\s*(['"])(.*?)\1\s*\)/);
+    if(eventMatch?.[2])return `event:${eventMatch[2]}`;
+    if(/dismissBackup\s*\(/.test(onclick))return `backup:${state?.lastBackup||'never'}`;
+
+    // PERSONAL_DEADLINES do not have an individual close ID. Their first token is a
+    // changing "123d ·" countdown, so remove it and key the stable label/date instead.
+    let text=normalizedText(banner)
+      .replace(/^[^\p{L}\p{N}]*/u,'')
+      .replace(/^\d+d\s*·\s*/,'')
+      .trim();
+    return text?`text:${text.slice(0,500)}`:'';
   }
 
   function directBannerChildren(content){
@@ -68,7 +86,7 @@
       const dismissed=new Set(readDismissed());
       const visible=[];
       banners.forEach(banner=>{
-        const key=fingerprint(banner);
+        const key=bannerKey(banner);
         if(key&&dismissed.has(key)){
           banner.remove();
           return;
@@ -84,9 +102,7 @@
         return;
       }
 
-      if(!center){
-        center=makeCenter();
-      }
+      if(!center)center=makeCenter();
       if(content.firstElementChild!==center)content.prepend(center);
 
       const target=center.querySelector('.ct-notification-stack');
@@ -104,10 +120,23 @@
     const center=document.querySelector('#tab-content > .ct-notification-center');
     if(!center)return;
     const dismissed=new Set(readDismissed());
+    const legacyEventIds=[];
+
     center.querySelectorAll('.ct-notification-stack > .banner').forEach(banner=>{
-      const key=banner.dataset.ctNotificationKey||fingerprint(banner);
-      if(key)dismissed.add(key);
+      const key=banner.dataset.ctNotificationKey||bannerKey(banner);
+      if(!key)return;
+      dismissed.add(key);
+      if(key.startsWith('event:'))legacyEventIds.push(key.slice(6));
+      if(key.startsWith('backup:')&&typeof state!=='undefined')state.dismissedBackup=true;
     });
+
+    // Persist market/freshness IDs through the tracker's existing state as well as the
+    // consolidated centre's stable keys. That prevents them being regenerated later.
+    if(typeof state!=='undefined'&&Array.isArray(state.eventsDismissed)&&legacyEventIds.length){
+      legacyEventIds.forEach(id=>{if(id&&!state.eventsDismissed.includes(id))state.eventsDismissed.push(id);});
+      try{localStorage.setItem(SK.eventsDis,JSON.stringify(state.eventsDismissed));}catch{}
+    }
+
     writeDismissed(Array.from(dismissed));
     center.remove();
   }
