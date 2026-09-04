@@ -112,11 +112,20 @@
         let members=[];try{members=CERTS.filter(ch.test);}catch{}
         const totalWeight=members.reduce((sum,cert)=>sum+Math.max(1,Number(cert.cvValue||0)),0),done=members.filter(cert=>P?.[cert.id]),doneWeight=done.reduce((sum,cert)=>sum+Math.max(1,Number(cert.cvValue||0)),0);
         const coverage=totalWeight?doneWeight/totalWeight:0;
-        const next=nextFor(ch.test,{filterId:ch.id,label:ch.label,passes:P});
-        const goal=typeof global.goalFor==='function'?global.goalFor(ch.id):{band:''};
+        // Keep this dashboard summary cheap. Detailed recommendation scoring is
+        // performed when a role is opened, not once for every role during a tab switch.
+        const next=members.filter(cert=>!P?.[cert.id]&&!state.skipped?.[cert.id]&&(cert.deps||[]).every(id=>P?.[id]))
+          .sort((a,b)=>Number(b.cvValue||0)-Number(a.cvValue||0)||Number(a.hours||9999)-Number(b.hours||9999))[0]||null;
+        const label=cleanLabel(ch.label);
+        let band='£45–65k';
+        if(/Principal|Lead|Chartered|Head|Architect/i.test(label))band='£80–110k';
+        else if(/Consultant|Manager/i.test(label))band='£70–95k';
+        else if(/Engineer|Specialist/i.test(label))band='£55–75k';
+        else if(/Analyst/i.test(label))band='£35–55k';
+        else if(/\bSE\b/.test(label))band='£50–70k';
         const track=gid==='cloud'?'A':gid==='physical'?'B':gid==='cyber'?'C':'';
         const exp=track?(state.expLog||[]).filter(entry=>entry.g===track).length:0;
-        return {id:ch.id,label:cleanLabel(ch.label),cov:coverage,done:done.length,total:members.length,band:goal.band||'',next,exp};
+        return {id:ch.id,label,cov:coverage,done:done.length,total:members.length,band,next,exp};
       }).filter(row=>row.total>=4).sort((a,b)=>b.cov-a.cov||b.done-a.done||a.label.localeCompare(b.label));
     };
   }

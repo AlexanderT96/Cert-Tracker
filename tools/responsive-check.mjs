@@ -11,16 +11,18 @@ const personalization=read('src/personalization.js');
 const sw=read('sw.js');
 const bootstrap=read('src/bootstrap.js');
 const renderer=read('src/renderer.js');
+const alignmentCss=read('platform-alignment.css');
 
 function require(condition,message){if(!condition)errors.push(message);}
 require(!/loadState\(\);\s*renderApp\(\);\s*$/.test(renderer),'Initial render must wait for the complete workspace shell, not flash three legacy tabs.');
 
-for(const asset of ['responsive-layout.css','src/responsive-layout.js','mobile-navigation.css']){
+for(const asset of ['responsive-layout.css','src/responsive-layout.js','mobile-navigation.css','platform-alignment.css']){
   require(index.includes(asset),`index.html is missing responsive asset ${asset}`);
   require(sw.includes(`./${asset}`),`service worker is missing responsive asset ${asset}`);
 }
 require(index.indexOf('responsive-layout.css')>index.indexOf('mechanical-chassis.css'),'Responsive CSS must load after the mechanical chassis layer.');
 require(index.indexOf('mobile-navigation.css')>index.indexOf('browser-compat.css'),'Compact mobile navigation CSS must be the final responsive presentation layer.');
+require(index.indexOf('platform-alignment.css')>index.indexOf('notification-center.css'),'Platform alignment must be the final layout cascade.');
 require(js.includes("root.dataset.layout=mode"),'Responsive detector must expose data-layout on the root element.');
 require(js.includes("'(pointer: coarse)'"),'Responsive detector must account for coarse/touch input.');
 require(js.includes('visualViewport'),'Responsive detector must use visualViewport where available for mobile Safari accuracy.');
@@ -36,6 +38,7 @@ require(workspace.includes('dedupeNavigation'),'Workspace shell must actively re
 require(workspace.includes('data-ct-workspace'),'Workspace tabs must share the canonical personalization workspace attribute.');
 require(workspace.includes('ct-mobile-navigation'),'Workspace shell must expose the compact mobile primary navigation.');
 require(workspace.includes('ct-mobile-more-layer'),'Workspace shell must keep secondary tools behind the mobile More sheet.');
+require(workspace.includes('ct-mobile-today-button'),'Today recommendations must remain a visible first-class mobile action.');
 require(bootstrap.includes('else CT.workspaceShell?.decorate()'),'Startup must finish decorating an already-rendered page, including first-load mobile navigation.');
 require(bootstrap.includes("document.addEventListener('DOMContentLoaded',()=>setTimeout(start,0)"),'Full dashboard rendering must yield until after document readiness.');
 require(mobileCss.includes('transform-style:flat!important')&&mobileCss.includes('will-change:auto!important'),'Mobile panels must avoid oversized 3D compositor layers.');
@@ -46,6 +49,9 @@ require(workspace.includes('global.CertTrackerTabNavigation=true'),'Workspace na
 require(workspace.includes("typeof global.renderTabContent==='function'"),'Workspace tabs must update content without rebuilding the entire application shell.');
 require(renderer.includes('window.CertTrackerTabNavigation ? 0 : window.scrollY'),'Tab changes must reset scroll while in-place updates preserve reading position.');
 require(personalization.includes('[data-workspace-tab=')&&personalization.includes('[data-ct-workspace='),'Personalization must reuse workspace-shell tabs instead of manufacturing duplicate menu buttons.');
+for(const mode of ['mobile','tablet','desktop'])require(alignmentCss.includes(`data-layout=\"${mode}\"`),`Missing independent ${mode} emblem alignment rules.`);
+require(alignmentCss.includes('grid-template-columns:42px minmax(0,1fr) auto auto'),'Banner icons, text and actions must occupy separate grid columns.');
+require(alignmentCss.includes('.banner>.ct-line-icon')&&alignmentCss.includes('position:static!important'),'Banner icons must stay in layout flow instead of overlaying text.');
 
 if(errors.length){console.error(`Responsive gate failed (${errors.length}):`);errors.forEach(e=>console.error(`- ${e}`));process.exit(1);}
 console.log('Responsive device-layout, compact mobile navigation and duplicate-menu checks passed.');

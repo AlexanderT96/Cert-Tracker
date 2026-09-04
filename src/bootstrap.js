@@ -10,17 +10,19 @@
   function start(){
     const app=document.getElementById('app');
     if(app){
-      new MutationObserver(postRender).observe(app,{childList:true,subtree:true});
       try{
         if(!app.childNodes.length&&typeof renderApp==='function')renderApp();
         // The legacy renderer runs before the workspace shell. Finish that existing render once.
         else CT.workspaceShell?.decorate();
       }catch(error){console.error('[CertTracker] initial render failed',error);}
+      const content=document.getElementById('tab-content');
+      if(content)new MutationObserver(postRender).observe(content,{childList:true,subtree:false});
     }
     postRender();
     CT.notifications?.checkAndNotify?.();
     CT.events.emit('ready',{version:CT.version,diagnostics:CT.validation?.diagnostics,path:CT.phases?.pathStatus?.()});
   }
+  global.addEventListener('certtracker:workspace-rendered',postRender);
   // Rendering the full dashboard during HTML parsing blocks DOM readiness and
   // delays the first usable navigation paint on slower phones. Yield once so
   // the document and browser chrome can settle before the application build.

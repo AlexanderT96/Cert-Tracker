@@ -139,12 +139,8 @@
     return Object.freeze({levels:LEVEL_ORDER.length,pathways:paths.length,archetypes:Object.keys(TITLES).length,issues:Object.freeze(issues)});
   }
 
-  // Preserve the legacy roleMatches() contract while attaching the stronger readiness model.
-  if(typeof global.roleMatches==='function'&&!global.roleMatches.__rankWrapped){
-    const original=global.roleMatches;
-    const wrapped=function(){return original().map(row=>{const item=CT.marketReadiness.filterItem(row.id);if(!item)return row;const path=CT.dualPillarDepth.pathwayProfile(item),role=CT.marketReadiness.roleRowFromPath(path),rank=rankForRole(role);return {...row,marketAccess:role.marketAccess,capability:role.capability,readiness:role.score,status:role.status,rank};});};
-    wrapped.__rankWrapped=true;global.roleMatches=wrapped;
-  }
+  // Keep readiness behind the explicit APIs below. Eagerly decorating all compact
+  // dashboard rows calculated unused detail and blocked mobile navigation.
 
   CT.roleReadiness=Object.freeze({LEVEL_ORDER,EVIDENCE_ORDER,RANKS,TITLES,LEVEL_NARRATIVE,evidenceStats,leadershipScore,snapshot,qualifies,gapsFor,titleFor,rankForRole,forPathway,forFilter,active,all,byArchetype,audit});
 })(window);
