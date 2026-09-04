@@ -16,6 +16,7 @@ const pathwayAudit=m.pathwayAudit();
 assert.equal(pathwayAudit.roles,m.ROLES.length);
 assert.equal(pathwayAudit.stages,5);
 assert.equal(pathwayAudit.complete,true,`Incomplete career pathways: ${pathwayAudit.missing.join(', ')}`);
+assert.ok(pathwayAudit.minCertifications>=10,`Sparse career pathway detected: minimum route has ${pathwayAudit.minCertifications} certifications`);
 for(const role of m.ROLES){
   const pathway=m.pathway(role);
   assert.equal(pathway.stages.length,5,`${role.id}: expected entry through endgame stages`);
