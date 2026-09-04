@@ -112,7 +112,8 @@
         if(banner.parentElement!==target)target.appendChild(banner);
       });
       const count=center.querySelector('.ct-notification-count');
-      if(count)count.textContent=String(visible.length);
+      const nextCount=String(visible.length);
+      if(count&&count.textContent!==nextCount)count.textContent=nextCount;
     }finally{
       decorating=false;
     }

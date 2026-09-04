@@ -106,6 +106,13 @@ assert.equal(delayed.content.querySelectorAll('[data-market-dashboard]').length,
 }
 console.log('UI lifecycle gate passed: panel and navigation observers settle, updates render, refresh fetches once and stale workspaces stay untouched.');
 
+// Notification decoration observes the same subtree it updates. Its count must
+// therefore be idempotent or each write schedules another microtask forever.
+{
+  const source=fs.readFileSync('src/notification-center-ui.js','utf8');
+  assert.match(source,/if\(count&&count\.textContent!==nextCount\)count\.textContent=nextCount/,'Notification count writes must settle when the value is unchanged');
+}
+
 // Source freshness is distinct from the time a user clicks Refresh.
 {
   const now=Date.parse('2026-09-02T12:00:00Z'),feed={status:'live',fetchedAt:new Date(now).toISOString(),jobs:[]};
