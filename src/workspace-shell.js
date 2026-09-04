@@ -51,7 +51,14 @@
     nav.innerHTML=availableTabs().map(tabButton).join('');
     dedupeNavigation(nav);
     installNavigationGuard(nav);
-    nav.querySelectorAll('[data-workspace-tab]').forEach(button=>button.addEventListener('click',()=>{state.currentTab=button.dataset.workspaceTab;global.renderApp();}));
+    nav.querySelectorAll('[data-workspace-tab]').forEach(button=>button.addEventListener('click',()=>switchTab(button.dataset.workspaceTab)));
+  }
+  function syncDesktopNavigation(){
+    document.querySelectorAll('[data-workspace-tab]').forEach(button=>{
+      const active=button.dataset.workspaceTab===state.currentTab;
+      button.classList.toggle('active',active);
+      if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');
+    });
   }
   function renderHeader(){const title=document.querySelector('.header-title');if(title)title.textContent=CT.personalization.title();const sub=document.querySelector('.header-sub');if(sub&&/^v24\b/.test(sub.textContent||''))sub.innerHTML=sub.innerHTML.replace(/^v24/,`v${esc(CT.version.app)}`);document.title=CT.personalization.title();}
 
@@ -152,13 +159,30 @@
   }
   function decorate(){ensureActiveTab();syncMobileNavigation();renderHeader();renderNavigation();renderWorkspaceContent();renderFocusedRoute();CT.personalization.organiseDock?.();}
   function renderApp(){ensureActiveTab();originalRenderApp();decorate();}
-  function switchTab(tab){const tabs=availableTabs();if(!tabs.includes(tab))return;state.currentTab=tab;renderApp();}
+  function switchTab(tab){
+    const tabs=availableTabs();if(!tabs.includes(tab)||tab===state.currentTab){closeMobileMore();return;}
+    state.currentTab=tab;
+    global.CertTrackerTabNavigation=true;
+    global.scrollTo({top:0,left:0,behavior:'instant'});
+    syncDesktopNavigation();syncMobileNavigation();closeMobileMore();
+    const content=document.getElementById('tab-content');
+    if(content&&typeof global.renderTabContent==='function'){
+      content.setAttribute('aria-busy','true');
+      content.innerHTML='';
+      global.renderTabContent();
+      renderWorkspaceContent();
+      renderFocusedRoute();
+      content.removeAttribute('aria-busy');
+      CT.personalization.organiseDock?.();
+    }else renderApp();
+    global.CertTrackerTabNavigation=false;
+  }
 
   global.renderApp=renderApp;
   global.switchTab=switchTab;
   global.addEventListener('certtracker:layout-changed',()=>{syncMobileNavigation();if(document.documentElement.dataset.layout!=='mobile')closeMobileMore();});
   global.addEventListener('keydown',event=>{if(event.key==='Escape'&&!document.getElementById('ct-mobile-more-layer')?.hidden)closeMobileMore();});
-  CT.workspaceShell=Object.freeze({renderApp,switchTab,availableTabs,decorate,focusHtml,dedupeNavigation,syncMobileNavigation});
+  CT.workspaceShell=Object.freeze({renderApp,switchTab,availableTabs,decorate,focusHtml,dedupeNavigation,syncMobileNavigation,syncDesktopNavigation});
   // bootstrap.js owns initial rendering. Keeping this module passive prevents duplicate
   // first renders and keeps the browser regression harness lightweight.
 })(window);

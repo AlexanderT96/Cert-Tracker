@@ -8,13 +8,15 @@ const browser=await browserType.launch({headless:true});
 const errors=[];
 async function open(options){
   const context=await browser.newContext({ignoreHTTPSErrors:true,...options}),page=await context.newPage();
-  page.setDefaultTimeout(15000);page.setDefaultNavigationTimeout(60000);
+  page.setDefaultTimeout(15000);page.setDefaultNavigationTimeout(120000);
   page.on('pageerror',error=>{errors.push(error.message);console.error('Application error:',error.stack||error.message);});
   page.on('console',message=>{if(message.type()==='error'&&message.text().includes('[CertTracker] initial render failed'))errors.push(message.text());});
   page.on('requestfailed',request=>console.error('Request failed:',request.url(),request.failure()?.errorText));
-  await page.goto('https://localhost:4173/');
-  await page.waitForFunction(()=>!!window.CertTracker?.workspaceShell);
-  await page.locator('[data-market-dashboard]').waitFor();
+  // The tracker is ready at DOMContentLoaded; third-party image latency must not
+  // hold navigation tests (or the interface readiness signal) behind window.load.
+  await page.goto('https://localhost:4173/',{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>!!window.CertTracker?.workspaceShell,null,{timeout:60000});
+  await page.locator('[data-market-dashboard]').waitFor({timeout:60000});
   return{context,page};
 }
 async function navigationInViewport(page){
@@ -179,6 +181,8 @@ try{
   assert.equal(await page.locator('#ct-mobile-navigation').evaluate(el=>getComputedStyle(el).backdropFilter),'none');
   const transforms=await page.locator('.ct-depth-surface').evaluateAll(nodes=>nodes.map(el=>getComputedStyle(el).transform));
   assert.ok(transforms.every(value=>value==='none'),'Phone panels must not use desktop 3D layers');
+  const cardLayers=await page.locator('#tab-content .ct3-card').evaluateAll(nodes=>nodes.map(el=>({clip:getComputedStyle(el).clipPath,contain:getComputedStyle(el).contain})));
+  assert.ok(cardLayers.every(layer=>layer.clip==='none'&&layer.contain==='none'),'Tall phone cards must stay in the normal paint layer');
   for(const tab of ['learning','roadmap','certifications','dashboard']){
     console.log(`${engine}: mobile tab ${tab}`);
     await page.locator(`[data-mobile-tab="${tab}"]`).click();
@@ -244,7 +248,8 @@ try{
   await page.locator('.ct-mobile-more-action').first().click();
   await page.waitForFunction(()=>state.currentTab==='strategy');
   await page.locator('[data-mobile-tab="dashboard"]').click();
-  await page.evaluate(()=>window.scrollTo(0,0));
+  await page.waitForFunction(()=>scrollY===0);
+  assert.equal(await page.evaluate(()=>scrollY),0,'Workspace changes must not restore a stale deep scroll offset');
   await page.screenshot({path:`/tmp/certtracker-${engine}-mobile.png`,animations:'disabled',timeout:30000});
   console.log(`${engine}: phone reload`);
   await page.reload();await navigationInViewport(page);

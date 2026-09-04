@@ -427,11 +427,13 @@ function renderApp() {
 function renderTabContent() {
   const el = document.getElementById('tab-content');
   if (!el) return;
-  const y = window.scrollY;
+  // Workspace changes start at the top. Restoring a longer tab's offset can
+  // strand a shorter mobile page inside a large blank scroll range.
+  const y = window.CertTrackerTabNavigation ? 0 : window.scrollY;
   if (state.currentTab === 'dashboard')      el.innerHTML = renderDashboard();
   if (state.currentTab === 'strategy')       el.innerHTML = renderStrategy();
   if (state.currentTab === 'certifications') el.innerHTML = renderCertifications();
-  requestAnimationFrame(() => window.scrollTo({ top: y, behavior: 'instant' }));
+  requestAnimationFrame(() => window.scrollTo({ top: y, left: 0, behavior: 'instant' }));
 }
 
 function switchTab(tab) { state.currentTab = tab; renderApp(); }
