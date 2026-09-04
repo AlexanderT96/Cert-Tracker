@@ -9,12 +9,14 @@ vm.runInNewContext(fs.readFileSync('src/career-options.js','utf8'),sandbox);
 const m=CT.careerOptions;
 assert.equal(Object.keys(m.FAMILIES).length,14);
 assert.ok(m.ROLES.length>=65);
+assert.equal(Object.keys(m.ROLE_ROUTE_PROFILES||{}).length,m.ROLES.length,'Every role must have an explicit route profile');
 assert.equal(new Set(m.ROLES.map(r=>r.id)).size,m.ROLES.length);
 for(const r of m.ROLES){assert.ok(m.FAMILIES[r.family]);assert.ok(!m.CONTEXTS[r.id]);assert.equal(m.requirements(r).length,4);assert.equal(m.assess(r).readiness,null);}
 for(const r of m.ROLES)for(const id of r.certs)assert.ok(sandbox.CERTS.some(c=>c.id===id),`${r.id}: unknown credential ${id}`);
 const pathwayAudit=m.pathwayAudit();
 assert.equal(pathwayAudit.roles,m.ROLES.length);
 assert.equal(pathwayAudit.stages,5);
+assert.equal(pathwayAudit.bespoke,m.ROLES.length,'Every role must use a bespoke route profile');
 assert.equal(pathwayAudit.complete,true,`Incomplete career pathways: ${pathwayAudit.missing.join(', ')}`);
 assert.ok(pathwayAudit.minCertifications>=10,`Sparse career pathway detected: minimum route has ${pathwayAudit.minCertifications} certifications`);
 for(const role of m.ROLES){
@@ -24,6 +26,7 @@ for(const role of m.ROLES){
   for(const stage of pathway.stages){
     assert.ok(stage.certIds.length,`${role.id}: ${stage.key} has no certification`);
     assert.ok(stage.plan?.objective&&stage.plan?.practice&&stage.plan?.evidence&&stage.plan?.exit,`${role.id}: ${stage.key} has no attached plan`);
+    assert.ok(stage.relevance,`${role.id}: ${stage.key} has no credential relevance rationale`);
     for(const id of stage.certIds)assert.ok(sandbox.CERTS.some(c=>c.id===id),`${role.id}: pathway references unknown credential ${id}`);
   }
 }
