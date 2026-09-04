@@ -191,6 +191,15 @@ try{
   assert.deepEqual(roleIconAudit,{cards:70,icons:70,unique:70},'Every career option must have a distinct theme emblem');
   const pathwayAudit=await desktop.page.evaluate(()=>{const pathways=[...document.querySelectorAll('[data-career-pathway]')];return {cards:document.querySelectorAll('.career-card').length,pathways:pathways.length,stages:pathways.every(pathway=>pathway.querySelectorAll('[data-pathway-stage]').length===5),plans:pathways.every(pathway=>[...pathway.querySelectorAll('[data-pathway-stage]')].every(stage=>stage.querySelectorAll('p').length>=3))};});
   assert.deepEqual(pathwayAudit,{cards:70,pathways:70,stages:true,plans:true},'Every career option must expose a five-stage plan');
+  await desktop.page.setViewportSize({width:390,height:844});
+  const mobilePathway=desktop.page.locator('.career-pathway-details').first();
+  await mobilePathway.locator('summary').click();
+  const pathwayLayout=await mobilePathway.evaluate(details=>{const ladder=details.querySelector('.career-pathway-ladder');const stages=[...details.querySelectorAll('.career-pathway-step')];return {columns:getComputedStyle(ladder).gridTemplateColumns,columnCount:getComputedStyle(ladder).gridTemplateColumns.trim().split(/\s+/).length,stageCount:stages.length,stageOverflow:stages.some(stage=>stage.scrollWidth>stage.clientWidth+1),verticalText:stages.some(stage=>getComputedStyle(stage).writingMode!=='horizontal-tb'||getComputedStyle(stage).wordBreak==='break-all')};});
+  assert.equal(pathwayLayout.columnCount,1,'Phone pathway stages must stack into readable cards');
+  assert.equal(pathwayLayout.stageCount,5,'Phone pathway must retain all five stages');
+  assert.equal(pathwayLayout.stageOverflow,false,'Phone pathway stage cards must not overflow');
+  assert.equal(pathwayLayout.verticalText,false,'Phone pathway text must remain horizontal');
+  await desktop.page.setViewportSize({width:1280,height:900});
   await desktop.page.locator('[data-career-search]').fill('GIS');
   await desktop.page.waitForFunction(()=>{
     const shown=[...document.querySelectorAll('[data-shortlist]')].map(el=>el.dataset.shortlist);
