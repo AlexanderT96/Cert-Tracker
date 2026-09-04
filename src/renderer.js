@@ -343,7 +343,7 @@ function simTogglePass(id) {
   if (state.simPasses[id]) delete state.simPasses[id]; else state.simPasses[id] = 'sim';
   renderApp();
 }
-function clearSim() { state.simPasses = {}; renderApp(); }
+function clearSim(){state.simPasses={};renderApp();}
 function editPace2() {
   const v = prompt('Study hours per week the candidate expect AFTER Sep 2026 (stored only in this browser):', state.pace2);
   if (v === null) return;
@@ -354,7 +354,6 @@ function editPace2() {
     renderApp();
   }
 }
-// Experience / portfolio log — because credentials open the door and experience walks through it
 function saveExpLog() { try { localStorage.setItem(SK.explog, JSON.stringify(state.expLog)); } catch {} }
 function addExp() {
   const t = prompt('Describe the experience (lab project, deployment, incident, design win):');
@@ -368,7 +367,6 @@ function delExp(i) {
   if (!confirm('Remove this experience entry?')) return;
   state.expLog.splice(i, 1); saveExpLog(); renderApp();
 }
-// Fluctuating role recommender — ranks every role by share of its credentials earned (value-weighted)
 function roleMatches() {
   const { filterGroups } = getFilterDefs();
   const P = effPasses();
@@ -385,10 +383,15 @@ function roleMatches() {
     const next = members
       .filter(c => !P[c.id] && (c.deps || []).every(d => P[d]))
       .sort((a, b) => (b.cvValue || 0) - (a.cvValue || 0))[0];
-    const goal = goalFor(ch.id);
+    const label = ch.label.replace(/^[^A-Za-z]+/, '').replace(/\s*▾$/, '').trim();
+    const band = /Principal|Lead|Chartered|Head|Architect/i.test(label) ? '£80–110k'
+      : /Consultant|Manager/i.test(label) ? '£70–95k'
+      : /Engineer|Specialist/i.test(label) ? '£55–75k'
+      : /Analyst/i.test(label) ? '£35–55k'
+      : /\bSE\b/.test(label) ? '£50–70k' : '£45–65k';
     const trk = gid === 'cloud' ? 'A' : gid === 'physical' ? 'B' : gid === 'cyber' ? 'C' : '';
     const exp = trk ? state.expLog.filter(e => e.g === trk).length : 0;
-    return { id: ch.id, label: ch.label.replace(/\s*▾$/, ''), cov, done: done.length, total: members.length, band: goal.band, next, exp };
+    return { id: ch.id, label: ch.label.replace(/\s*▾$/, ''), cov, done: done.length, total: members.length, band, next, exp };
   })
     .filter(r => r.total >= 4)
     .sort((a, b) => b.cov - a.cov || b.done - a.done);

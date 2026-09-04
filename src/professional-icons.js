@@ -126,7 +126,19 @@
   }
 
   function apply(root=document){labelLauncher(root);replaceMedallions(root);decorateCertRows(root);decorateMedalShelf(root);bannerIcons(root);stripDecorativeSymbols(root);}
-  function init(){apply();let queued=false;new MutationObserver(mutations=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;for(const m of mutations){for(const n of m.addedNodes){if(n.nodeType===1)apply(n);}}labelLauncher();replaceMedallions();decorateCertRows();decorateMedalShelf();bannerIcons();stripDecorativeSymbols();});}).observe(document.body,{childList:true,subtree:true});}
+  function init(){
+    apply();let queued=false,pending=[];
+    new MutationObserver(mutations=>{
+      for(const m of mutations)for(const n of m.addedNodes)if(n.nodeType===1)pending.push(n);
+      if(queued)return;queued=true;
+      requestAnimationFrame(()=>{
+        queued=false;
+        const roots=pending.filter(node=>node.isConnected).filter((node,index,list)=>!list.some((other,i)=>i!==index&&other.contains?.(node)));
+        pending=[];
+        roots.forEach(apply);
+      });
+    }).observe(document.body,{childList:true,subtree:true});
+  }
 
   CT.professionalIcons=Object.freeze({apply,icons:ICONS,tiers:Object.freeze([...TIERS]),rankToTier:RANK_TO_TIER});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();

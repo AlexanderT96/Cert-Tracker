@@ -3,7 +3,40 @@
    Phones use one primary bottom rail plus an on-demand More sheet. */
 
 #ct-mobile-navigation,
-#ct-mobile-more-layer{display:none}
+#ct-mobile-more-layer,
+#ct-mobile-today-button{display:none}
+
+html[data-layout="mobile"] #ct-mobile-today-button{
+  position:fixed;
+  right:calc(var(--ct-mobile-safe-right) + 4px);
+  bottom:calc(var(--ct-mobile-safe-bottom) + 69px);
+  z-index:9994;
+  display:block;
+  max-width:calc(100vw - var(--ct-mobile-safe-left) - var(--ct-mobile-safe-right) - 8px);
+  min-height:42px;
+  padding:9px 14px 9px 39px;
+  border:1px solid rgba(22,217,227,.54);
+  border-radius:4px;
+  background:linear-gradient(180deg,rgba(10,42,49,.98),rgba(3,17,22,.99));
+  color:#dffcff;
+  box-shadow:0 0 0 4px rgba(1,6,9,.88),0 0 18px rgba(0,239,245,.14);
+  font:700 11px/1.2 "Segoe UI Variable Text","Segoe UI",system-ui,sans-serif;
+  letter-spacing:.025em;
+  text-align:left;
+  white-space:nowrap;
+}
+html[data-layout="mobile"] #ct-mobile-today-button::before{
+  content:"";
+  position:absolute;
+  left:8px;
+  top:50%;
+  width:24px;
+  height:24px;
+  transform:translateY(-50%);
+  background:url("assets/hud/calendar.png") center/contain no-repeat;
+}
+html[data-layout="mobile"] #ct-mobile-today-button:focus-visible{outline:2px solid #69ffff;outline-offset:3px}
+html.ct-mobile-menu-open[data-layout="mobile"] #ct-mobile-today-button{visibility:hidden}
 
 html[data-layout="mobile"] .tabs{display:none!important}
 html[data-layout="mobile"] .ct-command-dock{display:none!important}
@@ -43,8 +76,8 @@ html[data-layout="mobile"] #ct-mobile-navigation button{
   border-radius:4px;
   background:transparent;
   color:#8eabb5;
-  font:700 9px/1.15 "Segoe UI Variable Text","Segoe UI",system-ui,sans-serif;
-  letter-spacing:.055em;
+  font:700 8px/1.15 "Segoe UI Variable Text","Segoe UI",system-ui,sans-serif;
+  letter-spacing:.025em;
   text-transform:uppercase;
   white-space:nowrap;
   overflow:hidden;

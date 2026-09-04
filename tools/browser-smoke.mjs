@@ -26,6 +26,10 @@ async function navigationInViewport(page){
   const box=await nav.boundingBox(),viewport=page.viewportSize();
   assert.ok(box&&box.y>=0&&box.y+box.height<=viewport.height+1,'Mobile navigation must remain inside the visible viewport');
   assert.equal(await nav.locator('button').count(),5,'Expected Dashboard, Learn, Map, Certs and More');
+  const today=page.locator('#ct-mobile-today-button');
+  await today.waitFor({state:'visible'});
+  const todayBox=await today.boundingBox();
+  assert.ok(todayBox&&todayBox.y+todayBox.height<=box.y+1,'Today recommendations must sit visibly above the mobile navigation');
 }
 async function persistentHealth(page){
   const button=page.locator('#ct-data-help');
@@ -74,6 +78,32 @@ async function dialogControls(page){
     return issues;
   });
   assert.deepEqual(overlaps,[],'Dialog actions, headings and rows must not overlap');
+}
+async function alignmentAudit(page,expectedMode){
+  await page.waitForFunction(mode=>document.documentElement.dataset.layout===mode,expectedMode);
+  const issues=await page.evaluate(mode=>{
+    const issues=[],overlap=(a,b)=>Math.min(a.right,b.right)-Math.max(a.left,b.left)>1&&Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)>1;
+    for(const banner of document.querySelectorAll('.banner')){
+      if(!banner.getClientRects().length)continue;
+      const children=[...banner.children].filter(el=>el.getClientRects().length);
+      for(let i=0;i<children.length;i++)for(let j=i+1;j<children.length;j++)if(overlap(children[i].getBoundingClientRect(),children[j].getBoundingClientRect()))issues.push('Banner children overlap');
+    }
+    for(const hero of document.querySelectorAll('.ct-map-hero,.learning-path-hero')){
+      if(!hero.getClientRects().length)continue;
+      const first=hero.firstElementChild?.getBoundingClientRect(),box=hero.getBoundingClientRect(),pseudo=getComputedStyle(hero,'::before'),size=parseFloat(pseudo.width)||0;
+      if(!first)continue;
+      if(mode==='mobile'&&first.top<box.top+size-1)issues.push('Phone hero copy overlaps emblem row');
+      if(mode!=='mobile'&&first.left<box.left+size-1)issues.push(`${mode} hero copy overlaps emblem column`);
+    }
+    for(const img of document.querySelectorAll('img')){
+      if(!img.getClientRects().length)continue;
+      const b=img.getBoundingClientRect();
+      if(!Number.isFinite(b.x)||!Number.isFinite(b.y)||b.width<1||b.height<1)issues.push('Visible image has invalid geometry');
+    }
+    if(document.documentElement.scrollWidth>innerWidth+2)issues.push('Page has unintended horizontal overflow');
+    return issues;
+  },expectedMode);
+  assert.deepEqual(issues,[],`${expectedMode} image/emblem alignment audit`);
 }
 try{
   console.log(`${engine}: desktop first load`);
@@ -165,6 +195,12 @@ try{
   await desktop.page.locator('[data-evidence]').first().selectOption('LAB');
   assert.ok(await desktop.page.evaluate(()=>Object.keys(state.customization.careerOptions.evidence).length===1));
   for(const tab of ['learning','roadmap','certifications','customize','dashboard']){await desktop.page.locator(`[data-workspace-tab="${tab}"]`).click();await desktop.page.waitForTimeout(150);assert.equal(await desktop.page.locator('.ct-dual-brief').count(),tab==='dashboard'?1:0);}
+  for(const target of [{width:768,height:1024,mode:'tablet'},{width:1280,height:900,mode:'desktop'},{width:1920,height:1080,mode:'desktop'}]){
+    await desktop.page.setViewportSize({width:target.width,height:target.height});
+    await desktop.page.locator('[data-workspace-tab="roadmap"]').click();
+    await alignmentAudit(desktop.page,target.mode);
+    await desktop.page.screenshot({path:`/tmp/certtracker-${engine}-${target.mode}-${target.width}.png`,animations:'disabled',timeout:30000});
+  }
   await desktop.context.close();
 
   console.log(`${engine}: phone first load`);
@@ -204,7 +240,7 @@ try{
       assert.equal(await filters.evaluate(el=>el.open),false,'Map collapse survives reload');
       const hero=page.locator('.ct-map-hero');
       const emblem=await hero.evaluate(el=>{const s=getComputedStyle(el,'::before');return{position:s.position,width:s.width,transform:s.transform};});
-      assert.deepEqual(emblem,{position:'static',width:'64px',transform:'none'},'Mobile emblem must occupy layout space instead of overlaying text');
+      assert.deepEqual(emblem,{position:'static',width:'58px',transform:'none'},'Mobile emblem must occupy layout space instead of overlaying text');
       await page.screenshot({path:`/tmp/certtracker-${engine}-${tab}-mobile.png`,animations:'disabled',timeout:30000});
     }
     if(tab==='certifications'){
@@ -225,6 +261,13 @@ try{
     assert.equal(await page.locator('.ct-dual-brief').count(),tab==='dashboard'?1:0);
   }
   console.log(`${engine}: scrolling and More menu`);
+  const switchTimes=[];
+  for(const tab of ['learning','roadmap','certifications','dashboard']){
+    const started=Date.now();await page.locator(`[data-mobile-tab="${tab}"]`).click();await page.waitForFunction(value=>state.currentTab===value,tab);switchTimes.push(Date.now()-started);
+  }
+  assert.ok(Math.max(...switchTimes)<1500,`Mobile tab switch exceeded 1.5s: ${switchTimes.join(', ')}ms`);
+  assert.ok(await page.locator('body *').count()<10000,'Mobile workspace DOM must remain within a practical interaction budget');
+  await alignmentAudit(page,'mobile');
   await page.evaluate(()=>window.scrollTo(0,Math.min(1200,document.documentElement.scrollHeight-innerHeight)));
   await page.waitForFunction(()=>scrollY>200);
   await navigationInViewport(page);

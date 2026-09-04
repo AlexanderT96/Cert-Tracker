@@ -97,6 +97,12 @@
     layer.querySelector('.ct-mobile-more-close')?.focus?.({preventScroll:true});
   }
   function ensureMobileNavigation(){
+    let today=document.getElementById('ct-mobile-today-button');
+    if(!today){
+      today=document.createElement('button');today.type='button';today.id='ct-mobile-today-button';today.className='ct-mobile-today-button';today.textContent="Today's Recommendations";today.setAttribute('aria-label',"Open Today's Recommendations");
+      today.addEventListener('click',()=>document.getElementById('ct3-launcher')?.click());
+      document.body.appendChild(today);
+    }
     let nav=document.getElementById('ct-mobile-navigation');
     if(!nav){
       nav=document.createElement('nav');nav.id='ct-mobile-navigation';nav.className='ct-mobile-navigation';nav.setAttribute('aria-label','Primary tracker navigation');
@@ -157,7 +163,8 @@
     section.querySelector('[data-apply-focused-route]')?.addEventListener('click',()=>route.apply());
     content.prepend(section);
   }
-  function decorate(){ensureActiveTab();syncMobileNavigation();renderHeader();renderNavigation();renderWorkspaceContent();renderFocusedRoute();CT.personalization.organiseDock?.();}
+  function announceRendered(){try{global.dispatchEvent(new CustomEvent('certtracker:workspace-rendered',{detail:{tab:state.currentTab}}));}catch{}}
+  function decorate(){ensureActiveTab();syncMobileNavigation();renderHeader();renderNavigation();renderWorkspaceContent();renderFocusedRoute();CT.personalization.organiseDock?.();announceRendered();}
   function renderApp(){ensureActiveTab();originalRenderApp();decorate();}
   function switchTab(tab){
     const tabs=availableTabs();if(!tabs.includes(tab)||tab===state.currentTab){closeMobileMore();return;}
@@ -174,6 +181,7 @@
       renderFocusedRoute();
       content.removeAttribute('aria-busy');
       CT.personalization.organiseDock?.();
+      announceRendered();
     }else renderApp();
     global.CertTrackerTabNavigation=false;
   }

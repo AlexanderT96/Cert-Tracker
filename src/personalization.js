@@ -103,7 +103,7 @@
     const today=document.getElementById('ct3-launcher');if(today&&today.parentElement!==document.body)document.body.appendChild(today);
     if(!dock.hidden)dock.hidden=true;
   }
-  function init(){if(!state.customization||typeof state.customization!=='object')state.customization=clone(DEFAULTS);else migrateLegacyProfessional();apply();let queued=false;new MutationObserver(()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;applyVisibility(settings().visibility||{});applyNavigation();organiseDock();});}).observe(document.body,{childList:true,subtree:true});}
+  function init(){if(!state.customization||typeof state.customization!=='object')state.customization=clone(DEFAULTS);else migrateLegacyProfessional();apply();let queued=false;const refresh=()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;applyVisibility(settings().visibility||{});applyNavigation();organiseDock();});};new MutationObserver(refresh).observe(document.body,{childList:true,subtree:false});global.addEventListener('certtracker:workspace-rendered',refresh);}
   CT.personalization=Object.freeze({PRESETS,DEFAULTS,settings,apply,update,preset,reset,tabOrder,tabLabel,title,applyNavigation,organiseDock,migrateLegacyProfessional});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })(window);

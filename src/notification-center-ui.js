@@ -165,7 +165,8 @@
   // consistent without depending on every caller to remember a notification hook.
   const observer=new MutationObserver(scheduleDecorate);
   function start(){
-    if(document.body)observer.observe(document.body,{childList:true,subtree:true});
+    const content=document.getElementById('tab-content');
+    if(content)observer.observe(content,{childList:true,subtree:false});
     decorate();
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});

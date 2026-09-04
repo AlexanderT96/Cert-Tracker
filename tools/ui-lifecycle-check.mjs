@@ -111,6 +111,26 @@ console.log('UI lifecycle gate passed: panel and navigation observers settle, up
 {
   const source=fs.readFileSync('src/notification-center-ui.js','utf8');
   assert.match(source,/if\(count&&count\.textContent!==nextCount\)count\.textContent=nextCount/,'Notification count writes must settle when the value is unchanged');
+  assert.match(source,/observe\(content,\{childList:true,subtree:false\}\)/,'Notification observation must stay scoped to direct workspace replacements');
+}
+
+// Deep DOM changes must not trigger whole-document icon and personalization rescans.
+{
+  const icons=fs.readFileSync('src/professional-icons.js','utf8');
+  const personalization=fs.readFileSync('src/personalization.js','utf8');
+  const bootstrap=fs.readFileSync('src/bootstrap.js','utf8');
+  assert.match(icons,/roots=pending\.filter/,'Nested icon mutation roots must be coalesced');
+  assert.match(icons,/pending\.filter\(node=>node\.isConnected\)/,'Detached workspaces must be discarded before icon decoration');
+  assert.doesNotMatch(icons,/labelLauncher\(\);replaceMedallions\(\);decorateCertRows\(\);decorateMedalShelf\(\);bannerIcons\(\);stripDecorativeSymbols\(\);/,'Icon mutations must not rescan the entire document every frame');
+  assert.match(personalization,/observe\(document\.body,\{childList:true,subtree:false\}\)/,'Personalization must ignore deep content mutations');
+  assert.match(bootstrap,/observe\(content,\{childList:true,subtree:false\}\)/,'Bootstrap post-render work must be scoped to workspace replacements');
+  const renderer=fs.readFileSync('src/renderer.js','utf8');
+  const filterIntelligence=fs.readFileSync('src/filter-intelligence.js','utf8');
+  const roleReadiness=fs.readFileSync('src/role-readiness-rank.js','utf8');
+  const roleMatchBody=renderer.slice(renderer.indexOf('function roleMatches()'),renderer.indexOf('function renderApp()'));
+  assert.doesNotMatch(roleMatchBody,/goalFor\(ch\.id\)/,'Dashboard role ranking must not rebuild the full filter catalogue once per role');
+  assert.doesNotMatch(filterIntelligence,/const next=nextFor\(ch\.test/,'Dashboard role ranking must not fully score every role during a tab switch');
+  assert.doesNotMatch(roleReadiness,/__rankWrapped/,'Dashboard role rows must not be eagerly decorated with unused readiness detail');
 }
 
 // Source freshness is distinct from the time a user clicks Refresh.
