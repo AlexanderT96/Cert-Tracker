@@ -18,13 +18,13 @@
       }catch(error){console.error('[CertTracker] initial render failed',error);}
     }
     postRender();
-    global.CertTracker=CT;
     CT.notifications?.checkAndNotify?.();
     CT.events.emit('ready',{version:CT.version,diagnostics:CT.validation?.diagnostics,path:CT.phases?.pathStatus?.()});
   }
   // Rendering the full dashboard during HTML parsing blocks DOM readiness and
   // delays the first usable navigation paint on slower phones. Yield once so
   // the document and browser chrome can settle before the application build.
+  global.CertTracker=CT;
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(start,0),{once:true});
   else setTimeout(start,0);
   if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(error=>console.warn('[CertTracker] service worker registration failed',error));
