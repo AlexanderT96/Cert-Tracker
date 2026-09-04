@@ -204,7 +204,7 @@
   const original=global.getFilterDefs;
   if(original)global.getFilterDefs=function(){const defs=original(),all=[...defs.filters,...Object.values(defs.filterGroups).flatMap(g=>g.chips||[])],prior=new Map(all.map(x=>[x.id,x]));
     const filters=defs.filters.filter(x=>!x.groupToggle&&!byId(x.id)&&!CONTEXTS[x.id]),filterGroups={};
-    for(const [id,f]of Object.entries(FAMILIES)){const group=`career-${id}`;filters.push({id:`group-${group}`,label:`${f.label} ▾`,groupToggle:group});filterGroups[group]={label:f.label,chips:ROLES.filter(r=>r.family===id).map(r=>({...prior.get(r.id),id:r.id,label:r.title,test:prior.get(r.id)?.test||((c)=>r.certs.includes(c.id))}))};}
+    for(const [id,f]of Object.entries(FAMILIES)){const group=`career-${id}`;filters.push({id:`group-${group}`,label:`${f.label} ▾`,groupToggle:group});filterGroups[group]={label:f.label,chips:ROLES.filter(r=>r.family===id).map(r=>{const routeCerts=pathway(r)?.certIds||r.certs;return {...prior.get(r.id),id:r.id,label:r.title,test:c=>routeCerts.includes(c.id)};})};}
     const contexts=Object.entries(CONTEXTS).filter(([id])=>prior.has(id)).map(([id,label])=>({...prior.get(id),label}));
     if(contexts.length){filters.push({id:'group-career-contexts',label:'Sectors, eligibility & work models ▾',groupToggle:'career-contexts'});filterGroups['career-contexts']={label:'Sectors, eligibility & work models',chips:contexts};}
     return {filters,filterGroups};};

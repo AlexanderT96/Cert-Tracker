@@ -191,6 +191,8 @@ try{
   assert.deepEqual(roleIconAudit,{cards:70,icons:70,unique:70},'Every career option must have a distinct theme emblem');
   const pathwayAudit=await desktop.page.evaluate(()=>{const pathways=[...document.querySelectorAll('[data-career-pathway]')];return {cards:document.querySelectorAll('.career-card').length,pathways:pathways.length,stages:pathways.every(pathway=>pathway.querySelectorAll('[data-pathway-stage]').length===5),plans:pathways.every(pathway=>[...pathway.querySelectorAll('[data-pathway-stage]')].every(stage=>stage.querySelectorAll('p').length>=3))};});
   assert.deepEqual(pathwayAudit,{cards:70,pathways:70,stages:true,plans:true},'Every career option must expose a five-stage plan');
+  const filterRouteAudit=await desktop.page.evaluate(()=>{const defs=getFilterDefs(),chips=Object.values(defs.filterGroups||{}).flatMap(group=>group.chips||[]),roles=window.CertTrackerV3.careerOptions.ROLES;return {roles:roles.length,complete:roles.every(role=>{const chip=chips.find(item=>item.id===role.id);return !!chip&&CERTS.filter(chip.test).length===window.CertTrackerV3.careerOptions.pathway(role).totalCerts;})};});
+  assert.deepEqual(filterRouteAudit,{roles:70,complete:true},'Every career filter chip must expose its complete route');
   await desktop.page.setViewportSize({width:390,height:844});
   const mobilePathway=desktop.page.locator('.career-pathway-details').first();
   await mobilePathway.locator('summary').click();
