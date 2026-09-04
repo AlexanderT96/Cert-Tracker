@@ -42,6 +42,20 @@
     global.renderTabContent=wrappedTabContent;
   }
 
+  // The renderer keeps its tab function in a script-level binding, which some
+  // engines do not alias when a property is reassigned.  Wrapping the public
+  // app entry point gives every initial render a synchronous final pass too.
+  const originalApp=global.renderApp;
+  if(typeof originalApp==='function'&&!originalApp.__ctRoleIcons){
+    const wrappedApp=function(...args){
+      const result=originalApp.apply(this,args);
+      icons.apply(document);
+      return result;
+    };
+    wrappedApp.__ctRoleIcons=true;
+    global.renderApp=wrappedApp;
+  }
+
   const originalMap=CT.roadmapMap;
   if(originalMap&&typeof originalMap.render==='function'&&!originalMap.render.__ctRoleIcons){
     const originalRender=originalMap.render;
@@ -58,3 +72,4 @@
     CT.roadmapMap=Object.freeze({...originalMap,render:wrappedRender});
   }
 })(window);
+
