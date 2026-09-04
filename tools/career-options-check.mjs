@@ -27,6 +27,7 @@ for(const role of m.ROLES){
     assert.ok(stage.certIds.length,`${role.id}: ${stage.key} has no certification`);
     assert.ok(stage.plan?.objective&&stage.plan?.practice&&stage.plan?.evidence&&stage.plan?.exit,`${role.id}: ${stage.key} has no attached plan`);
     assert.ok(stage.relevance,`${role.id}: ${stage.key} has no credential relevance rationale`);
+    for(const cert of stage.certifications){assert.ok(cert.studyMaterials,`${role.id}: ${cert.id} has no attached study materials`);assert.ok(cert.subjects?.length,`${role.id}: ${cert.id} has no mapped subjects`);}
     for(const id of stage.certIds)assert.ok(sandbox.CERTS.some(c=>c.id===id),`${role.id}: pathway references unknown credential ${id}`);
   }
 }

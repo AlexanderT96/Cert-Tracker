@@ -195,7 +195,7 @@ try{
   assert.deepEqual(filterRouteAudit,{roles:70,complete:true},'Every career filter chip must expose its complete route');
   await desktop.page.setViewportSize({width:390,height:844});
   const mobilePathway=desktop.page.locator('.career-pathway-details').first();
-  await mobilePathway.locator('summary').click();
+   await mobilePathway.locator(':scope > summary').click();
   const pathwayLayout=await mobilePathway.evaluate(details=>{const ladder=details.querySelector('.career-pathway-ladder');const stages=[...details.querySelectorAll('.career-pathway-step')];return {columns:getComputedStyle(ladder).gridTemplateColumns,columnCount:getComputedStyle(ladder).gridTemplateColumns.trim().split(/\s+/).length,stageCount:stages.length,stageOverflow:stages.some(stage=>stage.scrollWidth>stage.clientWidth+1),verticalText:stages.some(stage=>getComputedStyle(stage).writingMode!=='horizontal-tb'||getComputedStyle(stage).wordBreak==='break-all')};});
   assert.equal(pathwayLayout.columnCount,1,'Phone pathway stages must stack into readable cards');
   assert.equal(pathwayLayout.stageCount,5,'Phone pathway must retain all five stages');
@@ -212,7 +212,7 @@ try{
   await desktop.page.locator('[data-shortlist]').first().click();
   await desktop.page.locator('[data-career-shortlist]').check();
   assert.equal(await desktop.page.locator('.career-card').count(),1);
-  await desktop.page.locator('.career-card details:not([data-career-pathway]) summary').click();
+  await desktop.page.locator('.career-card details:not([data-career-pathway]) summary').first().click();
   await desktop.page.locator('[data-interest]').selectOption('100');
   await desktop.page.locator('[data-evidence]').first().selectOption('LAB');
   assert.ok(await desktop.page.evaluate(()=>Object.keys(state.customization.careerOptions.evidence).length===1));
