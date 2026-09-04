@@ -113,6 +113,13 @@ try{
   await desktop.page.evaluate(()=>renderApp());
   await desktop.page.locator('[data-workspace-tab="strategy"]').waitFor();
   await persistentHealth(desktop.page);
+  const marketProfile=desktop.page.locator('[data-market-profile]');
+  await marketProfile.waitFor();
+  await marketProfile.locator('[data-market-role-title]').fill('IT Support Engineer');
+  await marketProfile.locator('[data-market-salary]').fill('42000');
+  await marketProfile.locator('[data-market-profile-save]').click();
+  await desktop.page.waitForFunction(()=>state.currentSalary===42000&&document.querySelector('[data-market-profile-match]'));
+  assert.ok((await desktop.page.locator('[data-market-profile]').textContent()).includes('IT Support Engineer'),'Market baseline should evaluate a catalogue role');
   assert.equal(await desktop.page.locator('.tabs [data-workspace-tab]').count(),6);
   assert.equal(await desktop.page.locator('#ct-mobile-navigation').isVisible(),false);
   assert.equal(await desktop.page.locator('#ct-command-dock').isVisible(),false,'Retired tool dock must not be visible');
@@ -182,6 +189,8 @@ try{
   assert.equal(await desktop.page.locator('.ct-dual-brief').count(),0);
   const roleIconAudit=await desktop.page.evaluate(()=>{const icons=[...document.querySelectorAll('.career-card h3 .ct-job-icon')];return {cards:document.querySelectorAll('.career-card').length,icons:icons.length,unique:new Set(icons.map(x=>x.dataset.roleIcon)).size};});
   assert.deepEqual(roleIconAudit,{cards:70,icons:70,unique:70},'Every career option must have a distinct theme emblem');
+  const pathwayAudit=await desktop.page.evaluate(()=>{const pathways=[...document.querySelectorAll('[data-career-pathway]')];return {cards:document.querySelectorAll('.career-card').length,pathways:pathways.length,stages:pathways.every(pathway=>pathway.querySelectorAll('[data-pathway-stage]').length===5),plans:pathways.every(pathway=>[...pathway.querySelectorAll('[data-pathway-stage]')].every(stage=>stage.querySelectorAll('p').length>=3))};});
+  assert.deepEqual(pathwayAudit,{cards:70,pathways:70,stages:true,plans:true},'Every career option must expose a five-stage plan');
   await desktop.page.locator('[data-career-search]').fill('GIS');
   await desktop.page.waitForFunction(()=>{
     const shown=[...document.querySelectorAll('[data-shortlist]')].map(el=>el.dataset.shortlist);
@@ -192,7 +201,7 @@ try{
   await desktop.page.locator('[data-shortlist]').first().click();
   await desktop.page.locator('[data-career-shortlist]').check();
   assert.equal(await desktop.page.locator('.career-card').count(),1);
-  await desktop.page.locator('.career-card summary').click();
+  await desktop.page.locator('.career-card details:not([data-career-pathway]) summary').click();
   await desktop.page.locator('[data-interest]').selectOption('100');
   await desktop.page.locator('[data-evidence]').first().selectOption('LAB');
   assert.ok(await desktop.page.evaluate(()=>Object.keys(state.customization.careerOptions.evidence).length===1));

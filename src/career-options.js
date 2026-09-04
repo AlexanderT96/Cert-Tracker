@@ -96,9 +96,81 @@
     ['pv-top-ma','leadership','Cybersecurity Due Diligence Consultant','Assess technology risk and integration implications in transactions','cisa crisc cissp',3]
   ];
   const ROLES=Object.freeze(rows.map(([id,family,title,mission,certs,stage])=>Object.freeze({id,family,title,mission,certs:certs.split(' '),stage,source:family==='data'&&/GIS|Geospatial/.test(title)?'https://www.esriuk.com/en-gb/what-is-gis/careers':FAMILIES[family].source})));
+  // Every career option has the same five-gate shape, but its credentials and
+  // practical emphasis are selected for the family.  These are planning
+  // ladders, not promises that an issuer or employer accepts a badge as a
+  // substitute for experience.
+  const PATHWAY_STAGE_META=Object.freeze([
+    Object.freeze({key:'entry',label:'Entry / baseline',target:'Safe supervised contribution'}),
+    Object.freeze({key:'foundation',label:'Foundation / operations',target:'Repeatable day-to-day delivery'}),
+    Object.freeze({key:'practitioner',label:'Practitioner / ownership',target:'Independent bounded ownership'}),
+    Object.freeze({key:'senior',label:'Senior / design',target:'Cross-system design and defence'}),
+    Object.freeze({key:'endgame',label:'Endgame / leadership',target:'Strategic accountability and mentoring'})
+  ]);
+  const PATHWAY_TEMPLATES=Object.freeze({
+    infrastructure:[['a-plus','network-plus'],['linux-plus','server-plus'],['az-802','az-104'],['sc-900','az-700'],['az-305','ccsp']],
+    network:[['network-plus','security-plus'],['ccna','pan-practitioner'],['ccnp-enterprise','pan-netsec-pro'],['pan-ngfw-eng','pan-netsec-arch'],['ccie-enterprise','sc-100']],
+    cloud:[['network-plus','az-900'],['az-104','aws-cloud-practitioner'],['terraform','az-700','aws-saa'],['az-400','sc-500'],['az-305','sc-100','ccsp']],
+    defence:[['google-cyber','security-plus'],['cysa-plus','btl1'],['sc-200','mad','crowdstrike-ccfa'],['gcda','gcih','crowdstrike-ccf'],['gcfa','cissp','sc-100','ukcsc-princ']],
+    identity:[['network-plus','security-plus'],['sc-900','az-104'],['sc-300','sc-401'],['sc-500','ccsp'],['sc-100','cissp','issap']],
+    appsec:[['security-plus','pcep'],['secai-plus','pcap','bscp'],['terraform','az-400'],['csslp','cks'],['caisp','gaips','sc-100']],
+    governance:[['google-cyber','security-plus'],['cismp','iso-27001-li'],['crisc','cisa'],['cissp','bcs-esa'],['ukcsc-princ','ukcsc-chart','csyp']],
+    physical:[['a-plus','network-plus'],['mcit','acp','mcde'],['mcie','lcp'],['lce','lcda'],['asis-psp','bcs-esa','cissp']],
+    industrial:[['network-plus','security-plus','iec-62443-cfs'],['secot-plus','isa95-fund'],['gicsp','iec-62443-cra'],['iec-62443-cds','iec-62443-cms','grid'],['iec-62443-expert','isa-cap','cissp']],
+    offensive:[['network-plus','security-plus','linux-plus'],['thm-pt1','pentest-plus'],['pnpt','htb-cpts'],['oscp','crto'],['osed','osep','oswe','osee']],
+    software:[['a-plus','network-plus','pcep'],['pcap','autoops-plus'],['terraform','az-400'],['pcpp1','cka'],['pcpp2','csslp','sc-100']],
+    data:[['a-plus','network-plus','pcep'],['arcgis-foundation','pcap'],['az-104','arcgis-associate','esri-dev-found'],['arcgis-py-api','esri-ent-admin'],['esri-system-design','esri-ent-prof','ccsp']],
+    customer:[['a-plus','network-plus'],['arcules-csp','acp','az-104','meddic-found'],['mcde','bcs-esa','itil-4-foundation'],['az-305','sc-500'],['cissp','meddpicc-master','ukcsc-princ']],
+    leadership:[['network-plus','security-plus'],['itil-4-foundation','prince2-prac'],['cismp','bcs-esa','crisc'],['cissp','sc-100'],['issap','ukcsc-chart','csyp']]
+  });
+  const PATHWAY_CACHE=new Map(),CERT_BY_ID=new Map((typeof CERTS!=='undefined'?CERTS:[]).map(cert=>[cert.id,cert]));
   const CONTEXTS=Object.freeze({'pv-b-cni':'Sector: Critical national infrastructure','pv-top-finsec':'Sector: Financial services','pv-top-cleared':'Eligibility: Security-cleared work','pv-top-contractor':'Work model: Contracting'});
   const LEVELS=Object.freeze({UNKNOWN:0,NONE:0,LAB:25,USED:55,DESIGNED:80,OWNED:100});
   const byId=id=>ROLES.find(r=>r.id===id);
+  const stageIndexForRole=role=>role.stage===1?0:role.stage===2?2:role.stage>=3?3:1;
+  function orderCertIds(ids){
+    const unique=[...new Set(ids)].filter(id=>CERT_BY_ID.has(id)),pending=new Set(unique),ordered=[];
+    while(pending.size){
+      const next=[...pending].find(id=>{
+        const deps=CERT_BY_ID.get(id)?.deps||[];
+        return deps.every(dep=>!pending.has(dep));
+      })||[...pending][0];
+      pending.delete(next);ordered.push(next);
+    }
+    return ordered.sort((a,b)=>{
+      const pa=Number(CERT_BY_ID.get(a)?.phase)||0,pb=Number(CERT_BY_ID.get(b)?.phase)||0;
+      return pa-pb||ordered.indexOf(a)-ordered.indexOf(b);
+    });
+  }
+  function pathway(roleOrId){
+    const role=typeof roleOrId==='string'?byId(roleOrId):roleOrId;
+    if(!role)return null;
+    if(PATHWAY_CACHE.has(role.id))return PATHWAY_CACHE.get(role.id);
+    const family=FAMILIES[role.family],template=PATHWAY_TEMPLATES[role.family]||PATHWAY_TEMPLATES.infrastructure;
+    const buckets=template.map(ids=>[...ids]);
+    const roleBucket=stageIndexForRole(role);
+    for(const id of role.certs||[])if(CERT_BY_ID.has(id)&&!buckets.some(bucket=>bucket.includes(id)))buckets[roleBucket].push(id);
+    const focus=family.label.toLowerCase(),tasks=family.tasks||[];
+    const stages=PATHWAY_STAGE_META.map((meta,index)=>{
+      const certIds=Object.freeze(orderCertIds(buckets[index]));
+      const certifications=Object.freeze(certIds.map(id=>{const cert=CERT_BY_ID.get(id);return Object.freeze({id,name:cert.name||id,code:cert.code||'',phase:cert.phase||null});}));
+      const task=tasks[Math.min(Math.max(index-1,0),tasks.length-1)]?.[1]||`deliver reliable ${focus} work`;
+      const objective=index===0?`Build safe vocabulary and baseline habits for ${focus}.`:index===1?`Turn the baseline into repeatable ${focus} operations.`:index===2?`Take independent ownership of bounded ${focus} work.`:index===3?`Design and defend cross-system ${focus} outcomes for ${role.title}.`:`Lead strategy, governance and mentoring around ${role.title}.`;
+      const practice=index===0?`Use a supervised lab to explain the concepts behind “${role.mission}”.`:index===1?`Practise ${task.toLowerCase()} with runbooks, rollback steps and peer review.`:index===2?`Own ${task.toLowerCase()} and record the decision, test evidence and outcome.`:index===3?`Deliver ${task.toLowerCase()} across at least two systems and defend the trade-offs.`:`Create a portfolio around ${role.mission.toLowerCase()}, mentor another operator and review the control or service outcome.`;
+      const evidence=index===0?`A checked lab log and a short explanation of the main data flows, risks and escalation points.`:index===1?`A repeatable runbook, fault-injection exercise and recovery record for ${focus}.`:index===2?`A real or representative change with before/after evidence, review notes and a clear rollback.`:index===3?`A defended design or migration pack with assumptions, validation, monitoring and acceptance criteria.`:`Accountable outcomes, measured improvement, decision records and evidence that another person can operate the result.`;
+      const exit=index===0?`Can contribute safely under supervision to ${focus}.`:index===1?`Can deliver routine ${focus} work consistently and explain failures.`:index===2?`Can own a bounded ${focus} outcome from requirement through validation.`:index===3?`Can defend architecture and coordinate dependencies for ${role.title}.`:`Can set direction, coach others and remain accountable for ${role.title}-level outcomes.`;
+      return Object.freeze({...meta,certIds,certifications,objective,practice,evidence,exit,plan:Object.freeze({objective,practice,evidence,exit})});
+    });
+    const certIds=Object.freeze([...new Set(stages.flatMap(stage=>stage.certIds))]);
+    const result=Object.freeze({roleId:role.id,roleTitle:role.title,family:role.family,stages:Object.freeze(stages),certIds,certifications:Object.freeze(certIds.map(id=>{const cert=CERT_BY_ID.get(id);return Object.freeze({id,name:cert.name||id,code:cert.code||'',phase:cert.phase||null});})),totalCerts:certIds.length,plan:Object.freeze({sequence:'Complete one stage at a time; do not treat a certification as proof of readiness.',gate:'Only progress after the practical evidence and a current vacancy/issuer check support the next rung.',focus:`${role.title}: ${role.mission}`})});
+    PATHWAY_CACHE.set(role.id,result);return result;
+  }
+  function pathways(){return ROLES.map(pathway);}
+  function pathwayAudit(){
+    const missing=[];
+    for(const role of ROLES){const p=pathway(role);if(p.stages.length!==PATHWAY_STAGE_META.length||p.stages.some(stage=>!stage.certIds.length||!stage.objective||!stage.practice||!stage.evidence||!stage.exit))missing.push(role.id);}
+    return {roles:ROLES.length,stages:PATHWAY_STAGE_META.length,complete:missing.length===0,missing,minCertifications:Math.min(...ROLES.map(role=>pathway(role).totalCerts))};
+  }
   function prefs(){const p=state.customization?.careerOptions;return p&&typeof p==='object'?p:{};}
   function update(patch){const next={...prefs(),...patch};const validation=CT.storage?.validateBackup({version:CT.version.backup,customization:{careerOptions:next}});if(validation&&!validation.ok)throw new Error(validation.errors.join(' '));CT.storage?.captureUndoPoint('career preferences');state.customization={...state.customization,careerOptions:{...prefs(),...patch}};if(patch.evidence&&CT.storage){for(const [id,level]of Object.entries(patch.evidence)){if(level==='UNKNOWN')delete state.capabilityEvidence[id];else state.capabilityEvidence[id]={...state.capabilityEvidence[id],level,updatedAt:new Date().toISOString()};}CT.storage.persistAll();}else save.customization();CT.events.emit('career-options-changed',{});CT.events.emit('state-saved',{key:'customization',at:new Date().toISOString()});}
   function requirements(role){return [...FAMILIES[role.family].tasks.map(([id,label])=>({id,label})),{id:`role:${role.id}`,label:role.mission}].map(r=>({...r,target:role.stage===1?'LAB':role.stage===3?'DESIGNED':'USED'}));}
@@ -125,9 +197,9 @@
     const salaries=jobs.map(j=>{const lo=Number(j.salaryMin),hi=Number(j.salaryMax);return lo>0&&hi>=lo&&hi<300000&&(j.currency==='GBP'||feed?.country==='gb')&&(j.salaryPeriod==='year'||j.salaryPeriod==='annual')?(lo+hi)/2:null;}).filter(Boolean).sort((a,b)=>a-b);
     return {usable:fresh,count:fresh?jobs.length:null,jobs:fresh?jobs:[],label:!fresh?'Market evidence unavailable':jobs.length?'Observed in this feed sample':'No matching sample — demand unknown',salary:fresh&&salaries.length>=3?Math.round((salaries[Math.floor((salaries.length-1)/2)]+salaries[Math.floor(salaries.length/2)])/2):null,salarySamples:salaries.length,checkedAt:feed?.fetchedAt||null};
   }
-  function learning(role){return role.certs.map(id=>CERTS.find(c=>c.id===id)).filter(c=>c&&(CT.credentials?CT.credentials.availability(c).eligible:!['RETIRED','IN_DEVELOPMENT','UNCONFIRMED'].includes(CT.sourceRegistry?.[c.id]?.credentialStatus)));}
+  function learning(role){return pathway(role).certifications.map(item=>CERT_BY_ID.get(item.id)).filter(c=>c&&(CT.credentials?CT.credentials.availability(c).eligible:!['RETIRED','IN_DEVELOPMENT','UNCONFIRMED'].includes(CT.sourceRegistry?.[c.id]?.credentialStatus)));}
   function options({family='all',search='',shortlist=false,sort='compatibility'}={}){const p=prefs(),q=normal(search);return ROLES.map(r=>assess(r,p)).filter(x=>(family==='all'||x.role.family===family)&&(!shortlist||x.shortlisted)&&(!q||normal(`${x.role.title} ${x.role.mission} ${FAMILIES[x.role.family].label}`).includes(q))).sort((a,b)=>sort==='title'?a.role.title.localeCompare(b.role.title):sort==='readiness'?(b.readiness??-1)-(a.readiness??-1)||b.compatibility-a.compatibility:b.compatibility-a.compatibility||(b.readiness??-1)-(a.readiness??-1));}
-  CT.careerOptions=Object.freeze({FAMILIES,ROLES,CONTEXTS,LEVELS,byId,prefs,update,requirements,evidenceLevel,assess,market,matchesTitle,learning,options});
+  CT.careerOptions=Object.freeze({FAMILIES,ROLES,CONTEXTS,LEVELS,PATHWAY_STAGE_META,PATHWAY_TEMPLATES,byId,prefs,update,requirements,evidenceLevel,assess,market,matchesTitle,learning,pathway,pathways,pathwayAudit,options});
   // Normalise every filter label, keeping all saved IDs and legacy memberships.
   const original=global.getFilterDefs;
   if(original)global.getFilterDefs=function(){const defs=original(),all=[...defs.filters,...Object.values(defs.filterGroups).flatMap(g=>g.chips||[])],prior=new Map(all.map(x=>[x.id,x]));

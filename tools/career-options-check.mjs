@@ -12,6 +12,20 @@ assert.ok(m.ROLES.length>=65);
 assert.equal(new Set(m.ROLES.map(r=>r.id)).size,m.ROLES.length);
 for(const r of m.ROLES){assert.ok(m.FAMILIES[r.family]);assert.ok(!m.CONTEXTS[r.id]);assert.equal(m.requirements(r).length,4);assert.equal(m.assess(r).readiness,null);}
 for(const r of m.ROLES)for(const id of r.certs)assert.ok(sandbox.CERTS.some(c=>c.id===id),`${r.id}: unknown credential ${id}`);
+const pathwayAudit=m.pathwayAudit();
+assert.equal(pathwayAudit.roles,m.ROLES.length);
+assert.equal(pathwayAudit.stages,5);
+assert.equal(pathwayAudit.complete,true,`Incomplete career pathways: ${pathwayAudit.missing.join(', ')}`);
+for(const role of m.ROLES){
+  const pathway=m.pathway(role);
+  assert.equal(pathway.stages.length,5,`${role.id}: expected entry through endgame stages`);
+  assert.equal(new Set(pathway.certIds).size,pathway.certIds.length,`${role.id}: duplicate pathway credential`);
+  for(const stage of pathway.stages){
+    assert.ok(stage.certIds.length,`${role.id}: ${stage.key} has no certification`);
+    assert.ok(stage.plan?.objective&&stage.plan?.practice&&stage.plan?.evidence&&stage.plan?.exit,`${role.id}: ${stage.key} has no attached plan`);
+    for(const id of stage.certIds)assert.ok(sandbox.CERTS.some(c=>c.id===id),`${role.id}: pathway references unknown credential ${id}`);
+  }
+}
 const r=m.ROLES[0],a=m.assess(r);m.update({interests:{[r.id]:100}});assert.equal(m.assess(r).readiness,null);assert.equal(m.assess(r).provisional,false);assert.equal(saves,1);
 const evidence=Object.fromEntries(m.requirements(r).map(q=>[q.id,q.target]));m.update({evidence});assert.equal(m.assess(r).readiness,100);assert.equal(m.assess(r).compatibility,m.assess(r,{interests:{[r.id]:100}}).compatibility);
 assert.equal(m.assess(r,{evidence:Object.fromEntries(m.requirements(r).map(q=>[q.id,'NONE']))}).readiness,0);
