@@ -212,7 +212,7 @@ try{
   await desktop.page.locator('[data-shortlist]').first().click();
   await desktop.page.locator('[data-career-shortlist]').check();
   assert.equal(await desktop.page.locator('.career-card').count(),1);
-  await desktop.page.locator('.career-card details:not([data-career-pathway]) summary').click();
+  await desktop.page.locator('.career-card details:not([data-career-pathway]) summary').first().click();
   await desktop.page.locator('[data-interest]').selectOption('100');
   await desktop.page.locator('[data-evidence]').first().selectOption('LAB');
   assert.ok(await desktop.page.evaluate(()=>Object.keys(state.customization.careerOptions.evidence).length===1));
