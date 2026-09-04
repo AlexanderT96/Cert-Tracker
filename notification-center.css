@@ -1,0 +1,122 @@
+/* Cert Tracker — consolidated notification centre.
+   Loaded after the base/responsive styles so mobile alerts remain readable and unclipped. */
+
+.ct-notification-center{
+  width:100%;
+  min-width:0;
+  margin:0 0 16px;
+  padding:12px;
+  border:1px solid rgba(0,239,245,.34);
+  background:linear-gradient(180deg,rgba(5,22,28,.98),rgba(3,13,18,.96));
+  box-shadow:inset 0 0 0 1px rgba(0,239,245,.05),0 8px 24px rgba(0,0,0,.28);
+  border-radius:12px;
+  overflow:visible;
+}
+
+.ct-notification-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:10px;
+}
+
+.ct-notification-title-wrap{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+}
+
+.ct-notification-title{
+  color:var(--text);
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+}
+
+.ct-notification-count{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:24px;
+  height:24px;
+  padding:0 7px;
+  border:1px solid rgba(0,239,245,.34);
+  border-radius:999px;
+  color:var(--blue-text);
+  background:rgba(0,239,245,.08);
+  font-size:11px;
+  font-weight:800;
+  font-variant-numeric:tabular-nums;
+}
+
+.ct-notification-clear{
+  flex:0 0 auto;
+  min-height:38px;
+  padding:0 14px;
+  border:1px solid rgba(0,239,245,.48);
+  border-radius:8px;
+  background:rgba(0,239,245,.09);
+  color:var(--blue-text);
+  font:inherit;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.04em;
+  cursor:pointer;
+}
+.ct-notification-clear:hover{background:rgba(0,239,245,.16);border-color:var(--blue)}
+.ct-notification-clear:focus-visible{outline:2px solid #fff;outline-offset:2px}
+
+.ct-notification-stack{
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  gap:10px;
+  min-width:0;
+}
+
+.ct-notification-stack .banner{
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  margin:0!important;
+  padding:14px 16px!important;
+  display:flex!important;
+  align-items:flex-start!important;
+  gap:12px!important;
+  font-size:13px!important;
+  line-height:1.55!important;
+  overflow:visible!important;
+}
+.ct-notification-stack .banner>span:first-child{flex:0 0 auto;margin-top:1px}
+.ct-notification-stack .banner>div{flex:1 1 auto;min-width:0;overflow-wrap:anywhere;word-break:normal}
+.ct-notification-stack .banner .banner-btn{flex:0 0 auto;align-self:center;margin-left:auto}
+.ct-notification-stack .banner-x{display:none!important}
+
+html[data-layout="mobile"] .ct-notification-center{
+  margin:0 0 14px!important;
+  padding:10px!important;
+  border-radius:10px!important;
+}
+html[data-layout="mobile"] .ct-notification-head{gap:8px!important;margin-bottom:10px!important}
+html[data-layout="mobile"] .ct-notification-title{font-size:10px!important}
+html[data-layout="mobile"] .ct-notification-count{min-width:22px;height:22px;font-size:10px!important}
+html[data-layout="mobile"] .ct-notification-clear{
+  min-height:40px!important;
+  padding:0 12px!important;
+  font-size:10px!important;
+  white-space:nowrap!important;
+}
+html[data-layout="mobile"] .ct-notification-stack{gap:10px!important}
+html[data-layout="mobile"] .ct-notification-stack .banner{
+  padding:13px 14px!important;
+  gap:10px!important;
+  font-size:12px!important;
+  line-height:1.55!important;
+}
+html[data-layout="mobile"] .ct-notification-stack .backup-banner{flex-wrap:wrap!important}
+html[data-layout="mobile"] .ct-notification-stack .backup-banner .banner-btn{
+  min-height:38px!important;
+  margin-left:auto!important;
+}
