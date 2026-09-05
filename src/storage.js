@@ -58,6 +58,10 @@
   function validateCustomization(value){
     const errors=[];if(value==null)return errors;if(!isObj(value))return ['customization must be an object.'];
     for(const field of ['colors','phaseColors','visibility','tabLabels'])if(value[field]!=null&&!isObj(value[field]))errors.push(`customization.${field} must be an object.`);
+    if(value.marketProfile!=null){
+      if(!isObj(value.marketProfile))errors.push('customization.marketProfile must be an object.');
+      else if(value.marketProfile.roleTitle!=null&&(typeof value.marketProfile.roleTitle!=='string'||value.marketProfile.roleTitle.length>120))errors.push('Market role title must be text of at most 120 characters.');
+    }
     if(value.tabOrder!=null&&(!Array.isArray(value.tabOrder)||value.tabOrder.some(x=>typeof x!=='string')) )errors.push('customization.tabOrder must be an array of strings.');
     for(const field of ['fontScale','density','radius','cardRadius','controlRadius','contentWidth','panelOpacity','shadowStrength','glowStrength','borderWidth'])if(value[field]!=null&&!Number.isFinite(Number(value[field])))errors.push(`customization.${field} must be numeric.`);
     if(value.tabLabels)for(const label of Object.values(value.tabLabels))if(typeof label!=='string'||label.length>80)errors.push('Tab labels must be text of at most 80 characters.');
@@ -87,6 +91,36 @@
           if(['interests','shortlist','eligibility'].includes(field)&&roleIds&&!roleIds.has(id))errors.push(`Unknown career role: ${id}`);
           if(field==='families'&&families&&!families[id])errors.push(`Unknown career family: ${id}`);
         }}
+      }
+    }
+    const advisor=value.careerAdvisor;
+    if(advisor!=null){
+      if(!isObj(advisor))errors.push('careerAdvisor must be an object.');
+      else{
+        const roleIds=CT.careerOptions?.ROLES?new Set(CT.careerOptions.ROLES.map(r=>r.id)):null;
+        if(advisor.targetRole!=null&&(typeof advisor.targetRole!=='string'||(advisor.targetRole&&roleIds&&!roleIds.has(advisor.targetRole))))errors.push('Invalid career-advisor target role.');
+        if(advisor.comparisonRoles!=null&&(!Array.isArray(advisor.comparisonRoles)||advisor.comparisonRoles.length>5||advisor.comparisonRoles.some(id=>typeof id!=='string'||roleIds&&!roleIds.has(id))))errors.push('Invalid career-advisor comparison roles.');
+        if(advisor.horizonWeeks!=null&&![4,6,8].includes(Number(advisor.horizonWeeks)))errors.push('Career-advisor horizon must be 4, 6 or 8 weeks.');
+        if(advisor.reviewCadenceDays!=null&&![7,14,30].includes(Number(advisor.reviewCadenceDays)))errors.push('Career-advisor review cycle must be 7, 14 or 30 days.');
+        if(advisor.nextReviewAt&&!CT.util.validIsoDate(advisor.nextReviewAt))errors.push('Invalid career-advisor review date.');
+        if(advisor.history!=null){
+          if(!Array.isArray(advisor.history)||advisor.history.length>50)errors.push('Career-advisor history must contain at most 50 reviews.');
+          else for(const row of advisor.history){if(!isObj(row)||typeof row.id!=='string'||typeof row.at!=='string'||typeof row.signature!=='string'||!isObj(row.snapshot)||row.id.length>100||row.signature.length>25000)errors.push('Invalid career-advisor review record.');}
+        }
+      }
+    }
+    const mentor=value.careerMentor;
+    if(mentor!=null){
+      if(!isObj(mentor))errors.push('careerMentor must be an object.');
+      else{
+        const roleIds=CT.careerOptions?.ROLES?new Set(CT.careerOptions.ROLES.map(r=>r.id)):null;
+        for(const field of ['assessments','questionAttempts','projects','circumstances','resourceFeedback'])if(mentor[field]!=null&&!isObj(mentor[field]))errors.push(`careerMentor.${field} must be an object.`);
+        if(isObj(mentor.assessments)){const rows=Object.entries(mentor.assessments);if(rows.length>1000)errors.push('Too many career assessment records.');for(const [key,row]of rows){if(key.length>180||!validIds.has(key.split(':')[0])||!isObj(row)||!Array.isArray(row.attempts)||row.attempts.length>20)errors.push(`Invalid career assessment: ${key}`);else for(const attempt of row.attempts)if(!isObj(attempt)||typeof attempt.id!=='string'||!Number.isFinite(Date.parse(attempt.at))||!Number.isFinite(Number(attempt.score))||Number(attempt.score)<0||Number(attempt.score)>100||!Number.isFinite(Number(attempt.confidence))||Number(attempt.confidence)<1||Number(attempt.confidence)>5||String(attempt.notes||'').length>2000)errors.push(`Invalid career assessment attempt: ${key}`);if(row.nextDue&&!CT.util.validIsoDate(row.nextDue))errors.push(`Invalid assessment review date: ${key}`);}}
+        if(isObj(mentor.questionAttempts)){const rows=Object.entries(mentor.questionAttempts);if(rows.length>500)errors.push('Too many knowledge-check records.');for(const [recordId,row]of rows){if(recordId.length>380||!isObj(row)||!CT.assessmentBank?.get(row.questionId)||typeof row.subjectKey!=='string'||row.subjectKey.length>180||!validIds.has(row.subjectKey.split(':')[0])||!Array.isArray(row.attempts)||row.attempts.length>10)errors.push(`Invalid knowledge-check record: ${recordId}`);else for(const attempt of row.attempts)if(!isObj(attempt)||typeof attempt.id!=='string'||!Number.isFinite(Date.parse(attempt.at))||!Number.isInteger(Number(attempt.selected))||Number(attempt.selected)<0||Number(attempt.selected)>3||typeof attempt.correct!=='boolean'||![0,100].includes(Number(attempt.score))||!Number.isFinite(Number(attempt.confidence))||Number(attempt.confidence)<1||Number(attempt.confidence)>5)errors.push(`Invalid knowledge-check attempt: ${recordId}`);if(row.nextDue&&!CT.util.validIsoDate(row.nextDue))errors.push(`Invalid knowledge-check review date: ${recordId}`);}}
+        if(isObj(mentor.projects))for(const [roleId,row]of Object.entries(mentor.projects)){if(roleIds&&!roleIds.has(roleId)||!isObj(row)||!isObj(row.criteria)||Object.values(row.criteria||{}).some(v=>typeof v!=='boolean')||String(row.evidence||'').length>4000||String(row.artifactUrl||'').length>500||(row.artifactUrl&&!/^https:\/\//i.test(row.artifactUrl)))errors.push(`Invalid project evidence: ${roleId}`);}
+        if(mentor.vacancies!=null){if(!Array.isArray(mentor.vacancies)||mentor.vacancies.length>200)errors.push('Career vacancies must contain at most 200 records.');else for(const row of mentor.vacancies){const lo=Number(row?.salaryMin||0),hi=Number(row?.salaryMax||0);if(!isObj(row)||typeof row.id!=='string'||typeof row.title!=='string'||!row.title||row.title.length>160||String(row.employer||'').length>160||String(row.location||'').length>160||String(row.notes||'').length>2000||String(row.url||'').length>500||!/^https:\/\//i.test(String(row.url||''))||roleIds&&!roleIds.has(row.roleId)||!CT.util.validIsoDate(row.observedAt)||!['saved','applied','interview','offer','rejected','withdrawn'].includes(row.outcome)||lo<0||lo>250000||hi<0||hi>250000||(lo&&hi&&hi<lo))errors.push('Invalid career vacancy record.');}}
+        if(isObj(mentor.circumstances)){const c=mentor.circumstances;if(c.urgency!=null&&!['steady','soon','urgent'].includes(c.urgency))errors.push('Invalid career urgency.');if(c.budgetPressure!=null&&!['low','normal','high'].includes(c.budgetPressure))errors.push('Invalid career budget pressure.');if(String(c.workOpportunity||'').length>1000||String(c.constraintNote||'').length>1000)errors.push('Career circumstance notes are too long.');}
+        if(isObj(mentor.resourceFeedback)){const rows=Object.entries(mentor.resourceFeedback);if(rows.length>1000)errors.push('Too many resource feedback records.');for(const [url,row]of rows)if(!/^https:\/\//i.test(url)||!isObj(row)||!['useful','weak','outdated'].includes(row.status)||String(row.note||'').length>500)errors.push('Invalid resource feedback record.');}
       }
     }
     return errors;

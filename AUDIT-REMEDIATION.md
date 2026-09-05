@@ -1,6 +1,51 @@
-# Audit remediation — v4.9.0
+# Audit remediation — v4.15.0
 
-Implements the 2 September 2026 audit against v4.8.6. Stable certification and role IDs are retained; existing exam passes are not deleted. Backup schema is now 7.
+## Pre-deployment development beyond v4.14
+
+| Capability | v4.15 implementation |
+|---|---|
+| Objective assessment | Adds an original, validated bank of automatically marked scenario questions across networking, security, identity, cloud, Windows, Linux, automation, physical security, architecture and operations. Answers are explained after submission. These are learning checks, not copied vendor exam items. |
+| Defensible mastery | Separates marked knowledge from applied self-review, penalises confident misconceptions and withholds a `SUPPORTED` evidence label until at least three marked checks and two applied explanations cover three subjects. A self-rating alone cannot establish mastery. |
+| Portfolio portability | Exports the active project, criteria, completion state, evidence notes and artifact link as a local Markdown brief with an explicit redaction warning. |
+| Vacancy quality | Normalises source URLs, blocks duplicates and accepts bounded CSV intake without a provider account. Tracking remains local-first. |
+| Outcome calibration | Reports application-to-interview and interview-to-offer rates from recorded outcomes and changes guidance when either conversion point is weak. Small samples remain explicitly directional. |
+
+Backup schema 10 adds bounded, validated automatically marked knowledge-check records. Existing v4.14 mentor evidence remains compatible.
+
+Implements the 2 September 2026 audit against v4.8.6 and the subsequent whole-tracker review of the Luna Reserve work. Stable certification and role IDs are retained; existing exam passes are not deleted. Backup schema 10 retains the v4.14 mentor evidence and adds validated, bounded automatically marked knowledge checks.
+
+## Mentor evidence layer
+
+| Remaining gap | v4.14 implementation |
+|---|---|
+| Adaptive assessment | The weakest due subject is selected automatically. Explain, predict, apply, troubleshoot and transfer prompts rotate, use a five-part rubric and schedule the next review from demonstrated performance. Confident weak answers receive a penalty. |
+| Project verification | Every generated portfolio brief now has a persistent criterion-by-criterion review, evidence notes and an optional HTTPS portfolio link. Career-move gates respond to the recorded result. |
+| Market access without Adzuna | Users can record sourced vacancies, advertised salary ranges and application outcomes locally. Five current vacancies with three salary samples establish a personal sample; fewer records remain explicitly provisional. |
+| Outcome calibration | Saved, applied, interview, offer, rejected and withdrawn outcomes create a local funnel. Recommendations can distinguish catalogue assumptions from evidence of actual employer response. |
+| Changed circumstances | Move urgency, budget pressure, workplace evidence opportunities and constraints are saved and included in change explanations. Workplace opportunities replace weaker simulated parallel work. |
+| Resource quality | Users can mark material useful, weak or outdated. Useful material rises in the study stack; weak/outdated material is demoted rather than silently treated as equal. |
+| Review reminders | Reviews surface as due in the tracker and can be exported as a calendar event. The app still does not claim it can execute continuously while closed. |
+
+## Career-assistant foundation
+
+| Missing capability | Implementation |
+|---|---|
+| Decisive next move | The dashboard now selects one primary credential/career action, one parallel practical topic and an explicit defer list, with sequencing and evidence reasons. |
+| Instructional sequencing | A personalised four-, six- or eight-week plan turns the credential blueprint into weekly learn, retrieve, configure, break/fix, integrate and assess deliverables. |
+| Complete projects | Each target route receives a production-plausible project brief with build scope, deliberate faults, six deliverables, six assessment criteria and the current stage exit gate. |
+| Route decisions | The chosen route is compared with two plausible alternatives using compatibility, evidence readiness, route progress, remaining distance and honestly labelled market evidence. |
+| Market intelligence | Published job data is loaded without blocking local advice. Observed samples are labelled as samples; stale, missing or inadequate data produces no demand or salary claim. |
+| Ongoing mentorship | A configurable review cycle records bounded decision snapshots. Changes in passes, evidence, role, study capacity, salary baseline or market-feed reliability explain why the plan changed. |
+
+## Whole-tracker follow-up
+
+| Finding | Repair |
+|---|---|
+| Expanded career routes created large hidden DOM trees and made Career Options slow or unstable. | All 70 bespoke five-stage routes remain complete but hydrate only when opened. Initial DOM size and per-route completeness are now enforced by browser and model gates. |
+| Several career filters, plans and visible routes could drift onto different credential sets. | A single role-route model now drives the Career Options ladder, filter membership and progression state without silently recommending unavailable credentials. |
+| The dashboard salary/role evaluator could lose unsaved typing during an asynchronous dashboard rerender. | A transient draft survives rerenders, clears after a successful save or state restore, accepts whole-pound salaries and remains part of backup/sync state only after saving. |
+| “Dashboard” overflowed the five-button navigation rail on narrow phones. | Phones below 400 px show the compact label “Home” while retaining the accessible name “Dashboard”; browser tests reject clipped labels and horizontal page overflow. |
+| Dense roadmap and role visuals could overlap, render vertically or overload small devices. | Phone layouts stack route stages, simplify large decorative layers, preserve horizontal text, use lazy detail rendering and enforce emblem/text separation across tested breakpoints. |
 
 ## Changes
 
@@ -40,10 +85,10 @@ The local npm test includes the audit regressions and the existing structural, m
 
 The following are not claimed complete:
 
-1. **Working live-provider access.** The audited published feed had no jobs, the no-key provider was unavailable, and Adzuna credentials were not configured. This release fixes failure semantics, not account provisioning. Configure a working provider server-side; never put provider secrets into the public site.
+1. **Working live-provider access.** The audited published feed had no jobs and Adzuna credentials were not configured. v4.14 no longer requires a provider: sourced vacancies can be recorded locally and merged into the dashboard. Automated coverage still requires a permitted server-side provider integration; never put provider secrets into the public site.
 2. **Exhaustive issuer verification.** All records retain sources, but every price/blueprint/eligibility statement has not been independently verified. The UI now exposes this instead of implying otherwise. SecOT+ booking availability remains unconfirmed and is therefore blocked.
 3. **Physical iPhone acceptance.** Automated browser checks are not a substitute for testing the installed PWA and Safari on the affected phone, including cold load, scroll, rotation and modal focus.
-4. **Empirical career calibration.** Broad coverage and transparent heuristics are implemented; hiring probability and salary uplift are not scientifically validated outputs.
+4. **Empirical career calibration.** Vacancy and application outcomes now correct the personal recommendation locally, but a small personal sample is not a scientific hiring-probability or salary-uplift model.
 
 ## Issuer evidence used for corrections
 

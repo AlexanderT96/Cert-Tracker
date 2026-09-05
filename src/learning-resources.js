@@ -410,7 +410,8 @@
     const subjects=subjectCoverage(cert),stack=overallStack(cert);
     return Object.freeze({certId:cert.id,curated:!!SUBJECT_OVERRIDES[cert.id],model:SUBJECT_OVERRIDES[cert.id]?'CURATED':'DERIVED',subjects,stack,legacy:cert.studyMaterials||'',official:safeUrl(cert.sourceUrl)});
   }
-  function validate(){return CERTS.map(cert=>profile(cert)).every(p=>p.subjects.length&&p.subjects.every(s=>s.depth>=1&&s.depth<=5&&s.resources.length>=3&&s.resources.every(r=>/^https:\/\//.test(r.url)))&&p.stack.length>=3);}
+  const discoveryUrl=url=>/youtube\.com\/results|udemy\.com\/courses\/search/.test(url||'');
+  function validate(){return CERTS.map(cert=>profile(cert)).every(p=>p.subjects.length&&p.subjects.every(s=>s.depth>=1&&s.depth<=5&&s.resources.length>=3&&s.resources.some(r=>!discoveryUrl(r.url))&&s.resources.every(r=>/^https:\/\//.test(r.url)))&&p.stack.length>=3);}
 
   CT.learningResources=Object.freeze({DEPTH,PROVIDERS,SUBJECT_OVERRIDES,STACK_OVERRIDES,profile,subjectCoverage,overallStack,topicResources,validate});
 })(window);

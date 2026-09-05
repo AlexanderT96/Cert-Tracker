@@ -1,6 +1,6 @@
 # Cert Tracker
 
-Cert Tracker is a local-first certification, readiness and career-planning application. It combines certification progress, exam and renewal tracking, competency coverage, study readiness, portfolio evidence, UK market-value modelling and constraint-aware certification sequencing in one installable PWA.
+Cert Tracker is a local-first certification, readiness and career-planning application. It combines certification progress, exam and renewal tracking, competency coverage, subject-level study resources, practical evidence, directional UK market context and constraint-aware sequencing in one installable PWA.
 
 ## Core capabilities
 
@@ -12,7 +12,17 @@ Cert Tracker is a local-first certification, readiness and career-planning appli
 - Certification readiness estimates using prerequisites, study progress, objective coverage and existing skills
 - Constraint-aware planning by study hours, budget, target date and maximum certification count
 - Goal-aware recommendations with explainable scoring
-- Marginal £ career-value modelling that discounts overlapping credentials
+- Adaptive career advisor with one decisive next move, parallel evidence work and a defer list
+- Four-, six- or eight-week study programmes with weekly evidence deliverables
+- Role-specific portfolio project briefs, acceptance criteria and career-move gates
+- Competing-route comparison, review history and explanations when circumstances change
+- Original automatically marked knowledge checks plus applied assessments, spaced review and confidence calibration
+- Evidence-strength labels that withhold a supported mastery judgement until knowledge and applied coverage are broad enough
+- Persistent project rubrics, evidence notes, portfolio links and redaction-aware Markdown evidence export
+- User-owned vacancy samples, duplicate-safe CSV intake, salary observations and application-funnel analytics
+- Circumstance-aware recalculation and calendar review reminders
+- Resource-quality feedback that changes later study recommendations
+- Directional market-access modelling kept separate from job-performance evidence
 - Portfolio and experience evidence tracking
 - Certification-data freshness and official-source checks
 - Deeply validated JSON backup and restore
@@ -37,7 +47,7 @@ It models:
 - target completion date
 - employer-funded certifications
 - certification dependencies
-- marginal career value
+- directional market relevance
 
 The planner produces an ordered sequence that stays within the supplied constraints where possible and shows projected target-role coverage after the planned certifications.
 
@@ -59,23 +69,9 @@ Built-in goal profiles include:
 
 Recommendations use competency fit alongside phase position, prerequisites, readiness, effort, funding, gateway status, data confidence and marginal market value.
 
-## £ market value and ROI
+## Market context
 
-Role-market salary estimates are kept separate from certification career-value estimates.
-
-UK role bands provide broad market context. Certification values are indicative career-signal ranges rather than promised salary increases.
-
-The marginal-value model reduces the contribution of a certification when its competency signal substantially overlaps credentials already completed. This prevents a portfolio of closely related certifications from being treated as a simple additive salary uplift.
-
-The £ ROI views include:
-
-- low / median / high UK role-market bands
-- marginal certification contribution ranges
-- credential-overlap and novelty effects
-- confidence level
-- value signal per remaining study hour
-- self-funded cost efficiency
-- portfolio-evidence context
+Role-market salary observations are kept separate from certification relevance, compatibility and practical readiness. Users can record a current role title and salary baseline locally for comparison. Market samples are dated, incomplete observations rather than promised pay, demand ratings or certification salary uplifts.
 
 ## Certification data health
 
@@ -128,9 +124,12 @@ The application remains framework-free and build-free. Domain logic is separated
 | `src/source-registry.js` | Audited official-source registry |
 | `src/data-health.js` | Verification age, provenance and confidence |
 | `src/competency-engine.js` | Competency taxonomy, role coverage and readiness |
-| `src/market-value.js` | UK role-market and marginal certification-value modelling |
+| `src/market-value.js` | Directional UK role-market and relevance modelling |
 | `src/recommendation-engine.js` | Competency-aware recommendation scoring and explanations |
 | `src/planner.js` | Constraint-aware certification sequence optimisation |
+| `src/career-advisor.js` | Decisive next move, route comparison, study schedule and review history |
+| `src/assessment-bank.js` | Original objective question bank, context matching and validation |
+| `src/career-mentor.js` | Adaptive assessment, project evidence, vacancy intake and outcome analytics |
 | `src/exports.js` | Export handling |
 | `src/notifications.js` | Renewal notification checks |
 | `src/sync.js` | Encrypted vault, revisions, hashes and WebDAV concurrency control |
@@ -148,7 +147,7 @@ Run the static and data-contract checks with:
 npm test
 ```
 
-The repository quality gate also launches the real application in headless Chrome and executes `tests.html`. The browser suite covers state wiring, deep backup validation, dates/calendar export, phase overrides, competency modelling, readiness, marginal value, recommendations, planner constraints, encryption and stable sync hashing.
+The repository quality gate also launches the real application in Chromium, Firefox and WebKit. The browser suite covers state wiring, deep backup validation, dates/calendar export, phase overrides, competency modelling, lazy map and career-route rendering, responsive navigation, recommendations, planner constraints, encryption and stable sync hashing.
 
 A separate scheduled data-health workflow checks both stored verification age and reachability of audited official sources.
 

@@ -21,6 +21,10 @@ state.objectiveProgress={};run('save.objectives()');CT.store.setObjective('ccna'
 CT.store.setObjective('ccna',20);CT.store.setObjective('ccna',30);CT.storage.undoLastChange();assert.equal(state.objectiveProgress.ccna,20,'Rapid separate changes must undo one step');
 CT.careerFramework.setContext({current:'network',next:'cyber',target:'securityArchitect'});
 const backup=CT.storage.serializableState();assert.equal(backup.careerContext.current,'network');
+state.customization={marketProfile:{roleTitle:'Fictional Infrastructure Analyst'}};
+const profileBackup=CT.storage.serializableState();assert.equal(profileBackup.customization.marketProfile.roleTitle,'Fictional Infrastructure Analyst','Market role title must be included in backup and sync state');
+assert.equal(CT.storage.validateBackup(profileBackup).ok,true);
+assert.equal(CT.storage.validateBackup({...profileBackup,customization:{marketProfile:{roleTitle:'x'.repeat(121)}}}).ok,false,'Oversized market role titles must be rejected');
 CT.careerFramework.setContext({current:'generalIT'});CT.storage.applyBackup(backup,{silent:true});assert.equal(CT.careerFramework.context().current,'network');
 state.myPath={};run('save.myPath();loadState()');assert.equal(Object.values(state.myPath).filter(Boolean).length,0);
 assert.equal(CT.phases.inPath(cert('ccna')),false);
@@ -102,7 +106,7 @@ state.phaseOverrides['ccie-enterprise']=1;assert.equal(CT.store.effectivePhase(c
 state.passes=Object.fromEntries(expected.map(id=>[id,'2026-01-01']));assert.equal(CT.phases.pathStatus().complete,true);assert.equal(CT.recommendations.recommend().length,0);
 // Every later milestone must remain reachable without an excluded study dependency.
 for(let i=0;i<expected.length;i++)for(const dep of cert(expected[i]).deps||[])assert.ok(expected.indexOf(dep)>=0&&expected.indexOf(dep)<i,expected[i]+' dependency '+dep);
-for(const file of ['src/topic-engine.js','src/learning-path-ui.js'])vm.runInContext(fs.readFileSync(file,'utf8'),s,{filename:file});
+for(const file of ['src/topic-engine.js','src/career-advisor.js','src/assessment-bank.js','src/career-mentor.js','src/learning-path-ui.js'])vm.runInContext(fs.readFileSync(file,'utf8'),s,{filename:file});
 const learning=CT.learningPath.render();assert.ok(!learning.includes('OT + convergence engineering'));assert.ok(learning.includes('LOCKED MILESTONE'));
 assert.ok(!CT.topicEngine.forPhase(4).some(r=>/PLC|SCADA|ISA-95/.test(r.topic.title)));
 const previous=Array.from(CT.focusedRoute.definition.previousIds);
@@ -120,4 +124,16 @@ assert.equal(CT.recommendations.recommend()[0].id,'az-802');state.passes['az-802
 localStorage.removeItem('ct-focused-route-upgrade-'+CT.focusedRoute.definition.id);
 state.myPath=Object.fromEntries(CT.focusedRoute.definition.previousPaths[1].map(id=>[id,true]));
 CT.storage.persistAll();CT.store.load();assert.equal(CT.focusedRoute.enabled(),true,'Older 22-milestone preset also upgrades');
+// Adaptive mentor evidence remains local, bounded and changes recommendations only from recorded evidence.
+state.myPath={ccna:true};state.passes={'network-plus':'2026-01-01'};state.customization={careerAdvisor:{targetRole:'career-network'}};state.capabilityEvidence={};
+const advice=CT.careerAdvisor.advise(),assessment=CT.careerMentor.currentAssessment(advice),knowledge=CT.careerMentor.currentKnowledgeCheck(advice);assert.ok(assessment&&assessment.criteria.length===5);assert.ok(knowledge&&knowledge.question.options.length===4);assert.equal(CT.assessmentBank.validate().ok,true);assert.equal(CT.careerMentor.mastery(assessment.key),0);
+CT.careerMentor.recordAssessment(assessment.key,{score:85,confidence:4,criteriaMet:5,notes:'Configured, broke and verified the topic in an isolated lab.'});assert.equal(CT.careerMentor.appliedMastery(assessment.key),85);assert.equal(CT.careerMentor.mastery(assessment.key),47,'Self-assessment alone cannot establish mastery');assert.ok(CT.careerMentor.prefs().assessments[assessment.key].nextDue);
+const marked=CT.careerMentor.recordKnowledge(knowledge.question.id,{selected:knowledge.question.answer,confidence:4,subjectKey:knowledge.key});assert.equal(marked.correct,true);assert.equal(CT.careerMentor.objectiveMastery(knowledge.key),100);assert.equal(CT.careerMentor.mastery(knowledge.key),92);
+const badKnowledge={...CT.storage.serializableState(),customization:{careerMentor:{questionAttempts:{bad:{questionId:'invented-question',subjectKey:knowledge.key,attempts:[]}}}}};assert.equal(CT.storage.validateBackup(badKnowledge).ok,false);
+const criteria=Object.fromEntries(advice.project.criteria.map((_,index)=>[index,true]));CT.careerMentor.saveProject(advice.role.id,{criteria,evidence:'Diagram, configuration, fault matrix, validation output and reviewer notes are recorded.',artifactUrl:'https://example.test/portfolio'});assert.equal(CT.careerMentor.projectAssessment(advice).ready,true);
+for(let i=0;i<5;i++)CT.careerMentor.addVacancy({roleId:advice.role.id,title:'Network Engineer',employer:'Example '+i,url:`https://example.test/jobs/${i}`,salaryMin:i<3?40000+i*5000:0,salaryMax:i<3?50000+i*5000:0,observedAt:new Date().toISOString().slice(0,10),outcome:i===0?'interview':'saved'});
+const personalMarket=CT.careerMentor.marketSummary(advice.role.id);assert.equal(personalMarket.dependable,true);assert.equal(personalMarket.count,5);assert.equal(personalMarket.salarySamples,3);assert.ok(CT.careerMentor.combinedFeed(null).jobs.length>=5);
+assert.equal(personalMarket.analytics.interviewRate,100);await assert.rejects(async()=>CT.careerMentor.addVacancy({roleId:advice.role.id,title:'Duplicate',url:'https://example.test/jobs/0?utm_source=test'}),/already recorded/);
+const imported=CT.careerMentor.importVacancies('title,url,employer,outcome\nNetwork Specialist,https://example.test/jobs/6,Example 6,applied\nDuplicate,https://example.test/jobs/0,Example 0,saved',advice.role.id);assert.equal(imported.added,1);assert.equal(imported.skipped,1);assert.ok(CT.careerMentor.projectExport(advice).includes('Assessment criteria'));
+assert.equal(CT.storage.validateBackup(CT.storage.serializableState()).ok,true);assert.equal(CT.storage.validateBackup({...CT.storage.serializableState(),customization:{careerMentor:{vacancies:[{id:'bad',roleId:'fake',title:'Bad',url:'javascript:bad',observedAt:'bad',outcome:'offer'}]}}}).ok,false);
 console.log('Audit regressions passed, including focused route sequence, adoption, Undo, preserved progress, backup, phase gates and completion.');

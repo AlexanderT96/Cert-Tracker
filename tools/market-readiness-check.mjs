@@ -20,5 +20,5 @@ if(refresh.includes('www.arbeitnow.co.uk'))errors.push('Unavailable UK provider 
 if(!refresh.includes('cursor%QUERIES.length'))errors.push('Adzuna market refresh does not rotate broad role-query batches.');
 if(!refresh.includes("sort_by:'date'"))errors.push('Market refresh is not prioritising fresh listings.');
 if(!refresh.includes('refreshTargetMinutes:60'))errors.push('Generated feed does not advertise a hourly refresh target.');
-if(!ui.includes('not sent to the jobs provider'))errors.push('Dashboard does not disclose local-only best-fit matching.');
+if(!ui.includes('not sent to a jobs provider'))errors.push('Dashboard does not disclose local-only best-fit matching.');
 if(errors.length){console.error(`Market readiness gate failed (${errors.length}):`);errors.forEach(e=>console.error(`- ${e}`));process.exit(1);}console.log('Market readiness gate passed: active-filter role depth, six-level seniority gating, current-value modelling, privacy-preserving best-fit jobs and quota-limited hourly automation are enforced.');

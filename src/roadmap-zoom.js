@@ -89,9 +89,9 @@
     viewport.addEventListener('pointerdown',event=>{
       if(event.pointerType==='mouse'&&event.button!==0)return;
       pointers.set(event.pointerId,{x:event.clientX,y:event.clientY});
-      viewport.setPointerCapture?.(event.pointerId);
-      if(pointers.size===1){pan={id:event.pointerId,x:event.clientX,y:event.clientY,left:viewport.scrollLeft,top:viewport.scrollTop};pinch=null;}
+      if(pointers.size===1){pan={id:event.pointerId,x:event.clientX,y:event.clientY,left:viewport.scrollLeft,top:viewport.scrollTop,moved:false};pinch=null;}
       if(pointers.size===2){
+        for(const id of pointers.keys())viewport.setPointerCapture?.(id);
         const [a,b]=[...pointers.values()],mid=midpoint(a,b),rect=viewport.getBoundingClientRect(),zoom=currentZoom();
         pinch={startDistance:Math.max(1,distance(a,b)),startZoom:zoom,logicalX:(viewport.scrollLeft+mid.x-rect.left)/zoom,logicalY:(viewport.scrollTop+mid.y-rect.top)/zoom};
         pan=null;
@@ -101,9 +101,12 @@
       if(!pointers.has(event.pointerId))return;
       pointers.set(event.pointerId,{x:event.clientX,y:event.clientY});
       if(pointers.size===1&&pan&&pan.id===event.pointerId){
+        const dx=event.clientX-pan.x,dy=event.clientY-pan.y;
+        if(!pan.moved&&Math.hypot(dx,dy)<6)return;
+        if(!pan.moved)viewport.setPointerCapture?.(event.pointerId);pan.moved=true;
         event.preventDefault();
-        viewport.scrollLeft=pan.left-(event.clientX-pan.x);
-        viewport.scrollTop=pan.top-(event.clientY-pan.y);
+        viewport.scrollLeft=pan.left-dx;
+        viewport.scrollTop=pan.top-dy;
       }else if(pointers.size>=2&&pinch){
         event.preventDefault();
         const [a,b]=[...pointers.values()].slice(0,2),mid=midpoint(a,b),ratio=distance(a,b)/pinch.startDistance;
@@ -112,7 +115,7 @@
     },{passive:false});
     const release=event=>{
       pointers.delete(event.pointerId);
-      if(pointers.size===1){const [id,p]=[...pointers.entries()][0];pan={id,x:p.x,y:p.y,left:viewport.scrollLeft,top:viewport.scrollTop};pinch=null;}
+      if(pointers.size===1){const [id,p]=[...pointers.entries()][0];pan={id,x:p.x,y:p.y,left:viewport.scrollLeft,top:viewport.scrollTop,moved:false};pinch=null;}
       else if(pointers.size===0){pan=null;pinch=null;}
     };
     viewport.addEventListener('pointerup',release);

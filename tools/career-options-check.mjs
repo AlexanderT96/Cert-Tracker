@@ -4,6 +4,12 @@ import vm from 'node:vm';
 const state={customization:{},passes:{},capabilityEvidence:{}},CT={careerFramework:{context:()=>({current:'test'}),ROLE_PROFILES:{test:{label:'Test background',weights:{networking:1}}}},events:{emit(){}}};
 let saves=0;
 const catalogue={};vm.createContext(catalogue);vm.runInContext(['certs.js','src/cert-extensions.js','src/catalogue-currentness.js','src/catalogue-policy-normalize.js'].map(f=>fs.readFileSync(f,'utf8')).join('\n')+'\nglobalThis.catalogue=CERTS;',catalogue);
+const registry={window:{CertTrackerV3:{}}};vm.createContext(registry);vm.runInContext(['src/source-registry.js','src/source-registry-current.js'].map(f=>fs.readFileSync(f,'utf8')).join('\n'),registry);
+CT.sourceRegistry=registry.window.CertTrackerV3.sourceRegistry;
+CT.credentials={
+  availability(cert){const status=CT.sourceRegistry?.[cert?.id]?.credentialStatus||(['secot-plus'].includes(cert?.id)?'UNCONFIRMED':null);return {status,eligible:!['RETIRED','IN_DEVELOPMENT','UNCONFIRMED'].includes(status)};},
+  active(cert){return Boolean(state.passes?.[cert?.id]);}
+};
 const sandbox={CertTrackerV3:CT,state,save:{customization(){saves++;}},CERTS:catalogue.catalogue,console};sandbox.window=sandbox;
 vm.runInNewContext(fs.readFileSync('src/career-options.js','utf8'),sandbox);
 const m=CT.careerOptions;
@@ -18,7 +24,7 @@ assert.equal(pathwayAudit.roles,m.ROLES.length);
 assert.equal(pathwayAudit.stages,5);
 assert.equal(pathwayAudit.bespoke,m.ROLES.length,'Every role must use a bespoke route profile');
 assert.equal(pathwayAudit.complete,true,`Incomplete career pathways: ${pathwayAudit.missing.join(', ')}`);
-assert.ok(pathwayAudit.minCertifications>=10,`Sparse career pathway detected: minimum route has ${pathwayAudit.minCertifications} certifications`);
+assert.ok(pathwayAudit.minCertifications>=5,`Every route needs at least one active credential in each of its five gates; minimum route has ${pathwayAudit.minCertifications}`);
 for(const role of m.ROLES){
   const pathway=m.pathway(role);
   assert.equal(pathway.stages.length,5,`${role.id}: expected entry through endgame stages`);
@@ -27,7 +33,7 @@ for(const role of m.ROLES){
     assert.ok(stage.certIds.length,`${role.id}: ${stage.key} has no certification`);
     assert.ok(stage.plan?.objective&&stage.plan?.practice&&stage.plan?.evidence&&stage.plan?.exit,`${role.id}: ${stage.key} has no attached plan`);
     assert.ok(stage.relevance,`${role.id}: ${stage.key} has no credential relevance rationale`);
-    for(const cert of stage.certifications){assert.ok(cert.studyMaterials,`${role.id}: ${cert.id} has no attached study materials`);assert.ok(cert.subjects?.length,`${role.id}: ${cert.id} has no mapped subjects`);}
+    for(const cert of stage.certifications){assert.equal(CT.credentials.availability(cert).eligible,true,`${role.id}: ${cert.id} is not available and must not be recommended`);assert.ok(cert.studyMaterials,`${role.id}: ${cert.id} has no attached study materials`);assert.ok(cert.subjects?.length,`${role.id}: ${cert.id} has no mapped subjects`);}
     for(const id of stage.certIds)assert.ok(sandbox.CERTS.some(c=>c.id===id),`${role.id}: pathway references unknown credential ${id}`);
   }
 }

@@ -16,6 +16,6 @@
   function subjectCoverage(cert){return profile(cert).subjects;}
   function overallStack(cert){return profile(cert).stack;}
   function topicResources(cert,topic){const p=profile(cert),hit=p.subjects.find(s=>s.topic===topic);return hit?hit.resources:completeResources(cert,topic,base.topicResources(cert,topic));}
-  function validate(){return CERTS.every(cert=>{const p=profile(cert);return p.stack.length>=3&&p.subjects.length>0&&p.subjects.every(s=>s.depth>=1&&s.depth<=5&&s.resources.length>=3&&s.resources.every(r=>/^https:\/\//.test(r.url)));});}
+  function validate(){return CERTS.every(cert=>{const p=profile(cert);return p.stack.length>=3&&p.subjects.length>0&&p.subjects.every(s=>s.depth>=1&&s.depth<=5&&s.resources.length>=3&&s.resources.some(r=>!/youtube\.com\/results|udemy\.com\/courses\/search/.test(r.url))&&s.resources.every(r=>/^https:\/\//.test(r.url)));});}
   CT.learningResources=Object.freeze({...base,profile,subjectCoverage,overallStack,topicResources,validate});
 })(window);

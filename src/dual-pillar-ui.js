@@ -40,7 +40,9 @@
 
   function mountCerts(root=document){
     root.querySelectorAll?.('.cert-row[data-cid]').forEach(row=>{const details=row.querySelector('.cert-details');if(!details||details.querySelector('.ct-dual-cert'))return;const cert=CERTS.find(c=>c.id===row.dataset.cid);if(!cert)return;const host=document.createElement('div');host.innerHTML=certHtml(cert);const resources=details.querySelector('.ct-learning-resources-host');if(resources)details.insertBefore(host.firstElementChild,resources);else details.prepend(host.firstElementChild);});
-    root.querySelectorAll?.('.ct-map-cert[data-map-cert]').forEach(node=>{const body=node.querySelector('.ct-map-cert-body');if(!body||body.querySelector('.ct-dual-cert'))return;const cert=CERTS.find(c=>c.id===node.dataset.mapCert);if(cert)body.insertAdjacentHTML('afterbegin',certHtml(cert));});
+    // Map certification bodies are intentionally lazy. Decorating every collapsed
+    // node here rebuilt the full hidden map and was a major mobile cost.
+    root.querySelectorAll?.('.ct-map-cert[data-map-cert][data-loaded="true"][open]').forEach(node=>{const body=node.querySelector('.ct-map-cert-body');if(!body||body.querySelector('.ct-dual-cert'))return;const cert=CERTS.find(c=>c.id===node.dataset.mapCert);if(cert)body.insertAdjacentHTML('afterbegin',certHtml(cert));});
   }
 
   function tuneExistingModals(root=document){

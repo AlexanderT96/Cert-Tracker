@@ -30,3 +30,5 @@
 .career-pathway-materials li{color:#9ab9c1;font-size:.68rem;line-height:1.4;margin:4px 0;overflow-wrap:anywhere}
 .career-pathway-materials a{color:#83e9ff;text-decoration:underline}
 .career-pathway-subjects{display:block;color:#789ba4;margin-top:2px}
+.career-detail-body:empty{display:none}
+.career-pathway-watchlist{margin:8px 0;padding:9px 10px;border-left:2px solid var(--amber,#ffb52e);background:rgba(255,181,46,.07);color:#c8b98e;font-size:.78rem;line-height:1.5}

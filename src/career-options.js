@@ -228,9 +228,14 @@
     if(PATHWAY_CACHE.has(role.id))return PATHWAY_CACHE.get(role.id);
     const family=FAMILIES[role.family],profile=ROLE_ROUTE_PROFILES[role.id];
     // No family fallback: a missing profile is a data error caught by the audit.
-    const buckets=(profile?.stages||PATHWAY_TEMPLATES.infrastructure.map(ids=>({certs:ids}))).map(stage=>[...(stage.certs||stage)]);
+    const rawBuckets=(profile?.stages||PATHWAY_TEMPLATES.infrastructure.map(ids=>({certs:ids}))).map(stage=>[...(stage.certs||stage)]);
+    const isAvailable=id=>{const cert=CERT_BY_ID.get(id),status=CT.sourceRegistry?.[id]?.credentialStatus;return !!cert&&(CT.credentials?.availability?CT.credentials.availability(cert).eligible:!['RETIRED','IN_DEVELOPMENT','UNCONFIRMED'].includes(status));};
+    // Retired, unreleased and unconfirmed credentials may remain in the catalogue
+    // for historical records, but they are not active pathway recommendations.
+    const watchlist=Object.freeze([...new Set(rawBuckets.flat().filter(id=>CERT_BY_ID.has(id)&&!isAvailable(id)))].map(id=>Object.freeze({id,name:CERT_BY_ID.get(id).name||id,status:CT.sourceRegistry?.[id]?.credentialStatus||'UNAVAILABLE'})));
+    const buckets=rawBuckets.map(ids=>ids.filter(isAvailable));
     const roleBucket=stageIndexForRole(role);
-    for(const id of role.certs||[])if(CERT_BY_ID.has(id)&&!buckets.some(bucket=>bucket.includes(id)))buckets[roleBucket].push(id);
+    for(const id of role.certs||[])if(isAvailable(id)&&!buckets.some(bucket=>bucket.includes(id)))buckets[roleBucket].push(id);
     const focus=family.label.toLowerCase(),tasks=family.tasks||[];
     const stages=PATHWAY_STAGE_META.map((meta,index)=>{
       const certIds=Object.freeze(orderCertIds(buckets[index]));
@@ -246,7 +251,7 @@
       return Object.freeze({...meta,certIds,certifications,studyMaterials,objective,practice,evidence,exit,relevance,plan:Object.freeze({objective,practice,evidence,exit,relevance,studyMaterials})});
     });
     const certIds=Object.freeze([...new Set(stages.flatMap(stage=>stage.certIds))]);
-    const result=Object.freeze({roleId:role.id,roleTitle:role.title,family:role.family,bespoke:Boolean(profile?.bespoke),specialism:profile?.focus||focus,capstone:profile?.capstone||role.mission,transition:profile?.transition||'Compare the next rung against current vacancies',stages:Object.freeze(stages),certIds,certifications:Object.freeze(certIds.map(id=>{const cert=CERT_BY_ID.get(id);return Object.freeze({id,name:cert.name||id,code:cert.code||'',phase:cert.phase||null,studyMaterials:cert.studyMaterials||'',subjects:Object.freeze([...(cert.subjects||[])])});})),totalCerts:certIds.length,plan:Object.freeze({sequence:'Complete one stage at a time; do not treat a certification as proof of readiness.',gate:'Only progress after the practical evidence and a current vacancy/issuer check support the next rung.',focus:`${role.title}: ${role.mission}`,capstone:profile?.capstone||role.mission,transition:profile?.transition||'Compare the next rung against current vacancies'})});
+    const result=Object.freeze({roleId:role.id,roleTitle:role.title,family:role.family,bespoke:Boolean(profile?.bespoke),specialism:profile?.focus||focus,capstone:profile?.capstone||role.mission,transition:profile?.transition||'Compare the next rung against current vacancies',stages:Object.freeze(stages),certIds,certifications:Object.freeze(certIds.map(id=>{const cert=CERT_BY_ID.get(id);return Object.freeze({id,name:cert.name||id,code:cert.code||'',phase:cert.phase||null,studyMaterials:cert.studyMaterials||'',subjects:Object.freeze([...(cert.subjects||[])])});})),watchlist,totalCerts:certIds.length,plan:Object.freeze({sequence:'Complete one stage at a time; do not treat a certification as proof of readiness.',gate:'Only progress after the practical evidence and a current vacancy/issuer check support the next rung.',focus:`${role.title}: ${role.mission}`,capstone:profile?.capstone||role.mission,transition:profile?.transition||'Compare the next rung against current vacancies'})});
     PATHWAY_CACHE.set(role.id,result);return result;
   }
   function pathways(){return ROLES.map(pathway);}

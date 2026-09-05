@@ -10,10 +10,10 @@
 
   const FALLBACK_TABS=['dashboard','learning','roadmap','certifications','strategy','customize'];
   const MOBILE_PRIMARY=[
-    ['dashboard','Dashboard'],
-    ['learning','Learn'],
-    ['roadmap','Map'],
-    ['certifications','Certs']
+    ['dashboard','Dashboard','Home'],
+    ['learning','Learn','Learn'],
+    ['roadmap','Map','Map'],
+    ['certifications','Certs','Certs']
   ];
 
   function availableTabs(){const order=CT.personalization.tabOrder?.()||FALLBACK_TABS;return order.length?order:FALLBACK_TABS;}
@@ -106,7 +106,7 @@
     let nav=document.getElementById('ct-mobile-navigation');
     if(!nav){
       nav=document.createElement('nav');nav.id='ct-mobile-navigation';nav.className='ct-mobile-navigation';nav.setAttribute('aria-label','Primary tracker navigation');
-      nav.innerHTML=MOBILE_PRIMARY.map(([tab,label])=>`<button type="button" data-mobile-tab="${tab}">${label}</button>`).join('')+'<button type="button" id="ct-mobile-more-button" data-mobile-more="true">More</button>';
+      nav.innerHTML=MOBILE_PRIMARY.map(([tab,label,short])=>`<button type="button" data-mobile-tab="${tab}" aria-label="${label}"><span class="ct-mobile-nav-label" data-short-label="${short}">${label}</span></button>`).join('')+'<button type="button" id="ct-mobile-more-button" data-mobile-more="true">More</button>';
       nav.querySelectorAll('[data-mobile-tab]').forEach(button=>button.addEventListener('click',()=>switchTab(button.dataset.mobileTab)));
       nav.querySelector('[data-mobile-more]')?.addEventListener('click',openMobileMore);
       document.body.appendChild(nav);

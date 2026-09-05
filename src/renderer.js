@@ -1526,7 +1526,7 @@ function renderStrategy() {
     <details class="strategy-section track-section track-top-section">
       <summary><span class="strategy-marker">🚀</span> Highest-Earning Evolution Paths · Top 10 (ranked by transition ease)</summary>
       <div class="strategy-body">
-        <p class="strat-note">Ten roles with £150k+ ceilings, ranked by transition ease from relevant hands-on experience that evolve naturally from current Systems Support Engineer position. Not covered in the standard track pivots because they cross domains and lean vendor-agnostic. Each leverages skills the candidate is already developing.</p>
+        <p class="strat-note">Ten roles with £150k+ ceilings, ranked by transition ease from relevant hands-on systems-support experience. They sit outside the standard track pivots because they cross domains and lean vendor-agnostic. Each depends on skills recorded in the tracker rather than an assumed personal background.</p>
         <ul class="pivot-roles-list">
           <li data-rank="#1">
             <span class="role-rung-tag rung-pivot">🤝</span><span class="rank-badge">#1</span>

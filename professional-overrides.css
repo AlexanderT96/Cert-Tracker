@@ -29,16 +29,15 @@
   --aura-a:transparent!important;--aura-b:transparent!important;
 }
 
-/* Roadmap study click-through affordances. */
-.ct-map-cert-main strong[data-study-click],.ct-map-subject strong[data-study-click]{
-  cursor:pointer;color:var(--blue-text);text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--blue) 42%,transparent);
-  text-underline-offset:3px;text-decoration-thickness:1px;touch-action:manipulation;
-}
-.ct-map-cert-main strong[data-study-click]::after{content:'  Study ↗';font-size:8px;letter-spacing:.04em;text-transform:uppercase;color:var(--dim);text-decoration:none;white-space:nowrap}
-.ct-map-subject strong[data-study-click]::after{content:'  Learn ↗';font-size:8px;letter-spacing:.04em;text-transform:uppercase;color:var(--dim);text-decoration:none;white-space:nowrap}
-.ct-map-cert-main strong[data-study-click]:hover,.ct-map-subject strong[data-study-click]:hover,.ct-map-cert-main strong[data-study-click]:focus-visible,.ct-map-subject strong[data-study-click]:focus-visible{color:var(--text);text-decoration-color:var(--blue);outline:none}
-
-@media(max-width:760px){
-  .ct-map-cert-main strong[data-study-click],.ct-map-subject strong[data-study-click]{display:inline-block;min-height:28px;padding:5px 2px;margin:-5px -2px}
-  .ct-map-cert-main strong[data-study-click]::after,.ct-map-subject strong[data-study-click]::after{font-size:7px}
-}
+/* Roadmap subjects are disclosure controls. Resource links stay explicit so a
+   subject click expands its material instead of unexpectedly opening a tab. */
+.ct-map-subject-details{min-width:0}
+.ct-map-subject-details>summary{list-style:none;cursor:pointer;border-radius:7px;padding:5px 28px 5px 6px;position:relative;touch-action:manipulation}
+.ct-map-subject-details>summary::-webkit-details-marker{display:none}
+.ct-map-subject-details>summary::after{content:'+';position:absolute;right:7px;top:50%;translate:0 -50%;color:var(--blue-text);font-weight:800;font-size:13px}
+.ct-map-subject-details[open]>summary::after{content:'−'}
+.ct-map-subject-details>summary:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.ct-map-subject-study{display:grid;gap:6px;padding:6px 6px 4px}
+.ct-map-overall-label{margin-top:12px!important}
+.ct-map-overall-resources{padding-bottom:2px}
+@media(max-width:760px){.ct-map-subject-details>summary{min-height:44px;display:grid;align-content:center}}

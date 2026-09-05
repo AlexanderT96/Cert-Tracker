@@ -112,6 +112,11 @@ html[data-layout="mobile"] #ct-mobile-navigation button[aria-current="page"]::be
   box-shadow:0 0 10px rgba(22,217,227,.58);
 }
 
+@media(max-width:399px){
+  html[data-layout="mobile"] #ct-mobile-navigation [data-mobile-tab="dashboard"] .ct-mobile-nav-label{font-size:0}
+  html[data-layout="mobile"] #ct-mobile-navigation [data-mobile-tab="dashboard"] .ct-mobile-nav-label::after{content:attr(data-short-label);font-size:9px}
+}
+
 html[data-layout="mobile"] #ct-mobile-more-layer[hidden]{display:none!important}
 html[data-layout="mobile"] #ct-mobile-more-layer:not([hidden]){
   position:fixed;

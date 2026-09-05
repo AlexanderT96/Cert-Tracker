@@ -10,7 +10,7 @@
 
   // Review only the fields supported by the CompTIA-authored XK0-006 objectives.
   // A retrieved blueprint does not verify today's price, availability or renewal rules.
-  const linuxObjectives='https://abaii.vn/web/content/4406?unique=cdffb30f3a43bdebb950fffb3d98fc707de1f4ce';
+  const linuxObjectives='https://www.comptia.org/en-us/certifications/linux/';
   patch('linux-plus',{
     cost:'Planning estimate ~£277; current regional checkout price unverified',
     examFormat:'XK0-006: up to 90 multiple-choice and performance-based questions, 90 minutes. Confirm current booking conditions with CompTIA.',
