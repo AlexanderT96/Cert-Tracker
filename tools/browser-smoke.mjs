@@ -139,12 +139,12 @@ try{
   await desktop.page.evaluate(()=>renderApp());
   await marketProfile.waitFor();
   assert.deepEqual(await marketProfile.locator('input').evaluateAll(inputs=>inputs.map(input=>input.value)),['Fictional Infrastructure Analyst','38123'],'Unsaved market baseline must survive a dashboard rerender');
-  await marketProfile.locator('[data-market-role-title]').fill('Fictional Network Operations Analyst');
+  await marketProfile.locator('[data-market-role-title]').fill('Network Engineer');
   await marketProfile.locator('[data-market-salary]').fill('41789');
   await marketProfile.locator('[data-market-profile-save]').click();
   await desktop.page.waitForFunction(()=>state.currentSalary===41789&&document.querySelector('[data-market-profile-match]'));
-  assert.ok((await desktop.page.locator('[data-market-profile]').textContent()).includes('Fictional Network Operations Analyst'),'Market baseline should evaluate a role-title fixture');
-  assert.equal(await desktop.page.evaluate(()=>CertTrackerV3.storage.serializableState().customization.marketProfile?.roleTitle),'Fictional Network Operations Analyst','Market role title must survive backup and sync serialization');
+  assert.ok((await desktop.page.locator('[data-market-profile]').textContent()).includes('Network Engineer'),'Market baseline should evaluate a role-title fixture');
+  assert.equal(await desktop.page.evaluate(()=>CertTrackerV3.storage.serializableState().customization.marketProfile?.roleTitle),'Network Engineer','Market role title must survive backup and sync serialization');
   assert.equal(await desktop.page.locator('.tabs [data-workspace-tab]').count(),6);
   assert.equal(await desktop.page.locator('#ct-mobile-navigation').isVisible(),false);
   assert.equal(await desktop.page.locator('#ct-command-dock').isVisible(),false,'Retired tool dock must not be visible');
